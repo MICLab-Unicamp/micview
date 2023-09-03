@@ -38,7 +38,6 @@ def multi_channel_zoom(full_volume, zoom_factors, order, C=None, tqdm_on=True, t
 
     if C is None:
         C = full_volume.shape[0]
-
     if threaded:
         pool = mp.pool.ThreadPool(C)
     else:
@@ -49,7 +48,6 @@ def multi_channel_zoom(full_volume, zoom_factors, order, C=None, tqdm_on=True, t
     zoomed_volumes = []
 
     pool_iter = pool.map(zoom_worker, channels)
-
     if tqdm_on:
         iterator = tqdm(pool_iter, total=len(channels), desc="Computing zooms...")
     else:
@@ -76,7 +74,6 @@ def mouse_handler(event, x, y, flags, param):
     y = y//param["display_resize"]
 
     if ((event == cv.EVENT_LBUTTONDOWN or param["dragging"]) and param["previous_x"] != x and param["previous_y"] != y) or event == cv.EVENT_MBUTTONDOWN:
-
         window = param["get_current_window"][x]
         param["dragging"] = True
         param["previous_x"] = x
@@ -156,7 +153,6 @@ class MultiViewer():
         if self.volume_shape != (cube_side, cube_side, cube_side):
             zoom_factors = (cube_side/self.volume_shape[-3], cube_side/self.volume_shape[-2], cube_side/self.volume_shape[-1])
             mask_zoom = zoom_factors
-
             if multichannel:
                 self.volume = multi_channel_zoom(self.volume, zoom_factors, order=order, threaded=threaded, tqdm_on=False)
             else:
@@ -224,7 +220,6 @@ class MultiViewer():
         elif key == 13:
             return 'ENTER'
         elif key == 115:
-            # Hide/show mask
             if self.displaying_mask:
                 self.volume = self.original_volume
                 self.displaying_mask = False
@@ -235,7 +230,6 @@ class MultiViewer():
 
             return(self.display(channel_select=self.last_channel))
         elif self.multichannel:
-            # Change displayed channel
             channel = key - 48
 
             if channel in range(self.C):
@@ -249,7 +243,7 @@ def brats_preparation(npz):
     Assumes npz with multichannel data and softmax target
     '''
     if npz["target"].shape[0] == 4:
-        target = npz["target"][1:].astype(np.float32)  # discarding background
+        target = npz["target"][1:].astype(np.float32) 
         for i, channel in enumerate(target):
             target[i] = (i+1)*channel/3
     elif npz["target"].shape[0] == 3:
@@ -272,7 +266,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', type=str, required=True)
     args = parser.parse_args()
-
     npz_path = args.input
 
     if npz_path.endswith(".nii.gz"):
@@ -283,7 +276,6 @@ if __name__ == "__main__":
     elif npz_path.split('.')[-1] == 'npz':
         npz = np.load(npz_path)
         data, target = brats_preparation(npz)
-        print(data.shape, target.shape)
         MultiViewer(data, mask=target).display(channel_select=0 if len(data.shape) > 3 else -1)
     else:
         raise ValueError("File format not supported.")
