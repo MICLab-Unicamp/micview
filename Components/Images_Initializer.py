@@ -1,7 +1,7 @@
 import numpy as np
-import Image_Controller as Imctrl
+import Components.Image_Controller as Imctrl
 
-class MultiViewer():
+class ImagesContainer():
     def __init__(self, volume, mask=None, window_name="MultiViewer", cube_side=200, resize_factor=2, order=3, threaded=False):
         if len(volume.shape) == 4 and np.argmin(volume.shape) == 3:
             print("Channel dimension has to be 0, attempting transpose")

@@ -48,7 +48,7 @@ def reset_current_point():
         global current_point
         current_point = None
 
-def display(volume, handler_param, resize_factor=2, channel_select=-1):
+def update_POV(volume, handler_param, resize_factor=2, channel_select=-1):
         global current_point
 
         last_channel = channel_select
