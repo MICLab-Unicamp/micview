@@ -9,11 +9,12 @@ def get_screensize():
 
 
 class RootFrame():
-    def __init__(self, image, window_name):
+    def __init__(self, image, window_name, metadata):
         self.root = tk.Tk()
         Img = ImageTk.PhotoImage(image)
         self.image = Img
         self.window_name = window_name
+        self.metadata = metadata
         self.screensize = get_screensize()
         self.ScreenConfig()
         self.Frames()
@@ -33,3 +34,8 @@ class RootFrame():
         self.frame_left.place(relx=0.01, rely=0.01, relwidth=0.17, relheight=0.98)
         label = tk.Label(self.frame_top, image=self.image)
         label.pack(expand=True, fill=tk.BOTH)
+        label.bind("<1>", lambda event: print(event))
+        label.bind("<B1-Motion>", lambda event: print(event))
+        print(self.metadata.GetMetaDataKeys())
+        meta = tk.Label(self.frame_bottom, text=self.metadata.GetMetaDataKeys())
+        meta.place(relheight=1, relwidth=1)
