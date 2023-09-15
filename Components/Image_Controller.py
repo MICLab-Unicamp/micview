@@ -73,8 +73,32 @@ def update_POV(volume, handler_param, resize_factor=2, channel_select=-1):
                 axis2 = volume[0, :, :, current_point[2]]
 
         handler_param["channel"] = channel_select
-        stacked_array =np.hstack((axis0, axis1, axis2))
-        stacked_array = (stacked_array - stacked_array.min())
-        stacked_array = stacked_array * (255/stacked_array.max())
-        resized_array = Image.fromarray(cv.resize(stacked_array, (0, 0), fx=resize_factor, fy=resize_factor), mode='F')
-        return resized_array
+        Axisarray = [axis0,axis1,axis2]
+        Imagearray = []
+        for axis in Axisarray:
+            axis = np.clip(axis, a_min=-1024, a_max=600)
+            axis = (axis - axis.min())
+            axis = axis * (255/axis.max())
+            axis = Image.fromarray(axis, mode='F')
+            Imagearray.append(axis)
+        return Imagearray
+        '''
+        axis0 = (axis0 - axis0.min())
+        axis0 = axis0 * (255/axis0.max())
+        axis0 = Image.fromarray(axis0, mode='F')
+
+        axis1 = (axis1 - axis1.min())
+        axis1 = axis1 * (255/axis1.max())
+        axis1 = Image.fromarray(axis1, mode='F')
+
+        axis2 = (axis2 - axis2.min())
+        axis2 = axis2 * (255/axis2.max())
+        axis2 = Image.fromarray(axis2, mode='F')
+
+        updated_array = {"axis0": axis0, "axis1": axis1, "axis2": axis2}
+        '''####
+        #updated_array =np.hstack((axis0, axis1, axis2))
+        #updated_array = (updated_array - updated_array.min())
+        #updated_array = updated_array * (255/updated_array.max())
+        #resized_array = Image.fromarray(cv.resize(updated_array, (0, 0), fx=resize_factor, fy=resize_factor), mode='F')
+        return updated_array
