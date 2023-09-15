@@ -2,11 +2,15 @@ import numpy as np
 import Components.Image_Controller as Imctrl
 
 class ImagesContainer():
-    def __init__(self, volume, mask=None, window_name="MultiViewer", cube_side=200, resize_factor=2, order=3, threaded=False, AdjustToWindow=False):
+    def __init__(self, volume, mask=None, window_name="MultiViewer", cube_side=300, resize_factor=2, order=3, threaded=False):
         if len(volume.shape) == 4 and np.argmin(volume.shape) == 3:
             print("Channel dimension has to be 0, attempting transpose")
             volume = volume.transpose(3, 0, 1, 2)
             assert np.argmin(volume.shape) == 0, "Couldn't solve wrong dimension channel. Put channel on dimension 0."
+
+        self.order = order
+        self.threaded = threaded
+        self.mask = mask
 
         original_min = volume.min()
         original_max = volume.max()
@@ -19,14 +23,16 @@ class ImagesContainer():
         if multichannel:
             self.C = self.volume_shape[0]
             self.last_channel = 0
-
-        if self.volume_shape != (cube_side, cube_side, cube_side) and AdjustToWindow:
-            zoom_factors = (cube_side/self.volume_shape[-3], cube_side/self.volume_shape[-2], cube_side/self.volume_shape[-1])
-            mask_zoom = zoom_factors
-            if multichannel:
-                self.volume = Imctrl.multi_channel_zoom(self.volume, zoom_factors, order=order, threaded=threaded, tqdm_on=False)
-            else:
-                self.volume = Imctrl.zoom(self.volume, zoom_factors, order=order)
+        
+        sides = np.array(list(self.volume.shape))
+        self.max_side = sides.max()
+        
+        zoom_factors = (cube_side/self.volume_shape[-3], cube_side/self.volume_shape[-2], cube_side/self.volume_shape[-1])
+        mask_zoom = zoom_factors
+        if multichannel:
+            self.volume = Imctrl.multi_channel_zoom(self.volume, zoom_factors, order=order, threaded=threaded, tqdm_on=False)
+        else:
+            self.volume = Imctrl.zoom(self.volume, zoom_factors, order=order)
 
         if mask is not None:
             zoomed_mask = Imctrl.zoom(mask, mask_zoom, order=0).astype(np.float32)
@@ -37,7 +43,6 @@ class ImagesContainer():
             self.displaying_mask = True
 
         self.volume_shape = self.volume.shape
-        #assert self.volume_shape[-1:-4:-1][::-1] == (cube_side, cube_side, cube_side)
 
         self.current_point = (np.array(self.volume_shape[-1:-4:-1][::-1])/2).astype(int)
         self.window_name = window_name

@@ -48,31 +48,31 @@ def reset_current_point():
         global current_point
         current_point = None
 
-def update_POV(volume, handler_param, resize_factor=2, channel_select=-1):
+def update_POV(image, channel_select=-1):
         global current_point
 
         last_channel = channel_select
 
         if current_point is None:
-            current_point = (np.array(volume.shape[-1:-4:-1][::-1])/2).astype(int)
+            current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
 
         if channel_select < 0:
-            axis0 = volume[current_point[0], :, :]
-            axis1 = volume[:, current_point[1], :]
-            axis2 = volume[:, :, current_point[2]]
+            axis0 = image.volume[current_point[0], :, :]
+            axis1 = image.volume[:, current_point[1], :]
+            axis2 = image.volume[:, :, current_point[2]]
         else:
             try:
-                axis0 = volume[channel_select, current_point[0], :, :]
-                axis1 = volume[channel_select, :, current_point[1], :]
-                axis2 = volume[channel_select, :, :, current_point[2]]
+                axis0 = image.volume[channel_select, current_point[0], :, :]
+                axis1 = image.volume[channel_select, :, current_point[1], :]
+                axis2 = image.volume[channel_select, :, :, current_point[2]]
             except IndexError:
                 print(f"Channel {channel_select} not found. Using 0")
                 last_channel = 0
-                axis0 = volume[0, current_point[0], :, :]
-                axis1 = volume[0, :, current_point[1], :]
-                axis2 = volume[0, :, :, current_point[2]]
+                axis0 = image.volume[0, current_point[0], :, :]
+                axis1 = image.volume[0, :, current_point[1], :]
+                axis2 = image.volume[0, :, :, current_point[2]]
 
-        handler_param["channel"] = channel_select
+        image.handler_param["channel"] = channel_select
         Axisarray = [axis0,axis1,axis2]
         Imagearray = []
         for axis in Axisarray:
@@ -82,23 +82,26 @@ def update_POV(volume, handler_param, resize_factor=2, channel_select=-1):
             axis = Image.fromarray(axis, mode='F')
             Imagearray.append(axis)
         return Imagearray
-        '''
-        axis0 = (axis0 - axis0.min())
-        axis0 = axis0 * (255/axis0.max())
-        axis0 = Image.fromarray(axis0, mode='F')
 
-        axis1 = (axis1 - axis1.min())
-        axis1 = axis1 * (255/axis1.max())
-        axis1 = Image.fromarray(axis1, mode='F')
+def ImageResizing(image,new_cube_size):
+        zoom_factors = (new_cube_size/image.volume_shape[-3], new_cube_size/image.volume_shape[-2], new_cube_size/image.volume_shape[-1])
+        mask_zoom = zoom_factors
+        if image.multichannel:
+            image.volume = multi_channel_zoom(image.volume, zoom_factors, order=image.order, threaded=image.threaded, tqdm_on=False)
+        else:
+            image.volume = zoom(image.volume, zoom_factors, order=image.order)
 
-        axis2 = (axis2 - axis2.min())
-        axis2 = axis2 * (255/axis2.max())
-        axis2 = Image.fromarray(axis2, mode='F')
+        if image.mask is not None:
+            zoomed_mask = zoom(image.mask, mask_zoom, order=0).astype(np.float32)
+            zoomed_mask = (zoomed_mask - zoomed_mask.min())/(zoomed_mask.max() - zoomed_mask.min())
+            image.masked_volume = np.where(zoomed_mask == 0, image.volume, zoomed_mask)
+            image.original_volume = image.volume
+            image.volume = image.masked_volume
+            image.displaying_mask = True
+            image.handler_param["volume"] = image.volume
+            image.handler_param["cube_size"] = new_cube_size
 
-        updated_array = {"axis0": axis0, "axis1": axis1, "axis2": axis2}
-        '''####
-        #updated_array =np.hstack((axis0, axis1, axis2))
-        #updated_array = (updated_array - updated_array.min())
-        #updated_array = updated_array * (255/updated_array.max())
-        #resized_array = Image.fromarray(cv.resize(updated_array, (0, 0), fx=resize_factor, fy=resize_factor), mode='F')
-        return updated_array
+        global current_point
+        current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
+        
+        return image
