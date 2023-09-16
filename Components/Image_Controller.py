@@ -4,6 +4,7 @@ from scipy.ndimage import zoom
 from tqdm import tqdm
 import cv2 as cv
 from PIL import Image
+import math
 
 current_point = None
 
@@ -74,17 +75,27 @@ def update_POV(image, channel_select=-1):
 
         image.handler_param["channel"] = channel_select
         Axisarray = [axis0,axis1,axis2]
-        Imagearray = []
+        Image_data_array = []
         for axis in Axisarray:
             axis = np.clip(axis, a_min=-1024, a_max=600)
             axis = (axis - axis.min())
             axis = axis * (255/axis.max())
-            axis = Image.fromarray(axis, mode='F')
-            Imagearray.append(axis)
-        return Imagearray
+            Image_data_array.append(axis)
+        return Image_data_array
 
 def ImageResizing(image,new_cube_size):
-        zoom_factors = (new_cube_size/image.volume_shape[-3], new_cube_size/image.volume_shape[-2], new_cube_size/image.volume_shape[-1])
+        sides = np.array(list(image.volume_shape))
+        max_side = sides.max()
+        new_sizes = {
+             "axis0_x": math.floor((new_cube_size/max_side)*sides[1]),
+             "axis0_y": math.floor((new_cube_size/max_side)*sides[2]),
+             "axis1_x": math.floor((new_cube_size/max_side)*sides[2]),
+             "axis1_y": math.floor((new_cube_size/max_side)*sides[0]),
+             "axis2_x": math.floor((new_cube_size/max_side)*sides[1]),
+             "axis2_y": math.floor((new_cube_size/max_side)*sides[0])
+        }
+
+        return new_sizes
         mask_zoom = zoom_factors
         if image.multichannel:
             image.volume = multi_channel_zoom(image.volume, zoom_factors, order=image.order, threaded=image.threaded, tqdm_on=False)
@@ -100,8 +111,9 @@ def ImageResizing(image,new_cube_size):
             image.displaying_mask = True
             image.handler_param["volume"] = image.volume
             image.handler_param["cube_size"] = new_cube_size
-
-        global current_point
-        current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
         
+        image.volume_shape = image.volume.shape
+        global current_point
+        current_point = (np.array(image.volume_shape[-1:-4:-1][::-1])/2).astype(int)
+
         return image

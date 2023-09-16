@@ -14,7 +14,8 @@ if __name__ == "__main__":
     if npz_path.endswith(".nii.gz"):
         image = sitk.ReadImage(npz_path)
         image = sitk.GetArrayFromImage(image)
-        image = Iminit.ImagesContainer(image)
-        wndw.RootFrame(image, image.window_name)
+        #squared_image = Iminit.ImagesContainer(image,square=True)
+        #image = Iminit.ImagesContainer(image)
+        wndw.RootFrame(image, "MultiViewer")
     else:
         raise ValueError("File format not supported.")
