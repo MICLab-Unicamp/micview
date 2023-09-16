@@ -49,7 +49,7 @@ def reset_current_point():
         global current_point
         current_point = None
 
-def update_POV(image, channel_select=-1):
+def update_volume_point(image, channel_select=-1):
         global current_point
 
         last_channel = channel_select
@@ -94,26 +94,4 @@ def ImageResizing(image,new_cube_size):
              "axis2_x": math.floor((new_cube_size/max_side)*sides[1]),
              "axis2_y": math.floor((new_cube_size/max_side)*sides[0])
         }
-
         return new_sizes
-        mask_zoom = zoom_factors
-        if image.multichannel:
-            image.volume = multi_channel_zoom(image.volume, zoom_factors, order=image.order, threaded=image.threaded, tqdm_on=False)
-        else:
-            image.volume = zoom(image.volume, zoom_factors, order=image.order)
-
-        if image.mask is not None:
-            zoomed_mask = zoom(image.mask, mask_zoom, order=0).astype(np.float32)
-            zoomed_mask = (zoomed_mask - zoomed_mask.min())/(zoomed_mask.max() - zoomed_mask.min())
-            image.masked_volume = np.where(zoomed_mask == 0, image.volume, zoomed_mask)
-            image.original_volume = image.volume
-            image.volume = image.masked_volume
-            image.displaying_mask = True
-            image.handler_param["volume"] = image.volume
-            image.handler_param["cube_size"] = new_cube_size
-        
-        image.volume_shape = image.volume.shape
-        global current_point
-        current_point = (np.array(image.volume_shape[-1:-4:-1][::-1])/2).astype(int)
-
-        return image

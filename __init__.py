@@ -1,7 +1,5 @@
 import argparse
 import SimpleITK as sitk
-import Components.Image_Controller as Imctrl
-import Components.Images_Initializer as Iminit
 import Components.MainWindow as wndw
 
 if __name__ == "__main__":

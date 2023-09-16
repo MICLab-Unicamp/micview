@@ -1,5 +1,5 @@
 import numpy as np
-import Components.Image_Controller as Imctrl
+import Components.Volume_Controller as Imctrl
 
 class ImagesContainer():
     def __init__(self, volume, square=False, mask=None, window_name="MultiViewer", cube_side=200, resize_factor=2, order=3, threaded=False):
