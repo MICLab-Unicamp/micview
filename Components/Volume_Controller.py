@@ -1,0 +1,106 @@
+import numpy as np
+import multiprocessing as mp
+from scipy.ndimage import zoom
+from tqdm import tqdm
+import cv2 as cv
+from PIL import Image
+import math
+
+current_point = None
+
+def zoom_worker(x):
+    channel, zoom_factor, order = x
+    return zoom(channel, zoom_factor, order=order)
+
+
+def multi_channel_zoom(full_volume, zoom_factors, order, C=None, tqdm_on=True, threaded=False):
+    '''
+    full_volume: Full 4D volume (numpy)
+    zoom_factors: intented shape / current shape
+    order: 0 - 5, higher is slower but better results, 0 is fast and bad results
+    C: how many cores to spawn, defaults to number of channels in volume
+    tqdm_on: verbose computation
+    '''
+    assert len(full_volume.shape) == 4 and isinstance(full_volume, np.ndarray)
+
+    if C is None:
+        C = full_volume.shape[0]
+    if threaded:
+        pool = mp.pool.ThreadPool(C)
+    else:
+        pool = mp.Pool(C)
+
+    channels = [(channel, zoom_factors, order) for channel in full_volume]
+
+    zoomed_volumes = []
+
+    pool_iter = pool.map(zoom_worker, channels)
+    if tqdm_on:
+        iterator = tqdm(pool_iter, total=len(channels), desc="Computing zooms...")
+    else:
+        iterator = pool_iter
+
+    for output in iterator:
+        zoomed_volumes.append(output)
+
+    return np.stack(zoomed_volumes)
+
+def reset_current_point():
+    global current_point
+    current_point = None
+
+def change_current_point(axis0, axis1, axis2):
+    global current_point
+    if(axis0 >=0):
+        current_point[0] = axis0
+    if(axis1 >=0):
+        current_point[1] = axis1
+    if(axis2 >=0):
+        current_point[2] = axis2
+
+def update_volume_point(image, channel_select=-1):
+        global current_point
+        
+        last_channel = channel_select
+
+        if current_point is None:
+            current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
+
+        if channel_select < 0:
+            axis0 = image.volume[current_point[0], :, :]
+            axis1 = image.volume[:, current_point[1], :]
+            axis2 = image.volume[:, :, current_point[2]]
+        else:
+            try:
+                axis0 = image.volume[channel_select, current_point[0], :, :]
+                axis1 = image.volume[channel_select, :, current_point[1], :]
+                axis2 = image.volume[channel_select, :, :, current_point[2]]
+            except IndexError:
+                print(f"Channel {channel_select} not found. Using 0")
+                last_channel = 0
+                axis0 = image.volume[0, current_point[0], :, :]
+                axis1 = image.volume[0, :, current_point[1], :]
+                axis2 = image.volume[0, :, :, current_point[2]]
+
+        image.handler_param["channel"] = channel_select
+        Axisarray = [axis0,axis1,axis2]
+        Image_data_array = []
+        for axis in Axisarray:
+            axis = np.clip(axis, a_min=-1024, a_max=600)
+            axis = (axis - axis.min())
+            axis = axis * (255/axis.max())
+            Image_data_array.append(axis)
+        return Image_data_array
+
+def ImageResizing(image,new_cube_size):
+        sides = np.array(list(image.volume_shape))
+        max_side = sides.max()
+        new_sizes = {
+             "axis0_x": math.floor((new_cube_size/max_side)*sides[1]),
+             "axis0_y": math.floor((new_cube_size/max_side)*sides[2]),
+             "axis1_x": math.floor((new_cube_size/max_side)*sides[2]),
+             "axis1_y": math.floor((new_cube_size/max_side)*sides[0]),
+             "axis2_x": math.floor((new_cube_size/max_side)*sides[1]),
+             "axis2_y": math.floor((new_cube_size/max_side)*sides[0])
+        }
+        return new_sizes

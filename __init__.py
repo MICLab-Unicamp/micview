@@ -1,7 +1,5 @@
 import argparse
 import SimpleITK as sitk
-import Components.Image_Controller as Imctrl
-import Components.Images_Initializer as Iminit
 import Components.MainWindow as wndw
 
 if __name__ == "__main__":
@@ -14,8 +12,8 @@ if __name__ == "__main__":
     if npz_path.endswith(".nii.gz"):
         image = sitk.ReadImage(npz_path)
         image = sitk.GetArrayFromImage(image)
-        image = Iminit.ImagesContainer(image)
-        Labeled_image = Imctrl.update_POV(image.volume, image.handler_param, image.resize_factor)
-        wndw.RootFrame(Labeled_image, image.window_name)
+        #squared_image = Iminit.ImagesContainer(image,square=True)
+        #image = Iminit.ImagesContainer(image)
+        wndw.RootFrame(image, "MultiViewer")
     else:
         raise ValueError("File format not supported.")
