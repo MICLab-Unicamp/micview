@@ -2,6 +2,8 @@ import tkinter as tk
 import math
 from screeninfo import get_monitors
 from Components.ImageFrame import *
+import Components.ImageFrame_Update as Imupdate
+import Components.Volume_Controller as Volctrl
 
 def get_screensize():
     for monitor in get_monitors():
@@ -52,8 +54,12 @@ class RootFrame():
         self.load_image_buttom['state'] = "disabled"
         self.ImageFrame.Load_Images(self.image_sitk)
 
-    def SquareImageButtonHandler(self):
-        self.ImageFrame.UpdateSquareImage()
+    def SquareImageButtonHandler(self): ###Tratar erro futuramente
+        Square_Image_True()
+        Volctrl.reset_current_point()
+        Imupdate.UpdateImages(self.ImageFrame.Controller, True)
 
     def NormalImageButtonHandler(self):
-        self.ImageFrame.UpdateNormalImage()
+        Square_Image_False()
+        Volctrl.reset_current_point()
+        Imupdate.UpdateImages(self.ImageFrame.Controller, False)

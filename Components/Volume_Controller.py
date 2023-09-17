@@ -46,12 +46,21 @@ def multi_channel_zoom(full_volume, zoom_factors, order, C=None, tqdm_on=True, t
     return np.stack(zoomed_volumes)
 
 def reset_current_point():
-        global current_point
-        current_point = None
+    global current_point
+    current_point = None
+
+def change_current_point(axis0, axis1, axis2):
+    global current_point
+    if(axis0 >=0):
+        current_point[0] = axis0
+    if(axis1 >=0):
+        current_point[1] = axis1
+    if(axis2 >=0):
+        current_point[2] = axis2
 
 def update_volume_point(image, channel_select=-1):
         global current_point
-
+        
         last_channel = channel_select
 
         if current_point is None:

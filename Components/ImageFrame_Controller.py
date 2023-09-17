@@ -1,33 +1,68 @@
+import Components.Volume_Controller as Volctrl
+import Components.ImageFrame_Update as Imupdate
+import Components.ImageFrame as ImFrame
+import math
 
 class ImageFrame_Controller:
-    def __init__(self, axis0, axis1, axis2, imageorientation):
+    def __init__(self, axis0, axis1, axis2, imageorientation, image, squared_image):
         self.axis0 = axis0
         self.axis1 = axis1
         self.axis2 = axis2
         self.imageorientation = imageorientation
+        self.image = image
+        self.squared_image = squared_image
         self.BindAxis()
+        self.label_h = None
+        self.label_w = None
+        self.previous_label_h = None
+        self.previous_label_w = None
 
     def BindAxis(self):
-
         self.axis0['Label'].bind('<Button-1>', self.UpdatePointAxis0)
         self.axis0['Label'].bind('<B1-Motion>', self.UpdatePointAxis0)
-
         self.axis1['Label'].bind('<Button-1>', self.UpdatePointAxis1)
         self.axis1['Label'].bind('<B1-Motion>', self.UpdatePointAxis1)
-
         self.axis2['Label'].bind('<Button-1>', self.UpdatePointAxis2)
         self.axis2['Label'].bind('<B1-Motion>', self.UpdatePointAxis2)
 
+    def UpdateImageSize(self,images_sizes, label_w, label_h):
+        self.images_sizes = images_sizes
+        self.label_w = label_w
+        self.label_h = label_h
+
     def UpdatePointAxis0(self, event):
         click = event.__dict__
-        x = click['x']
-        y = click['y']
-        print(f"Click: x={x}, y={y}")
-        #print(f"Image Size: x={self.images_sizes['axis0_x']}, y={self.images_sizes['axis0_y']}")
-        #print(f"Label Size: x={self.image_w}, y={self.image_h}")
+        x = click['x']; y = click['y']
+        new_point_x, new_point_y = self.UpdatePoint(self.images_sizes['axis0_x'], self.images_sizes['axis0_y'], x, y)
+        if(new_point_x != None and new_point_y != None):
+            Volctrl.change_current_point(-1,new_point_y,new_point_x)
+            square_image = ImFrame.Get_Square_Image()
+            Imupdate.UpdateImages(self,square_image)
 
     def UpdatePointAxis1(self, event):
-        print(f"eixo 1: {event}")
+        click = event.__dict__
+        x = click['x']; y = click['y']
+        new_point_x, new_point_y = self.UpdatePoint(self.images_sizes['axis1_x'], self.images_sizes['axis1_y'], x, y)
+        if(new_point_x != None and new_point_y != None):
+            Volctrl.change_current_point(new_point_y,-1,new_point_x)
+            square_image = ImFrame.Get_Square_Image()
+            Imupdate.UpdateImages(self,square_image)
 
     def UpdatePointAxis2(self, event):
-        print(f"eixo 2: {event}")
+        click = event.__dict__
+        x = click['x']; y = click['y']
+        new_point_x, new_point_y = self.UpdatePoint(self.images_sizes['axis2_x'], self.images_sizes['axis2_y'], x, y)
+        if(new_point_x != None and new_point_y != None):
+            Volctrl.change_current_point(new_point_y,new_point_x,-1)
+            square_image = ImFrame.Get_Square_Image()
+            Imupdate.UpdateImages(self,square_image)
+
+    def UpdatePoint(self, image_size_x, image_size_y, x, y):
+        center = (self.label_w/2, self.label_h/2)
+        if(x < center[0] - image_size_x/2 or x > center[0] + image_size_x/2 or y < center[1] - image_size_y/2 or y > center[1] + image_size_y/2):
+            return None, None #Clicked outside the image
+        offsetx = math.floor((self.label_w - image_size_x)/2)
+        new_point_x = int(x - offsetx) -1
+        offsety = math.floor((self.label_h - image_size_y)/2)
+        new_point_y = int(y - offsety) -1
+        return new_point_x,new_point_y
