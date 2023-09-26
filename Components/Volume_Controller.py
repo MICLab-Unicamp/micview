@@ -2,8 +2,6 @@ import numpy as np
 import multiprocessing as mp
 from scipy.ndimage import zoom
 from tqdm import tqdm
-import cv2 as cv
-from PIL import Image
 import math
 
 current_point = None
@@ -13,7 +11,7 @@ def zoom_worker(x):
     return zoom(channel, zoom_factor, order=order)
 
 
-def multi_channel_zoom(full_volume, zoom_factors, order, C=None, tqdm_on=True, threaded=False):
+def multi_channel_zoom(full_volume, zoom_factors, order, C=None, tqdm_on=True):
     '''
     full_volume: Full 4D volume (numpy)
     zoom_factors: intented shape / current shape
@@ -25,11 +23,8 @@ def multi_channel_zoom(full_volume, zoom_factors, order, C=None, tqdm_on=True, t
 
     if C is None:
         C = full_volume.shape[0]
-    if threaded:
-        pool = mp.pool.ThreadPool(C)
-    else:
-        pool = mp.Pool(C)
-
+        
+    pool = mp.Pool(C)
     channels = [(channel, zoom_factors, order) for channel in full_volume]
 
     zoomed_volumes = []
@@ -58,13 +53,12 @@ def change_current_point(axis0, axis1, axis2):
     if(axis2 >=0):
         current_point[2] = axis2
 
-def update_volume_point(image, channel_select=-1):
+def get_2D_slices(image, channel_select=-1):
         global current_point
-        
-        last_channel = channel_select
-
+        print(f"Image volume shape: {image.volume.shape}")
         if current_point is None:
             current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
+            image.handler_param["point"] = current_point
 
         if channel_select < 0:
             axis0 = image.volume[current_point[0], :, :]
@@ -77,20 +71,14 @@ def update_volume_point(image, channel_select=-1):
                 axis2 = image.volume[channel_select, :, :, current_point[2]]
             except IndexError:
                 print(f"Channel {channel_select} not found. Using 0")
-                last_channel = 0
+                channel_select = 0
                 axis0 = image.volume[0, current_point[0], :, :]
                 axis1 = image.volume[0, :, current_point[1], :]
                 axis2 = image.volume[0, :, :, current_point[2]]
 
         image.handler_param["channel"] = channel_select
-        Axisarray = [axis0,axis1,axis2]
-        Image_data_array = []
-        for axis in Axisarray:
-            axis = np.clip(axis, a_min=-1024, a_max=600)
-            axis = (axis - axis.min())
-            axis = axis * (255/axis.max())
-            Image_data_array.append(axis)
-        return Image_data_array
+        Image_2D_slices = [axis0,axis1,axis2]
+        return Image_2D_slices
 
 def ImageResizing(image,new_cube_size):
         sides = np.array(list(image.volume_shape))
