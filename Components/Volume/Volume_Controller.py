@@ -55,7 +55,6 @@ def change_current_point(axis0, axis1, axis2):
 
 def get_2D_slices(image, channel_select=-1):
         global current_point
-        print(f"Image volume shape: {image.volume.shape}")
         if current_point is None:
             current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
             image.handler_param["point"] = current_point

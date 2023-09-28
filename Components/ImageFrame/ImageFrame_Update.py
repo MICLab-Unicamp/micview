@@ -1,11 +1,11 @@
 from PIL import Image, ImageTk
-import Components.Volume_Controller as Volctrl
+import Components.Volume.Volume_Controller as Volctrl
 
-def UpdateImages(ControllerObj, square_image, resized_window=False):
+def UpdateImages(ControllerObj, square_image_boolean, resized_window=False):
     if(ControllerObj.label_h == None or ControllerObj.label_h <= 1): # Screen Not Open Yet
         return
     
-    input_image = ControllerObj.squared_image if square_image else ControllerObj.image
+    input_image = ControllerObj.square_image if square_image_boolean else ControllerObj.image
     image_data = Volctrl.get_2D_slices(input_image)
     Labeled_image = [Image.fromarray(image_data[0],mode='L'),Image.fromarray(image_data[1],mode='L'),Image.fromarray(image_data[2],mode='L')]
     
@@ -24,10 +24,10 @@ def UpdateImages(ControllerObj, square_image, resized_window=False):
     ControllerObj.axis2['Label'].configure(image=Imgs[2])
     ControllerObj.axis2['Label'].image = Imgs[2]
 
-def Resize_Images_Check(ControllerObj,square_image):
+def Resize_Images_Check(ControllerObj,square_image_boolean):
     ControllerObj.label_w = ControllerObj.axis0['Label'].winfo_width()
     ControllerObj.label_h = ControllerObj.axis0['Label'].winfo_height()
     if(ControllerObj.label_h != ControllerObj.previous_label_h or ControllerObj.label_w != ControllerObj.previous_label_w):
         ControllerObj.previous_label_w = ControllerObj.axis0['Label'].winfo_width()
         ControllerObj.previous_label_h = ControllerObj.axis0['Label'].winfo_height()
-        UpdateImages(ControllerObj, square_image=square_image, resized_window=True)
+        UpdateImages(ControllerObj, square_image_boolean=square_image_boolean, resized_window=True)

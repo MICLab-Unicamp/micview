@@ -2,27 +2,14 @@ import tkinter as tk
 import math
 import multiprocessing as mp
 from PIL import Image, ImageTk
-import Components.Volume_Initializer as Volinit
-import Components.Volume_Controller as Volctrl
-import Components.ImageFrame_Update as Imupdate
-from Components.ImageFrame_Controller import *
-
-square_image = False
-
-def Square_Image_True():
-    global square_image
-    square_image = True
-    
-def Square_Image_False():
-    global square_image
-    square_image = False
-
-def Get_Square_Image():
-     global square_image
-     return square_image
+import Components.Volume.Volume_Initializer as Volinit
+import Components.Volume.Volume_Controller as Volctrl
+import Components.ImageFrame.ImageFrame_Update as Imupdate
+from Components.ImageFrame.ImageFrame_Controller import *
 
 class ImageFrame:
-    def __init__(self,frame):
+    def __init__(self,root,frame):
+        self.root = root
         self.frame = frame
         self.canvasaxis0 = self.AxisLabel(relheight=0.47, rely=0.02, relwidth=0.47, relx=0.02)
         self.canvasaxis1 = self.AxisLabel(relheight=0.47, rely=0.02, relwidth=0.47, relx=0.52)
@@ -36,16 +23,17 @@ class ImageFrame:
         labelaxis.pack(expand=True, fill=tk.BOTH)
         return {"Canvas": canvasaxis, "Label": labelaxis}
 
-    def Load_Images(self, image_sitk):
-        self.image_sitk = image_sitk
+    def Load_Images(self, sitk_file):
+        self.root.setvar(name="image_is_set", value=True)
+        self.sitk_file = sitk_file
         size=math.floor(self.canvasaxis0['Label'].winfo_height())
-        self.squared_image = Volinit.ImagesContainer(image_sitk,square=True, cube_side=size)
-        self.image = Volinit.ImagesContainer(image_sitk,square=False, cube_side=size)
+        self.square_image = Volinit.ImagesContainer(sitk_file,square_image_boolean=True, cube_side=size)
+        self.image = Volinit.ImagesContainer(sitk_file,square_image_boolean=False, cube_side=size)
         self.Labeled_images = self.Label_Images(self.image)
-        self.Labeled_squared_images = self.Label_Images(self.squared_image)
+        self.Labeled_square_images = self.Label_Images(self.square_image)
 
-        self.Controller = ImageFrame_Controller(self.canvasaxis0, self.canvasaxis1, self.canvasaxis2, self.imageorientation, self.image, self.squared_image)
-        Imupdate.Resize_Images_Check(self.Controller, square_image=False)
+        self.Controller = ImageFrame_Controller(self.root,self.canvasaxis0, self.canvasaxis1, self.canvasaxis2, self.imageorientation, self.image, self.square_image)
+        Imupdate.Resize_Images_Check(self.Controller, square_image_boolean=False)
         self.canvasaxis0['Label'].bind("<Configure>", self.BindConfigure)
 
     def Label_Images(self, image):
@@ -55,5 +43,5 @@ class ImageFrame:
         return Imgs
     
     def BindConfigure(self,event=None):
-        global square_image
-        Imupdate.Resize_Images_Check(self.Controller, square_image=square_image)
+        square_image_boolean = self.root.getvar(name="square_image_boolean")
+        Imupdate.Resize_Images_Check(self.Controller, square_image_boolean=square_image_boolean)

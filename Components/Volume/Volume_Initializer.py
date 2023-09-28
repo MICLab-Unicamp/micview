@@ -1,9 +1,9 @@
 import numpy as np
 from scipy.ndimage import zoom
-import Components.Volume_Controller as Volctrl
+import Components.Volume.Volume_Controller as Volctrl
 
 class ImagesContainer():
-    def __init__(self, volume, square=False, mask=None, window_name="MultiViewer", cube_side=200, resize_factor=1, order=0, clip=(-1024,600)):
+    def __init__(self, volume, square_image_boolean=False, mask=None, window_name="MultiViewer", cube_side=200, resize_factor=1, order=0, clip=(-1024,600)):
         if len(volume.shape) == 4 and np.argmin(volume.shape) == 3:
             print("Channel dimension has to be 0, attempting transpose")
             volume = volume.transpose(3, 0, 1, 2)
@@ -26,7 +26,7 @@ class ImagesContainer():
         
         sides = np.array(list(self.volume.shape))
         self.max_side = sides.max()
-        if(square):
+        if(square_image_boolean):
             zoom_factors = (cube_side/self.volume_shape[-3], cube_side/self.volume_shape[-2], cube_side/self.volume_shape[-1])
         else:
             zoom_factors = (cube_side/self.max_side, cube_side/self.max_side, cube_side/self.max_side)
