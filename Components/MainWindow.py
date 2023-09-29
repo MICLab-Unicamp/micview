@@ -36,7 +36,7 @@ class RootFrame:
     
     def WatchVars(self, *args):
         if(args[0] == "image_is_set"):
-            pass
+            self.menuframe.change_buttons_state()
         if(args[0] == "square_image_boolean"):
             self.ImageFrame.Controller.FormatImageButtonHandler()
 
@@ -57,7 +57,6 @@ class RootFrame:
         self.frame_rigth.place(relx=0.19, rely=0, relwidth=0.8, relheight=1)
         self.ImageFrame = ImageFrame(self.root, self.frame_rigth)
         self.menuframe = Menu.Menu(self.root)
-        self.image_is_set.trace('w', self.menuframe.change_buttons_state)
         ###################
         self.load_image_buttom = tk.Button(self.frame_left, text="Load Image", command=self.LoadImageButtonHandler)
         self.load_image_buttom.pack()

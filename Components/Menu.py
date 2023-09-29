@@ -1,4 +1,5 @@
 import tkinter as tk
+from Components.SideWindows.OpenImage import *
 
 class Menu:
     def __init__(self, rootframe):
@@ -16,7 +17,7 @@ class Menu:
 
     def file_init(self):
         self.file_options = tk.Menu(self.menubar, tearoff=False, background='blue', foreground='white')
-        self.file_options.add_command(label="Open Main Image")  
+        self.file_options.add_command(label="Open Main Image", command=self.OpenImageWindow)  
         self.file_options.add_separator()  
         self.file_options.add_command(label="Exit", command=self.rootframe.quit)  
         self.menubar.add_cascade(label="File", menu=self.file_options)
@@ -61,3 +62,6 @@ class Menu:
         state = "normal" if image_is_set else "disabled"
         self.view_options.entryconfig("Original Size", state=state)        
         self.view_options.entryconfig("Zoom To Fit", state=state)        
+
+    def OpenImageWindow(self):
+        self.side_window = OpenImageWindow(self.rootframe)
