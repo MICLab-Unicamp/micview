@@ -19,13 +19,14 @@ def set_minsize(screen_w,screen_h):
     return math.ceil(screen_w*2/3),math.ceil(screen_w*2/3)
 
 class RootFrame:
-    def __init__(self, sitk_file, window_name):
+    def __init__(self, window_name, **kwargs):
         self.root = tk.Tk()
         self.window_name = window_name
-        self.sitk_file = sitk_file
+        self.kwargs = kwargs
         self.CreateGlobalVars()
         self.ScreenConfig()
         self.Frames()
+        self.root.after(200, self.checkimageload)
         self.root.mainloop()
 
     def CreateGlobalVars(self):
@@ -36,9 +37,10 @@ class RootFrame:
     
     def WatchVars(self, *args):
         if(args[0] == "image_is_set"):
-            pass
+            self.menuframe.change_buttons_state()
         if(args[0] == "square_image_boolean"):
-            self.ImageFrame.Controller.FormatImageButtonHandler()
+            if(self.image_is_set.get()):
+                self.ImageFrame.Controller.FormatImageButtonHandler()
 
     def ScreenConfig(self):
         self.screensize = get_screensize()
@@ -56,13 +58,8 @@ class RootFrame:
         self.frame_rigth = tk.Frame(self.root, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=2)
         self.frame_rigth.place(relx=0.19, rely=0, relwidth=0.8, relheight=1)
         self.ImageFrame = ImageFrame(self.root, self.frame_rigth)
-        self.menuframe = Menu.Menu(self.root)
-        self.image_is_set.trace('w', self.menuframe.change_buttons_state)
-        ###################
-        self.load_image_buttom = tk.Button(self.frame_left, text="Load Image", command=self.LoadImageButtonHandler)
-        self.load_image_buttom.pack()
-        ###############
+        self.menuframe = Menu.Menu(self)
 
-    def LoadImageButtonHandler(self):
-        self.load_image_buttom['state'] = "disabled"
-        self.ImageFrame.Load_Images(self.sitk_file)
+    def checkimageload(self):
+        if(self.kwargs):
+            self.ImageFrame.Load_Images(**self.kwargs)
