@@ -3,7 +3,6 @@ import math
 import SimpleITK as sitk
 import multiprocessing as mp
 import os
-import time
 import Components.Volume.Volume_Initializer as Volinit
 import Components.Volume.Volume_Controller as Volctrl
 import Components.ImageFrame.ImageFrame_Update as Imupdate
@@ -31,18 +30,11 @@ class ImageFrame:
         self.checkKwargs(**kwargs)
         image_is_set = self.root.getvar(name="image_is_set")
         if not image_is_set: self.root.setvar(name="image_is_set", value=True)
-        ini = time.time()
         self.sitk_file = sitk.ReadImage(self.path)
         self.sitk_file = sitk.GetArrayFromImage(self.sitk_file)
-        fim = time.time()
-        print(f"Leitura do arquivo: {fim-ini} segundos")
-        size=math.floor(self.canvasaxis0['Label'].winfo_height())
-        ini = time.time()
+        size=math.floor(self.canvasaxis0['Label'].winfo_height())        
         mp_images_params = [(self.sitk_file, True, size, self.interpolation_order), (self.sitk_file, False, size, self.interpolation_order)]
-        self.square_image, self.image = self.MultiprocessReadFiles(mp_images_params)        
-        fim = time.time()
-        print(f"processamento: {fim-ini} segundos")
-
+        self.square_image, self.image = self.MultiprocessReadFiles(mp_images_params, order=self.interpolation_order)
         self.Controller = ImageFrame_Controller(self.root,self.canvasaxis0, self.canvasaxis1, self.canvasaxis2, self.imageorientation, self.image, self.square_image)
         square_image_boolean = self.root.getvar(name="square_image_boolean")
         Imupdate.Resize_Images_Check(self.Controller, square_image_boolean=square_image_boolean)
@@ -70,11 +62,14 @@ class ImageFrame:
         square_image_boolean = self.root.getvar(name="square_image_boolean")
         Imupdate.Resize_Images_Check(self.Controller, square_image_boolean=square_image_boolean)
 
-    def MultiprocessReadFiles(self, params):
-        p = mp.Pool(os.cpu_count())
-        result = p.map(auxargs, params)
-        p.close()
-        p.join()
+    def MultiprocessReadFiles(self, params, order):
+        if(order > 0):
+            p = mp.Pool(os.cpu_count())
+            result = p.map(auxargs, params)
+            p.close()
+            p.join()
+        else:
+            result = map(auxargs, params)
         return result
     
 def auxargs(params):
