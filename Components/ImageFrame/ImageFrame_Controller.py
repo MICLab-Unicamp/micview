@@ -27,7 +27,7 @@ class ImageFrame_Controller:
         self.previous_label_h = None
         self.previous_label_w = None
 
-    def FormatImageButtonHandler(self): ###Tratar erro futuramente
+    def FormatImageButtonHandler(self):
         square_image_boolean = self.root.getvar(name="square_image_boolean")
         Volctrl.reset_current_point()
         Imupdate.UpdateImages(self, square_image_boolean)
