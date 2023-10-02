@@ -5,6 +5,7 @@ from Components.ImageFrame.ImageFrame import *
 import Components.ImageFrame.ImageFrame_Update as Imupdate
 import Components.Volume.Volume_Controller as Volctrl
 import Components.Menu as Menu
+from Components.ToolFrame.ToolFrame import *
 
 def get_screensize():
     arr = get_monitors()
@@ -34,13 +35,28 @@ class RootFrame:
         self.image_is_set.trace('w',self.WatchVars)
         self.square_image_boolean = tk.BooleanVar(self.root, False, name="square_image_boolean")
         self.square_image_boolean.trace('w', self.WatchVars)
+        self.channel_select = tk.IntVar(self.root, -1, name="channel_select")
+        self.channel_select.trace('w', self.WatchVars)
+        self.num_of_channels = tk.IntVar(self.root, 1, name="num_of_channels")
+        self.toolvar = tk.StringVar(self.root, value="none", name="toolvar")
+        self.toolvar.trace('w', self.WatchVars)
+        self.channel_intensity = tk.StringVar(self.root, "", name="channel_intensity")
+        self.channel_intensity.trace('w', self.WatchVars)
     
     def WatchVars(self, *args):
         if(args[0] == "image_is_set"):
             self.menuframe.change_buttons_state()
         if(args[0] == "square_image_boolean"):
             if(self.image_is_set.get()):
-                self.ImageFrame.Controller.FormatImageButtonHandler()
+                self.ImageFrame.Controller.UpdateImageResetPoint()
+        if(args[0] == "toolvar"):
+            self.toolframe.WatchToolsVar(self.toolvar.get())
+        if(args[0] == "channel_select"):
+            if(self.image_is_set.get()):
+                self.ImageFrame.Controller.UpdateImage()
+        if(args[0] == "channel_intensity"):
+            if(self.toolvar.get() == "cursor_tool"):
+                self.toolframe.WatchToolsVar(args[0])
 
     def ScreenConfig(self):
         self.screensize = get_screensize()
@@ -53,10 +69,10 @@ class RootFrame:
 
     def Frames(self):
         self.frame_left = tk.Frame(self.root, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=2)
-        self.frame_left.place(relx=0.005, rely=0, relwidth=0.18, relheight=1)
-
+        self.frame_left.place(x=0, rely=0, width=200, relheight=1)
+        self.toolframe = ToolFrame(self, self.frame_left)
         self.frame_rigth = tk.Frame(self.root, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=2)
-        self.frame_rigth.place(relx=0.19, rely=0, relwidth=0.8, relheight=1)
+        self.frame_rigth.place(x=205, rely=0, relwidth=1, relheight=1, width=-205)
         self.ImageFrame = ImageFrame(self.root, self.frame_rigth)
         self.menuframe = Menu.Menu(self)
 

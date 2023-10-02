@@ -168,8 +168,9 @@ class MultiViewer():
 
         self.volume_shape = self.volume.shape
         assert self.volume_shape[-1:-4:-1][::-1] == (cube_side, cube_side, cube_side)
-
+        print(self.volume_shape)
         self.current_point = (np.array(self.volume_shape[-1:-4:-1][::-1])/2).astype(int)
+        print(self.current_point)
         self.window_name = window_name
         self.resize_factor = resize_factor
 
@@ -272,7 +273,7 @@ if __name__ == "__main__":
         image = sitk.GetArrayFromImage(sitk.ReadImage(npz_path))
         image = np.clip(image, a_min=-1024, a_max=600)
         image = (image - image.min())/(image.max() - image.min())
-        MultiViewer(image).display(channel_select=-1)
+        MultiViewer(image).display(channel_select=0)
     elif npz_path.split('.')[-1] == 'npz':
         npz = np.load(npz_path)
         data, target = brats_preparation(npz)

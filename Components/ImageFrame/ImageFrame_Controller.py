@@ -27,7 +27,11 @@ class ImageFrame_Controller:
         self.previous_label_h = None
         self.previous_label_w = None
 
-    def FormatImageButtonHandler(self):
+    def UpdateImage(self):
+        square_image_boolean = self.root.getvar(name="square_image_boolean")
+        Imupdate.UpdateImages(self, square_image_boolean)       
+
+    def UpdateImageResetPoint(self):
         square_image_boolean = self.root.getvar(name="square_image_boolean")
         Volctrl.reset_current_point()
         Imupdate.UpdateImages(self, square_image_boolean)
@@ -42,8 +46,9 @@ class ImageFrame_Controller:
         x = click['x']; y = click['y']
         new_point_x, new_point_y = self.UpdatePoint(self.images_sizes['axis0_x'], self.images_sizes['axis0_y'], x, y)
         if(new_point_x != None and new_point_y != None):
-            Volctrl.change_current_point(-1,new_point_y,new_point_x)
             square_image_boolean = self.root.getvar(name="square_image_boolean")
+            Volctrl.change_current_point(-1,new_point_y,new_point_x, self.square_image) if square_image_boolean else Volctrl.change_current_point(-1,new_point_y,new_point_x, self.image)
+            self.ChangeChannelsIntensity()
             Imupdate.UpdateImages(self,square_image_boolean)
 
     def UpdatePointAxis1(self, event):
@@ -51,8 +56,9 @@ class ImageFrame_Controller:
         x = click['x']; y = click['y']
         new_point_x, new_point_y = self.UpdatePoint(self.images_sizes['axis1_x'], self.images_sizes['axis1_y'], x, y)
         if(new_point_x != None and new_point_y != None):
-            Volctrl.change_current_point(new_point_y,-1,new_point_x)
             square_image_boolean = self.root.getvar(name="square_image_boolean")
+            Volctrl.change_current_point(new_point_y,-1,new_point_x, self.square_image) if square_image_boolean else Volctrl.change_current_point(new_point_y,-1,new_point_x, self.image)
+            self.ChangeChannelsIntensity()
             Imupdate.UpdateImages(self,square_image_boolean)
 
     def UpdatePointAxis2(self, event):
@@ -60,8 +66,9 @@ class ImageFrame_Controller:
         x = click['x']; y = click['y']
         new_point_x, new_point_y = self.UpdatePoint(self.images_sizes['axis2_x'], self.images_sizes['axis2_y'], x, y)
         if(new_point_x != None and new_point_y != None):
-            Volctrl.change_current_point(new_point_y,new_point_x,-1)
             square_image_boolean = self.root.getvar(name="square_image_boolean")
+            Volctrl.change_current_point(new_point_y,new_point_x,-1, self.square_image) if square_image_boolean else Volctrl.change_current_point(new_point_y,new_point_x,-1, self.image)
+            self.ChangeChannelsIntensity()
             Imupdate.UpdateImages(self,square_image_boolean)
 
     def UpdatePoint(self, image_size_x, image_size_y, x, y):
@@ -73,3 +80,16 @@ class ImageFrame_Controller:
         offsety = math.floor((self.label_h - image_size_y)/2)
         new_point_y = int(y - offsety) -1
         return new_point_x,new_point_y
+    
+    def ChangeChannelsIntensity(self):
+        original_vol = self.image.handler_param["original_volume"]
+        original_shape = original_vol.shape
+        point = Volctrl.get_original_vol_current_point()
+        multi = True if len(original_shape) > 3 else False
+        intensity = []
+        if(multi):
+            for i in range(original_shape[0]):
+                intensity.append(original_vol[i,point[0],point[1],point[2]])
+        else:
+            intensity.append(original_vol[point[0],point[1],point[2]])
+        self.root.setvar(name="channel_intensity", value=str(intensity))

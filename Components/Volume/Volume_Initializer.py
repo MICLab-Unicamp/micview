@@ -3,12 +3,10 @@ from scipy.ndimage import zoom
 import Components.Volume.Volume_Controller as Volctrl
 
 class ImagesContainer():
-    def __init__(self, volume, square_image_boolean=False, mask=None, window_name="MultiViewer", cube_side=200, resize_factor=1, order=0, clip=(-1024,600)):
+    def __init__(self, volume, square_image_boolean=False, mask=None, window_name="MultiViewer", cube_side=200, order=0, clip=(-1024,600)):
         if len(volume.shape) == 4 and np.argmin(volume.shape) == 3:
-            print("Channel dimension has to be 0, attempting transpose")
             volume = volume.transpose(3, 0, 1, 2)
             assert np.argmin(volume.shape) == 0, "Couldn't solve wrong dimension channel. Put channel on dimension 0."
-
         self.order = order
         self.mask = mask
         self.original_volume = volume 
@@ -16,6 +14,7 @@ class ImagesContainer():
         original_max = volume.max()
         self.volume = volume
         self.volume_shape = volume.shape
+        self.point_original_vol = (np.array(self.volume_shape[-1:-4:-1][::-1])/2).astype(int)
 
         multichannel = len(self.volume_shape) > 3
         self.multichannel = multichannel
@@ -30,14 +29,13 @@ class ImagesContainer():
             zoom_factors = (cube_side/self.volume_shape[-3], cube_side/self.volume_shape[-2], cube_side/self.volume_shape[-1])
         else:
             zoom_factors = (cube_side/self.max_side, cube_side/self.max_side, cube_side/self.max_side)
-        
         mask_zoom = zoom_factors
         if multichannel:
-            self.volume = Volctrl.multi_channel_zoom(self.volume, zoom_factors, order=order, tqdm_on=False)
+            self.volume = Volctrl.multi_channel_zoom(self.volume, zoom_factors, order=order)
         else:
             self.volume = zoom(self.volume, zoom_factors, order=order)
 
-        self.volume = np.clip(self.volume, a_min=clip[0], a_max=clip[1])
+        #self.volume = np.clip(self.volume, a_min=clip[0], a_max=clip[1])
         self.volume = self.volume - self.volume.min()
         self.volume = (self.volume * (255/self.volume.max())).astype(np.uint8)
 
@@ -56,6 +54,6 @@ class ImagesContainer():
         self.resize_factor = zoom_factors
 
         self.handler_param = {"window_name": self.window_name, "original_volume": self.original_volume,
-                              "point": self.current_point, "cube_size": cube_side, "initial_x": cube_side/2,
-                              "initial_y": cube_side/2, "dragging": False, "display_resize": resize_factor,
+                              "point": self.current_point, "point_original_vol": self.point_original_vol, "cube_size": cube_side, "initial_x": cube_side/2,
+                              "initial_y": cube_side/2, "dragging": False, "display_resize": self.resize_factor,
                               "min": original_min, "max": original_max}
