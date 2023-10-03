@@ -70,6 +70,8 @@ class OpenFileInputWindow:
 
     def GetFileName(self):
         name = fd.askopenfilename(initialdir="./", title="Select File", filetypes= (("NiFTI files","*.nii.gz"),("all files","*.*")))
+        if(type(name) != str):
+            return
         aux = name.split('/')
         filepath = aux[-1]
         currentdirectory = "/".join(aux[:-1])

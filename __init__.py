@@ -13,7 +13,7 @@ if __name__ == "__main__":
     if(vars(args).get('input')):
         if args.input.endswith(".nii.gz"):
             if(args.order == None):
-                wndw.RootFrame("MultiViewer", file=args.input, order=0, resized = args.resize)
+                wndw.RootFrame("Micview", file=args.input, order=0, resized = args.resize)
             else:
                 if(args.order < 0 or args.order > 5):
                     raise argparse.ArgumentTypeError("Order must be between 0 and 5")
