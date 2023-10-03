@@ -35,6 +35,7 @@ class ImageFrame_Controller:
         square_image_boolean = self.root.getvar(name="square_image_boolean")
         Volctrl.reset_current_point()
         Imupdate.UpdateImages(self, square_image_boolean)
+        self.ChangeChannelsIntensity()
 
     def UpdateImageSize(self,images_sizes, label_w, label_h):
         self.images_sizes = images_sizes

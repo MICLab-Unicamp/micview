@@ -46,9 +46,12 @@ class RootFrame:
     def WatchVars(self, *args):
         if(args[0] == "image_is_set"):
             self.menuframe.change_buttons_state()
+            if(self.image_is_set.get() == False):
+                self.toolframe.WatchToolsVar("image_unset")
         if(args[0] == "square_image_boolean"):
             if(self.image_is_set.get()):
                 self.ImageFrame.Controller.UpdateImageResetPoint()
+                self.toolframe.WatchToolsVar(self.toolvar.get())
         if(args[0] == "toolvar"):
             self.toolframe.WatchToolsVar(self.toolvar.get())
         if(args[0] == "channel_select"):
