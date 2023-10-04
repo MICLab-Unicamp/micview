@@ -28,7 +28,7 @@ class ImageFrame:
 
     def Load_Images(self, **kwargs):
         self.checkKwargs(**kwargs)
-        
+        #check if there is segmentation
         self.sitk_file = sitk.ReadImage(self.path)
         self.sitk_file = sitk.GetArrayFromImage(self.sitk_file)
             

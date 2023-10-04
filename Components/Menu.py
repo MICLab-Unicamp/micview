@@ -1,5 +1,6 @@
 import tkinter as tk
 from Components.SideWindows.OpenImage import *
+from Components.SideWindows.OpenSegmentation import *
 
 class Menu:
     def __init__(self, parent):
@@ -33,7 +34,7 @@ class Menu:
 
     def segmentation_init(self):
         self.segmentation_options = tk.Menu(self.menubar, tearoff=False, background='blue', foreground='white')
-        self.segmentation_options.add_command(label="Open Segmentation")
+        self.segmentation_options.add_command(label="Open Segmentation", command=self.OpenSegmentationFileWindow)
         self.segmentation_options.add_command(label="Save Segmentation")
         self.menubar.add_cascade(label="Segmentation", menu=self.segmentation_options)
 
@@ -66,6 +67,9 @@ class Menu:
 
     def OpenFileInputWindow(self):
         self.side_window = OpenFileInputWindow(self.parent, self.rootframe)
+    
+    def OpenSegmentationFileWindow(self):
+        self.side_window = OpenFileSegmentation(self.parent, self.rootframe)
 
-    def DelFileInputWindow(self):
+    def DelSideWindow(self):
         del self.side_window
