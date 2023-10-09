@@ -27,6 +27,22 @@ class ImageFrame_Controller:
         self.previous_label_h = None
         self.previous_label_w = None
 
+    def Unbindaxis(self):
+        self.axis0['Label'].unbind('<Button-1>')
+        self.axis0['Label'].unbind('<B1-Motion>')
+        self.axis1['Label'].unbind('<Button-1>')
+        self.axis1['Label'].unbind('<B1-Motion>')
+        self.axis2['Label'].unbind('<Button-1>')
+        self.axis2['Label'].unbind('<B1-Motion>')
+
+    def UnsetImages(self):
+        self.axis0['Label'].configure(image=None)
+        self.axis0['Label'].image = None
+        self.axis1['Label'].configure(image=None)
+        self.axis1['Label'].image = None
+        self.axis2['Label'].configure(image=None)
+        self.axis2['Label'].image = None
+
     def UpdateImage(self):
         square_image_boolean = self.root.getvar(name="square_image_boolean")
         Imupdate.UpdateImages(self, square_image_boolean)       

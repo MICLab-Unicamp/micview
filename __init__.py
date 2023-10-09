@@ -1,5 +1,4 @@
 import argparse
-import SimpleITK as sitk
 import Components.MainWindow as wndw
 
 if __name__ == "__main__":

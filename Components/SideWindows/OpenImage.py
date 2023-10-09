@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import tkinter.filedialog as fd
+from threading import Thread
 import os
 
 class OpenFileInputWindow:
@@ -79,9 +80,8 @@ class OpenFileInputWindow:
         self.filepath.set(filepath)
 
     def LoadNewImage(self):
-        if(self.parent.root.getvar(name="image_is_set")):
-            self.parent.ImageFrame.Destroy_image()
-        self.OnClosing(loadimage=True)
+        self.parent.Loader.ImageSet(file=self.finalpath, order=self.zoomorder.get(), resized = self.resized_image.get())
+        self.OnClosing()
 
     def WatchCurrentDir(self, *args):
         self.pathtextvariable.set(f"Path: {self.currentdirectory.get()}")
@@ -117,11 +117,9 @@ class OpenFileInputWindow:
         else:
             self.resized_image.set(True)
 
-    def OnClosing(self, loadimage=False):
+    def OnClosing(self):
         self.filepath.trace_remove("write", self.traceid1)
         self.currentdirectory.trace_remove("write", self.traceid2)
         self.root.destroy()
         self.root.update()
-        if(loadimage):
-            self.parent.ImageFrame.Load_Images(file=self.finalpath, order=self.zoomorder.get(), resized = self.resized_image.get())
         self.parent.menuframe.DelFileInputWindow()

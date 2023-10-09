@@ -24,12 +24,17 @@ class Menu:
         self.menubar.add_cascade(label="File", menu=self.file_options)
 
     def view_init(self):
-        radioboolvar = tk.BooleanVar(self.rootframe, self.rootframe.getvar(name="square_image_boolean"))
-        radioboolvar.trace('w', lambda *args: self.rootframe.setvar(name="square_image_boolean", value=radioboolvar.get()))
+        self.radioboolvar = tk.BooleanVar(self.rootframe, self.rootframe.getvar(name="square_image_boolean"))
+        self.traceidradiobool = self.radioboolvar.trace_add("write", callback=lambda *args: self.rootframe.setvar(name="square_image_boolean", value=self.radioboolvar.get()))
         self.view_options = tk.Menu(self.menubar, tearoff=False, background='blue', foreground='white')
-        self.view_options.add_radiobutton(label="Original Size", variable=radioboolvar, value=False, state="disabled")
-        self.view_options.add_radiobutton(label="Zoom To Fit", variable=radioboolvar, value=True, state="disabled")
+        self.view_options.add_radiobutton(label="Original Size", variable=self.radioboolvar, value=False, state="disabled")
+        self.view_options.add_radiobutton(label="Zoom To Fit", variable=self.radioboolvar, value=True, state="disabled")
         self.menubar.add_cascade(label="View", menu=self.view_options)
+    
+    def Update_radioboolvar(self):
+        self.radioboolvar.trace_remove("write", self.traceidradiobool)
+        self.radioboolvar.set(self.rootframe.getvar(name="square_image_boolean"))
+        self.traceidradiobool = self.radioboolvar.trace_add("write", callback=lambda *args: self.rootframe.setvar(name="square_image_boolean", value=self.radioboolvar.get()))
 
     def segmentation_init(self):
         self.segmentation_options = tk.Menu(self.menubar, tearoff=False, background='blue', foreground='white')
@@ -63,6 +68,7 @@ class Menu:
         state = "normal" if image_is_set else "disabled"
         self.view_options.entryconfig("Original Size", state=state)        
         self.view_options.entryconfig("Zoom To Fit", state=state)
+        self.file_options.entryconfig("Open Main Image", state=state)
 
     def OpenFileInputWindow(self):
         self.side_window = OpenFileInputWindow(self.parent, self.rootframe)
