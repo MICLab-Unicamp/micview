@@ -35,6 +35,8 @@ class RootFrame:
     def CreateGlobalVars(self):
         self.image_is_set = tk.BooleanVar(self.root, False, name="image_is_set")
         self.image_is_set.trace('w',self.WatchVars)
+        self.seg_is_set = tk.BooleanVar(self.root, False, name="seg_is_set")
+        self.seg_is_set.trace('w', self.WatchVars)
         self.square_image_boolean = tk.BooleanVar(self.root, False, name="square_image_boolean")
         self.square_image_boolean.trace('w', self.WatchVars)
         self.channel_select = tk.IntVar(self.root, -1, name="channel_select")
@@ -52,6 +54,8 @@ class RootFrame:
             if(self.image_is_set.get() == False):
                 self.toolframe.WatchToolsVar("image_unset")
             self.menuframe.Update_radioboolvar()
+        if(args[0] == "seg_is_set"):
+            print("setting segmentation")
         if(args[0] == "square_image_boolean"):
             if(self.image_is_set.get()):
                 self.Loader.Controller.UpdateImageResetPoint()
