@@ -1,10 +1,15 @@
 import tkinter as tk
 from Components.ToolFrame.CursorTool import *
+from threading import Thread
 
-class ToolFrame:
+class ToolFrame(Thread):
     def __init__(self, parent, rootframe):
+        super().__init__()
         self.parent = parent
         self.rootframe = rootframe
+        self.start()
+
+    def run(self):
         self.toolframe = tk.Frame(self.rootframe, width=185, background="lightgray")
         self.toolframe.place(x=0, rely=0.1, relheight=0.8)
         self.tool_is_set = False
