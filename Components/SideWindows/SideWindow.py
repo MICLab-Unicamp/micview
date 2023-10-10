@@ -16,6 +16,7 @@ class SideWindow:
         self.root.transient(self.rootframe)
         self.root.focus_force()
         self.root.grab_set()
+        self.root.wm_attributes('-topmost', 1)
         self.CreateVars()
         self.Create_widgets()
         self.ActionButtons()
