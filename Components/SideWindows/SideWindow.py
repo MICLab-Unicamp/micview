@@ -49,14 +49,17 @@ class SideWindow:
         self.openbutton.place(rely=0.88, relx=0.81, relheight=0.1, relwidth=0.18)
 
     def GetFileName(self):
+        self.root.withdraw()
         name = fd.askopenfilename(initialdir="./", title="Select File", filetypes= (("NiFTI files","*.nii.gz"),("all files","*.*")))
         if(type(name) != str):
+            self.root.deiconify()
             return
         aux = name.split('/')
         filepath = aux[-1]
         currentdirectory = "/".join(aux[:-1])
         self.currentdirectory.set(currentdirectory)
         self.filepath.set(filepath)
+        self.root.deiconify()
 
     def WatchCurrentDir(self, *args):
         self.pathtextvariable.set(f"Path: {self.currentdirectory.get()}")
