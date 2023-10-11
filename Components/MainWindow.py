@@ -2,8 +2,8 @@ import tkinter as tk
 import math
 from screeninfo import get_monitors
 from threading import Thread
-from Components.ImageFrame.ImageFrame import *
-import Components.ImageFrame.ImageFrame_Update as Imupdate
+from Components.Images.ImagesContainer import *
+import Components.Images.ImageFrame_Update as Imupdate
 import Components.Volume.Volume_Controller as Volctrl
 import Components.Menu as Menu
 from Components.ToolFrame.ToolFrame import *
@@ -91,8 +91,8 @@ class RootFrame:
         self.toolframe = ToolFrame(self, self.frame_left)
         self.frame_rigth = tk.Frame(self.root, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=2)
         self.frame_rigth.place(x=205, rely=0, relwidth=1, relheight=1, width=-205)
-        self.ImageFrame = ImageFrame(self.root, self.frame_rigth)
-        self.Loader = self.ImageFrame.Loader
+        self.ImagesContainer = ImagesContainer(self.root, self.frame_rigth)
+        self.Loader = self.ImagesContainer.Loader
         self.menuframe = Menu.Menu(self)
 
     def checkimageload(self):
@@ -100,7 +100,7 @@ class RootFrame:
             self.Loader.ImageSet(**self.kwargs)
     
     def CreateProgressBars(self):
-        self.loadingbars = [CircularProgressbar(self.ImageFrame.canvasaxis0['Canvas']),CircularProgressbar(self.ImageFrame.canvasaxis1['Canvas']),CircularProgressbar(self.ImageFrame.canvasaxis2['Canvas'])]
+        self.loadingbars = [CircularProgressbar(self.ImagesContainer.axis0),CircularProgressbar(self.ImagesContainer.axis1),CircularProgressbar(self.ImagesContainer.axis2)]
         for item in self.loadingbars:
             item.place(relx=0.5, rely=0.5, anchor="center")
 

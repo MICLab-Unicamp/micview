@@ -1,6 +1,6 @@
 import Components.Volume.Volume_Controller as Volctrl
-import Components.ImageFrame.ImageFrame_Update as Imupdate
-import Components.ImageFrame.ImageFrame as ImFrame
+import Components.Images.ImageFrame_Update as Imupdate
+import Components.Images.ImagesContainer as ImContainer
 import math
 import tkinter as tk
 
@@ -16,32 +16,32 @@ class ImageFrame_Controller:
         self.CreateVars()
 
     def CreateVars(self):
-        self.axis0['Label'].bind('<Button-1>', self.UpdatePointAxis0)
-        self.axis0['Label'].bind('<B1-Motion>', self.UpdatePointAxis0)
-        self.axis1['Label'].bind('<Button-1>', self.UpdatePointAxis1)
-        self.axis1['Label'].bind('<B1-Motion>', self.UpdatePointAxis1)
-        self.axis2['Label'].bind('<Button-1>', self.UpdatePointAxis2)
-        self.axis2['Label'].bind('<B1-Motion>', self.UpdatePointAxis2)
+        self.axis0.bind('<Button-1>', self.UpdatePointAxis0)
+        self.axis0.bind('<B1-Motion>', self.UpdatePointAxis0)
+        self.axis1.bind('<Button-1>', self.UpdatePointAxis1)
+        self.axis1.bind('<B1-Motion>', self.UpdatePointAxis1)
+        self.axis2.bind('<Button-1>', self.UpdatePointAxis2)
+        self.axis2.bind('<B1-Motion>', self.UpdatePointAxis2)
         self.label_h = None
         self.label_w = None
         self.previous_label_h = None
         self.previous_label_w = None
 
     def Unbindaxis(self):
-        self.axis0['Label'].unbind('<Button-1>')
-        self.axis0['Label'].unbind('<B1-Motion>')
-        self.axis1['Label'].unbind('<Button-1>')
-        self.axis1['Label'].unbind('<B1-Motion>')
-        self.axis2['Label'].unbind('<Button-1>')
-        self.axis2['Label'].unbind('<B1-Motion>')
+        self.axis0.unbind('<Button-1>')
+        self.axis0.unbind('<B1-Motion>')
+        self.axis1.unbind('<Button-1>')
+        self.axis1.unbind('<B1-Motion>')
+        self.axis2.unbind('<Button-1>')
+        self.axis2.unbind('<B1-Motion>')
 
     def UnsetImages(self):
-        self.axis0['Label'].configure(image=None)
-        self.axis0['Label'].image = None
-        self.axis1['Label'].configure(image=None)
-        self.axis1['Label'].image = None
-        self.axis2['Label'].configure(image=None)
-        self.axis2['Label'].image = None
+        self.axis0.configure(image=None)
+        self.axis0.image = None
+        self.axis1.configure(image=None)
+        self.axis1.image = None
+        self.axis2.configure(image=None)
+        self.axis2.image = None
 
     def UpdateImage(self):
         square_image_boolean = self.root.getvar(name="square_image_boolean")

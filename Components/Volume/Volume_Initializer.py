@@ -8,8 +8,9 @@ class ImagesContainer():
             volume = volume.transpose(3, 0, 1, 2)
             assert np.argmin(volume.shape) == 0, "Couldn't solve wrong dimension channel. Put channel on dimension 0."
         self.order = order
+        self.original_mask = mask
         self.mask = mask
-        self.original_volume = volume 
+        self.original_volume = volume
         original_min = volume.min()
         original_max = volume.max()
         self.volume = volume
@@ -36,16 +37,17 @@ class ImagesContainer():
             self.volume = zoom(self.volume, zoom_factors, order=order)
 
         #self.volume = np.clip(self.volume, a_min=clip[0], a_max=clip[1])
-        self.volume = self.volume - self.volume.min()
-        self.volume = (self.volume * (255/self.volume.max())).astype(np.uint8)
+        self.volume = ((self.volume - self.volume.min())*(255/(self.volume.max()-self.volume.min()))).astype(np.uint8)
 
         if mask is not None:
-            zoomed_mask = Volctrl.zoom(mask, mask_zoom, order=0).astype(np.float32)
-            zoomed_mask = (zoomed_mask - zoomed_mask.min())/(zoomed_mask.max() - zoomed_mask.min())
-            self.masked_volume = np.where(zoomed_mask == 0, self.volume, zoomed_mask)
-            self.original_volume = self.volume
-            self.volume = self.masked_volume
-            self.displaying_mask = True
+            self.original_mask = mask
+            zoomed_mask = Volctrl.zoom(mask, mask_zoom, order=0).astype(np.uint8)
+            R = np.expand_dims(np.where(zoomed_mask == 1, 255, 0), axis=-1).astype(np.uint8)
+            G = np.expand_dims(np.where(zoomed_mask == 2, 255, 0), axis=-1)
+            B = np.expand_dims(np.where(zoomed_mask == 4, 255, 0), axis=-1)
+            A = np.expand_dims(np.where(zoomed_mask > 0, 255, 0), axis=-1)
+            zoomed_mask = np.concatenate((R,G,B,A), axis=-1).astype(np.uint8)
+            self.mask = zoomed_mask
 
         self.volume_shape = self.volume.shape
 
@@ -53,7 +55,7 @@ class ImagesContainer():
         self.window_name = window_name
         self.resize_factor = zoom_factors
 
-        self.handler_param = {"window_name": self.window_name, "original_volume": self.original_volume,
+        self.handler_param = {"window_name": self.window_name, "original_volume": self.original_volume, "original_mask": self.original_mask,
                               "point": self.current_point, "point_original_vol": self.point_original_vol, "cube_size": cube_side, "initial_x": cube_side/2,
                               "initial_y": cube_side/2, "dragging": False, "display_resize": self.resize_factor,
                               "min": original_min, "max": original_max}

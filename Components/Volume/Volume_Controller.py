@@ -75,31 +75,48 @@ def change_current_point_original_vol(image):
     if(current_point_original_vol[2] >= original_shape[n+2]): current_point_original_vol[2] -= 1 
     image.handler_param["point_original_vol"] = current_point_original_vol
 
-def get_2D_slices(image, channel_select=-1):
-        global current_point
-        if current_point is None:
-            current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
-            image.handler_param["point"] = current_point
-            change_current_point_original_vol(image)
+def get_image_slices(image, channel_select):
+    global current_point
+    if current_point is None:
+        current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
+        image.handler_param["point"] = current_point
+        change_current_point_original_vol(image)
 
-        if channel_select < 0:
-            axis0 = image.volume[current_point[0], :, :]
-            axis1 = image.volume[:, current_point[1], :]
-            axis2 = image.volume[:, :, current_point[2]]
-        else:
-            try:
-                axis0 = image.volume[channel_select, current_point[0], :, :]
-                axis1 = image.volume[channel_select, :, current_point[1], :]
-                axis2 = image.volume[channel_select, :, :, current_point[2]]
-            except IndexError:
-                channel_select = 0
-                axis0 = image.volume[0, current_point[0], :, :]
-                axis1 = image.volume[0, :, current_point[1], :]
-                axis2 = image.volume[0, :, :, current_point[2]]
+    if channel_select < 0:
+        axis0 = image.volume[current_point[0], :, :]
+        axis1 = image.volume[:, current_point[1], :]
+        axis2 = image.volume[:, :, current_point[2]]
+    else:
+        try:
+            axis0 = image.volume[channel_select, current_point[0], :, :]
+            axis1 = image.volume[channel_select, :, current_point[1], :]
+            axis2 = image.volume[channel_select, :, :, current_point[2]]
 
-        image.handler_param["channel"] = channel_select
-        Image_2D_slices = [axis0,axis1,axis2]
-        return Image_2D_slices
+        except IndexError:
+            channel_select = 0
+            axis0 = image.volume[0, current_point[0], :, :]
+            axis1 = image.volume[0, :, current_point[1], :]
+            axis2 = image.volume[0, :, :, current_point[2]]
+
+    image.handler_param["channel"] = channel_select
+    Image_2D_slices = [axis0,axis1,axis2]
+    return Image_2D_slices
+
+def get_mask_slices(image):
+    global current_point
+    axis0 = image.mask[current_point[0], :, :, :]
+    axis1 = image.mask[:, current_point[1], :, :]
+    axis2 = image.mask[:, :, current_point[2], :]
+    Mask_2D_slices = [axis0,axis1,axis2]
+    return Mask_2D_slices    
+
+def get_2D_slices(image, channel_select=-1, show_mask=True):
+    image_slices = get_image_slices(image, channel_select)
+    if(show_mask):
+        mask_slices = get_mask_slices(image)
+        return image_slices, mask_slices
+    return image_slices
+
 
 def ImageResizing(image,new_cube_size, channel_select):
         n = 1 if channel_select > -1 else 0

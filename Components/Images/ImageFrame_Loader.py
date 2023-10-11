@@ -3,7 +3,7 @@ import math
 import multiprocessing as mp
 from threading import Thread
 import os
-from Components.ImageFrame.ImageFrame_Controller import *
+from Components.Images.ImageFrame_Controller import *
 from Components.CircularProgressbar import *
 import Components.Volume.Volume_Initializer as Volinit
 import Components.Volume.Volume_Controller as Volctrl
@@ -13,6 +13,8 @@ class ImageFrame_Loader:
         self.parent = parent
         self.root = parent.root
         self.path = None
+        self.mask_path = None
+        self.sitk_maskfile = None
         self.interpolation_order = 0
 
     def ImageSet(self, **kwargs):
@@ -28,18 +30,21 @@ class ImageFrame_Loader:
         
         self.sitk_file = sitk.ReadImage(self.path)
         self.sitk_file = sitk.GetArrayFromImage(self.sitk_file)
-            
-        size=math.floor(self.parent.canvasaxis0['Label'].winfo_height())        
-        mp_images_params = [(self.sitk_file, True, size, self.interpolation_order), (self.sitk_file, False, size, self.interpolation_order)]
+        if(self.mask_path is not None): 
+            self.sitk_maskfile = sitk.ReadImage(self.mask_path)
+            self.sitk_maskfile = sitk.GetArrayFromImage(self.sitk_maskfile)
+    
+        size=math.floor(self.parent.axis0.winfo_height())        
+        mp_images_params = [(self.sitk_file, True, self.sitk_maskfile, size, self.interpolation_order), (self.sitk_file, False, self.sitk_maskfile, size, self.interpolation_order)]
         self.square_image, self.image = self.MultiprocessReadFiles(mp_images_params, order=self.interpolation_order)
         
         self.CheckMultichannel()
 
-        self.Controller = ImageFrame_Controller(self.root,self.parent.canvasaxis0, self.parent.canvasaxis1, self.parent.canvasaxis2, self.parent.imageorientation, self.image, self.square_image)
+        self.Controller = ImageFrame_Controller(self.root,self.parent.axis0, self.parent.axis1, self.parent.axis2, self.parent.imageorientation, self.image, self.square_image)
         square_image_boolean = self.root.getvar(name="square_image_boolean")
         Imupdate.Resize_Images_Check(self.Controller, square_image_boolean=square_image_boolean)
         
-        self.parent.canvasaxis0['Label'].bind("<Configure>", self.BindConfigure)
+        self.parent.axis0.bind("<Configure>", self.BindConfigure)
         self.root.setvar(name="toolvar", value="cursor_tool")
         image_is_set = self.root.getvar(name="image_is_set")
         if not image_is_set: self.root.setvar(name="image_is_set", value=True)
@@ -48,10 +53,12 @@ class ImageFrame_Loader:
     def Destroy_image(self):
         self.task.join()
         self.root.setvar(name="image_is_set", value=False)
-        self.parent.canvasaxis0['Label'].unbind("<Configure>")
+        self.parent.axis0.unbind("<Configure>")
         self.Controller.Unbindaxis()
         self.Controller.UnsetImages()
+        self.mask_path = None
         del self.sitk_file
+        del self.sitk_maskfile
         del self.square_image
         del self.image
         del self.Controller
@@ -79,6 +86,8 @@ class ImageFrame_Loader:
                 self.root.setvar(name="square_image_boolean", value=value)
             elif(key == "order"):
                 self.interpolation_order = value
+            elif(key == "mask"):
+                self.mask_path = value
         
     def BindConfigure(self,event=None):
         square_image_boolean = self.root.getvar(name="square_image_boolean")
@@ -95,5 +104,5 @@ class ImageFrame_Loader:
         return result
     
 def auxargs(params):
-    volume, square_image_boolean, cube_side, order = params
-    return Volinit.ImagesContainer(volume=volume, square_image_boolean=square_image_boolean, cube_side=cube_side, order=order)
+    volume, square_image_boolean, mask, cube_side, order = params
+    return Volinit.ImagesContainer(volume=volume, square_image_boolean=square_image_boolean, mask=mask, cube_side=cube_side, order=order)
