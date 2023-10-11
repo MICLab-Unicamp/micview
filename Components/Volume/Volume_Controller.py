@@ -122,12 +122,9 @@ def ImageResizing(image,new_cube_size, channel_select):
         n = 1 if channel_select > -1 else 0
         sides = np.array(list(image.volume_shape))
         max_side = sides.max()
-        new_sizes = {
-             "axis0_x": math.floor((new_cube_size/max_side)*sides[n+1]),
-             "axis0_y": math.floor((new_cube_size/max_side)*sides[n+2]),
-             "axis1_x": math.floor((new_cube_size/max_side)*sides[n+2]),
-             "axis1_y": math.floor((new_cube_size/max_side)*sides[n+0]),
-             "axis2_x": math.floor((new_cube_size/max_side)*sides[n+1]),
-             "axis2_y": math.floor((new_cube_size/max_side)*sides[n+0])
-        }
+        new_sizes = [
+            (math.floor((new_cube_size/max_side)*sides[n+1]), math.floor((new_cube_size/max_side)*sides[n+2])),
+            (math.floor((new_cube_size/max_side)*sides[n+2]), math.floor((new_cube_size/max_side)*sides[n+0])),
+            (math.floor((new_cube_size/max_side)*sides[n+1]), math.floor((new_cube_size/max_side)*sides[n+0]))
+        ]
         return new_sizes

@@ -16,11 +16,3 @@ class ImagesContainer:
         self.imageorientation = ImageFrame(self.frame)
         self.imageorientation.place(relheight=0.47, rely=0.52, relwidth=0.47, relx=0.02)
         self.Loader = Loader.ImageFrame_Loader(self)
-
-    def AxisLabel(self, relheight, rely, relwidth, relx, fig=None):
-        canvasaxis = tk.Canvas(self.frame, background="lightblue")
-        canvasimage = canvasaxis.create_image(0,0,image=fig)
-        canvasaxis.place(relheight=relheight, rely=rely, relwidth=relwidth, relx=relx)
-        labelaxis = tk.Label(canvasaxis, image=fig)
-        labelaxis.pack(expand=True, fill=tk.BOTH)
-        return {"Canvas": canvasaxis, "Label": labelaxis, "CanvasImage": canvasimage}

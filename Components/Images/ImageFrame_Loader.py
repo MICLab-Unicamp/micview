@@ -30,7 +30,8 @@ class ImageFrame_Loader:
         
         self.sitk_file = sitk.ReadImage(self.path)
         self.sitk_file = sitk.GetArrayFromImage(self.sitk_file)
-        if(self.mask_path is not None): 
+        if(self.mask_path is not None):
+            self.root.setvar(name="mask_is_set", value=True)
             self.sitk_maskfile = sitk.ReadImage(self.mask_path)
             self.sitk_maskfile = sitk.GetArrayFromImage(self.sitk_maskfile)
     

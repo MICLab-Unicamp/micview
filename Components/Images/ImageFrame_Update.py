@@ -1,47 +1,41 @@
 from PIL import Image, ImageTk
 import Components.Volume.Volume_Controller as Volctrl
 
-def ComposeImages(image_data, mask_data):
-    PIL_images = []
+def SetImages(ControllerObj, image_data, new_sizes):
+    Imgs = []
     for i in range(3):
-        image = Image.fromarray(image_data[i], mode='L')
-        mask = Image.fromarray(mask_data[i], mode='RGBA') #tem que ter 4 camadas
-        PIL_images.append([image,mask])
-    return PIL_images
+        Imgs.append(ImageTk.PhotoImage(Image.fromarray(image_data[i], mode='L').resize(new_sizes[i])))
+    ControllerObj.axis0.SetImage(Imgs[0])
+    ControllerObj.axis1.SetImage(Imgs[1])
+    ControllerObj.axis2.SetImage(Imgs[2])
 
-def UpdateImages(ControllerObj, square_image_boolean, show_mask=True):
+def SetMasks(ControllerObj, mask_data, new_sizes):
+    Masks = []
+    for i in range(3):
+        Masks.append(ImageTk.PhotoImage(Image.fromarray(mask_data[i], mode='RGBA').resize(new_sizes[i])))
+    ControllerObj.axis0.SetMask(Masks[0])
+    ControllerObj.axis1.SetMask(Masks[1])
+    ControllerObj.axis2.SetMask(Masks[2])
+
+def UpdateImages(ControllerObj, square_image_boolean):
+    mask_is_set = ControllerObj.root.getvar(name="mask_is_set")
     if(ControllerObj.label_h == None or ControllerObj.label_h <= 1): # Screen Not Open Yet
         return
     
     input_image = ControllerObj.square_image if square_image_boolean else ControllerObj.image
-    channel = ControllerObj.root.getvar(name="channel_select")
-    #######
-    image_data, mask_data = Volctrl.get_2D_slices(input_image, channel_select=channel, show_mask=show_mask)
-    Labeled_image = ComposeImages(image_data, mask_data)
-    #Labeled_image = [Image.fromarray(composed_data[0],mode='L'),Image.fromarray(composed_data[1],mode='L'),Image.fromarray(composed_data[2],mode='L')]
-    
+    channel = ControllerObj.root.getvar(name="channel_select")    
     ControllerObj.label_w = ControllerObj.axis0.winfo_width()
     ControllerObj.label_h = ControllerObj.axis0.winfo_height()
     new_sizes = Volctrl.ImageResizing(input_image, ControllerObj.label_h, channel_select=channel)
-    Imgs = [ImageTk.PhotoImage(Labeled_image[0][0].resize((new_sizes["axis0_x"],new_sizes["axis0_y"]))),
-            ImageTk.PhotoImage(Labeled_image[1][0].resize((new_sizes["axis1_x"],new_sizes["axis1_y"]))), 
-            ImageTk.PhotoImage(Labeled_image[2][0].resize((new_sizes["axis2_x"],new_sizes["axis2_y"]))),
-            ImageTk.PhotoImage(Labeled_image[0][1].resize((new_sizes["axis0_x"],new_sizes["axis0_y"]))),
-            ImageTk.PhotoImage(Labeled_image[1][1].resize((new_sizes["axis1_x"],new_sizes["axis1_y"]))), 
-            ImageTk.PhotoImage(Labeled_image[2][1].resize((new_sizes["axis2_x"],new_sizes["axis2_y"])))]
-    ControllerObj.UpdateImageSize(new_sizes, ControllerObj.label_w, ControllerObj.label_h)
+    if(mask_is_set):
+        image_data, mask_data = Volctrl.get_2D_slices(input_image, channel_select=channel, show_mask=mask_is_set)
+    else:
+        image_data = Volctrl.get_2D_slices(input_image, channel_select=channel, show_mask=False)
+        mask_data = None
 
-    #canvasaxis.create_image(0,0,image=fig)
-    '''
-    ControllerObj.axis0['Label'].configure(image=Imgs[3])
-    ControllerObj.axis0['Label'].image = Imgs[3]
-    ControllerObj.axis1['Label'].configure(image=Imgs[4])
-    ControllerObj.axis1['Label'].image = Imgs[4]
-    ControllerObj.axis2['Label'].configure(image=Imgs[5])
-    ControllerObj.axis2['Label'].image = Imgs[5]'''
-    ControllerObj.axis0.SetImage(Imgs[0])
-    ControllerObj.axis1.SetImage(Imgs[1])
-    ControllerObj.axis2.SetImage(Imgs[2])
+    SetImages(ControllerObj, image_data, new_sizes)
+    SetMasks(ControllerObj, mask_data, new_sizes)
+    ControllerObj.UpdateImageSize(new_sizes, ControllerObj.label_w, ControllerObj.label_h)
 
 def Resize_Images_Check(ControllerObj,square_image_boolean):
     ControllerObj.label_w = ControllerObj.axis0.winfo_width()
