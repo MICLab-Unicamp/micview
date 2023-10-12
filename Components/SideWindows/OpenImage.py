@@ -49,10 +49,3 @@ class OpenFileInputWindow(SideWindow):
             self.resized_image.set(False)
         else:
             self.resized_image.set(True)
-
-    def OnClosing(self):
-        self.filepath.trace_remove("write", self.traceid1)
-        self.currentdirectory.trace_remove("write", self.traceid2)
-        self.root.destroy()
-        self.root.update()
-        self.parent.menuframe.DelSideWindow()

@@ -61,7 +61,7 @@ class ImageFrame_Controller:
     def UpdatePointAxis0(self, event):
         click = event.__dict__
         x = click['x']; y = click['y']
-        new_point_x, new_point_y = self.UpdatePoint(self.images_sizes['axis0_x'], self.images_sizes['axis0_y'], x, y)
+        new_point_x, new_point_y = self.UpdatePoint(self.images_sizes[0][0], self.images_sizes[0][1], x, y)
         if(new_point_x != None and new_point_y != None):
             square_image_boolean = self.root.getvar(name="square_image_boolean")
             Volctrl.change_current_point(-1,new_point_y,new_point_x, self.square_image) if square_image_boolean else Volctrl.change_current_point(-1,new_point_y,new_point_x, self.image)
@@ -71,7 +71,7 @@ class ImageFrame_Controller:
     def UpdatePointAxis1(self, event):
         click = event.__dict__
         x = click['x']; y = click['y']
-        new_point_x, new_point_y = self.UpdatePoint(self.images_sizes['axis1_x'], self.images_sizes['axis1_y'], x, y)
+        new_point_x, new_point_y = self.UpdatePoint(self.images_sizes[1][0], self.images_sizes[1][1], x, y)
         if(new_point_x != None and new_point_y != None):
             square_image_boolean = self.root.getvar(name="square_image_boolean")
             Volctrl.change_current_point(new_point_y,-1,new_point_x, self.square_image) if square_image_boolean else Volctrl.change_current_point(new_point_y,-1,new_point_x, self.image)
@@ -81,7 +81,7 @@ class ImageFrame_Controller:
     def UpdatePointAxis2(self, event):
         click = event.__dict__
         x = click['x']; y = click['y']
-        new_point_x, new_point_y = self.UpdatePoint(self.images_sizes['axis2_x'], self.images_sizes['axis2_y'], x, y)
+        new_point_x, new_point_y = self.UpdatePoint(self.images_sizes[2][0], self.images_sizes[2][1], x, y)
         if(new_point_x != None and new_point_y != None):
             square_image_boolean = self.root.getvar(name="square_image_boolean")
             Volctrl.change_current_point(new_point_y,new_point_x,-1, self.square_image) if square_image_boolean else Volctrl.change_current_point(new_point_y,new_point_x,-1, self.image)

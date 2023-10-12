@@ -1,6 +1,22 @@
 import numpy as np
 from scipy.ndimage import zoom
 import Components.Volume.Volume_Controller as Volctrl
+import Components.Volume.Mask_Pallete as Pallete
+
+def SettingMaskPallete(max):
+    pallete = []
+    for i in range(max):
+        pallete.append(Pallete.MaskPallete(i))
+    return pallete
+
+def Mask_Label_Colors(RGBA_mask, zoomed_mask):
+    pallete = SettingMaskPallete(zoomed_mask.max())
+    for label in pallete:
+        RGBA_mask[:,:,:, 0] = np.where(zoomed_mask == label["Number"], label["RGB"][0], RGBA_mask[:,:,:,0])
+        RGBA_mask[:,:,:, 1] = np.where(zoomed_mask == label["Number"], label["RGB"][1], RGBA_mask[:,:,:,1])
+        RGBA_mask[:,:,:, 2] = np.where(zoomed_mask == label["Number"], label["RGB"][2], RGBA_mask[:,:,:,2])
+    del pallete
+    return RGBA_mask
 
 class ImagesContainer():
     def __init__(self, volume, square_image_boolean=False, mask=None, window_name="MultiViewer", cube_side=200, order=0, clip=(-1024,600)):
@@ -42,12 +58,13 @@ class ImagesContainer():
         if mask is not None:
             self.original_mask = mask
             zoomed_mask = Volctrl.zoom(mask, mask_zoom, order=0).astype(np.uint8)
-            R = np.expand_dims(np.where(zoomed_mask == 1, 255, 0), axis=-1).astype(np.uint8)
-            G = np.expand_dims(np.where(zoomed_mask == 2, 255, 0), axis=-1)
-            B = np.expand_dims(np.where(zoomed_mask == 4, 255, 0), axis=-1)
+            R = np.expand_dims(np.zeros_like(zoomed_mask), axis=-1).astype(np.uint8)
+            G = np.zeros_like(R)
+            B = np.zeros_like(R)
             A = np.expand_dims(np.where(zoomed_mask > 0, 255, 0), axis=-1)
-            zoomed_mask = np.concatenate((R,G,B,A), axis=-1).astype(np.uint8)
-            self.mask = zoomed_mask
+            RGBA_mask = np.concatenate((R,G,B,A), axis=-1).astype(np.uint8)
+            RGBA_mask = Mask_Label_Colors(RGBA_mask, zoomed_mask)
+            self.mask = RGBA_mask
 
         self.volume_shape = self.volume.shape
 

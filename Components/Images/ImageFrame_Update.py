@@ -27,14 +27,14 @@ def UpdateImages(ControllerObj, square_image_boolean):
     ControllerObj.label_w = ControllerObj.axis0.winfo_width()
     ControllerObj.label_h = ControllerObj.axis0.winfo_height()
     new_sizes = Volctrl.ImageResizing(input_image, ControllerObj.label_h, channel_select=channel)
-    if(mask_is_set):
-        image_data, mask_data = Volctrl.get_2D_slices(input_image, channel_select=channel, show_mask=mask_is_set)
-    else:
+    if(mask_is_set == False):
         image_data = Volctrl.get_2D_slices(input_image, channel_select=channel, show_mask=False)
-        mask_data = None
+        SetImages(ControllerObj, image_data, new_sizes)
+    else:
+        image_data, mask_data = Volctrl.get_2D_slices(input_image, channel_select=channel, show_mask=mask_is_set)
+        SetImages(ControllerObj, image_data, new_sizes)
+        SetMasks(ControllerObj, mask_data, new_sizes)
 
-    SetImages(ControllerObj, image_data, new_sizes)
-    SetMasks(ControllerObj, mask_data, new_sizes)
     ControllerObj.UpdateImageSize(new_sizes, ControllerObj.label_w, ControllerObj.label_h)
 
 def Resize_Images_Check(ControllerObj,square_image_boolean):

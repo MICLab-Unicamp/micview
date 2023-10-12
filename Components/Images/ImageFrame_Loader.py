@@ -20,8 +20,21 @@ class ImageFrame_Loader:
     def ImageSet(self, **kwargs):
         if(self.root.getvar(name="image_is_set")):
             self.Destroy_image()
+            self.parent.clean_screen()
+        if(self.root.getvar(name="mask_is_set")):
+            self.Destroy_mask()
 
         self.task = Thread(target=self.Load_Images, kwargs={**kwargs})
+        self.task.start()
+
+    def MaskSet(self, mask_path):
+        if(self.root.getvar(name="image_is_set")):
+            self.Destroy_image()
+            self.parent.clean_screen()
+        if(self.root.getvar(name="mask_is_set")):
+            self.Destroy_mask()
+        self.mask_path = mask_path
+        self.task = Thread(target=self.Load_Images)
         self.task.start()
     
     def Load_Images(self, **kwargs):
@@ -30,13 +43,17 @@ class ImageFrame_Loader:
         
         self.sitk_file = sitk.ReadImage(self.path)
         self.sitk_file = sitk.GetArrayFromImage(self.sitk_file)
+        size=math.floor(self.parent.axis0.winfo_height())    
+        
         if(self.mask_path is not None):
             self.root.setvar(name="mask_is_set", value=True)
             self.sitk_maskfile = sitk.ReadImage(self.mask_path)
             self.sitk_maskfile = sitk.GetArrayFromImage(self.sitk_maskfile)
-    
-        size=math.floor(self.parent.axis0.winfo_height())        
-        mp_images_params = [(self.sitk_file, True, self.sitk_maskfile, size, self.interpolation_order), (self.sitk_file, False, self.sitk_maskfile, size, self.interpolation_order)]
+            mp_images_params = [(self.sitk_file, True, self.sitk_maskfile, size, self.interpolation_order), (self.sitk_file, False, self.sitk_maskfile, size, self.interpolation_order)]
+        else:
+            mp_images_params = [(self.sitk_file, True, None, size, self.interpolation_order), (self.sitk_file, False, None, size, self.interpolation_order)]
+            self.root.setvar(name="mask_is_set", value=False)
+
         self.square_image, self.image = self.MultiprocessReadFiles(mp_images_params, order=self.interpolation_order)
         
         self.CheckMultichannel()
@@ -57,13 +74,16 @@ class ImageFrame_Loader:
         self.parent.axis0.unbind("<Configure>")
         self.Controller.Unbindaxis()
         self.Controller.UnsetImages()
-        self.mask_path = None
         del self.sitk_file
-        del self.sitk_maskfile
         del self.square_image
         del self.image
         del self.Controller
         Volctrl.reset_current_point()
+
+    def Destroy_mask(self):
+        self.root.setvar(name="mask_is_set", value=False)
+        self.mask_path = None
+        del self.sitk_maskfile
 
     def CheckMultichannel(self):
         point = self.image.handler_param["point_original_vol"]

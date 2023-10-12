@@ -83,3 +83,9 @@ class SideWindow:
             else:
                 self.warning.set("File format not suported")
                 self.openbutton['state'] = "disabled"
+    def OnClosing(self):
+        self.filepath.trace_remove("write", self.traceid1)
+        self.currentdirectory.trace_remove("write", self.traceid2)
+        self.root.destroy()
+        self.root.update()
+        self.parent.menuframe.DelSideWindow()
