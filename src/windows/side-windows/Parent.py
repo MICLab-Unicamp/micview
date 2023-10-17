@@ -3,7 +3,7 @@ from tkinter import ttk
 import tkinter.filedialog as fd
 import os
 
-class SideWindow:
+class ParentWindow:
     def __init__(self, parent, rootframe, windowtitle, TypeOfFile):
         self.parent = parent
         self.rootframe = rootframe
