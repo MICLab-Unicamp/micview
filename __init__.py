@@ -1,5 +1,5 @@
 import argparse
-import Components.MainWindow as wndw
+import src.windows.MainWindow as wndw
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="__init__.py")
@@ -21,13 +21,13 @@ if __name__ == "__main__":
 
         if args.input.endswith(".nii.gz"):
             if(args.order == None):
-                wndw.RootFrame("Micview", file=args.input, mask=mask_param, order=0, resized = args.resize)
+                wndw.RootFrame(file=args.input, mask=mask_param, order=0, resized = args.resize).join()
             else:
                 if(args.order < 0 or args.order > 5):
                     raise argparse.ArgumentTypeError("Order must be between 0 and 5")
                 else:
-                    wndw.RootFrame("MultiViewer", file=args.input, mask=mask_param, order=args.order, resized = args.resize)
+                    wndw.RootFrame(file=args.input, mask=mask_param, order=args.order, resized = args.resize).join()
         else:
             raise ValueError("File format not supported.")
     else:
-        wndw.RootFrame("MultiViewer")
+        wndw.RootFrame().join()

@@ -3,7 +3,7 @@ import Components.Images.ImageFrame_Update as Imupdate
 import Components.Images.ImageFrame_Loader as Loader
 from Components.Images.ImageFrame import *
 
-class ImagesContainer(Thread):
+class ImagesFrame(Thread):
     def __init__(self,root,frame):
         self.root = root
         self.frame = frame
