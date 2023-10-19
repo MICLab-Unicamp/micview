@@ -4,7 +4,7 @@ from infos.volume_infos import *
 from infos.files_infos import *
 from refs.objects_ref import *
 from states.loading_states import *
-from states.optional_states import *
+from models.states.options_states import *
 from states.toolframe_states import *
 
 cursor_infos = None
@@ -16,7 +16,7 @@ loading_states = None
 optional_states = None
 toolframe_states = None
 
-def init_globals(master):
+def init_models(master):
     global cursor_infos, toolframe_infos, volume_infos, files_infos
     global objects_ref
     global loading_states, optional_states, toolframe_states
