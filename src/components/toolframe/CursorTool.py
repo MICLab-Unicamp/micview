@@ -1,14 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
-import Components.Volume.Volume_Controller as Volctrl
+from globals.globals import volume_infos
+import services.image.controller as Volctrl
+from services.tools.cursor_tool import handle_selected_item
 
 class CursorTool:
     def __init__(self, parent, root):
         self.parent = parent
         self.root = root
-        self.numofchannels = self.parent.root.getvar(name="num_of_channels")
-        self.treeview_is_set = False
-        self.initial_point = Volctrl.get_original_vol_current_point()
+        self.initial_point = volume_infos.get_current_point_original_vol()
         self.CreateVars()
         self.CreateWidgets()
 
@@ -30,52 +30,21 @@ class CursorTool:
         self.posz.place(x=75, y=60, width=30, height=30)
         self.instensitytitle = tk.Label(self.root, text="Intensity under cursor:", font=('Helvetica', 10))
         self.instensitytitle.place(x=5, y=110)
-        self.Update_intensity()
+        self.CreateTreeView()
 
-    def CreateTreeView(self, itens_array):
+    def CreateTreeView(self):
         mode = "none"
-        if(self.numofchannels > 1): mode = "browse" 
-        self.layerslist = ttk.Treeview(self.root, height=5, columns=("col0", "col1"), show="headings", selectmode=mode)
-        self.layerslist.column("col0", anchor="center", stretch=False, width=85)
-        self.layerslist.column("col1", anchor="center", stretch=False, width=99)
-        self.layerslist.heading("col0", text="Channel")
-        self.layerslist.heading("col1", text="Intensity")
-        self.layerslist.place(x=0, y=150, relheight=0.4, relwidth=1)
-        self.AddTreeviewItens(itens_array)
-        self.layerslist.bind('<<TreeviewSelect>>', self.Selected_item)
-        self.treeview_is_set = True
+        numofchannels = volume_infos.get_num_of_channels()
+        if(numofchannels > 1): mode = "browse" 
+        self.treeview = ttk.Treeview(self.root, height=5, columns=("col0", "col1"), show="headings", selectmode=mode)
+        self.treeview.column("col0", anchor="center", stretch=False, width=85)
+        self.treeview.column("col1", anchor="center", stretch=False, width=99)
+        self.treeview.heading("col0", text="Channel")
+        self.treeview.heading("col1", text="Intensity")
+        self.treeview.place(x=0, y=150, relheight=0.4, relwidth=1)
+        self.AddTreeviewItens(numofchannels)
+        self.treeview.bind('<<TreeviewSelect>>', handle_selected_item)
 
-    def Selected_item(self,event):
-        itemid = self.layerslist.focus()
-        selected_channel = int(self.layerslist.item(itemid, 'values')[0]) - 1
-        self.parent.root.setvar(name="channel_select", value=selected_channel)
-
-    def AddTreeviewItens(self, itens):
-        for i in range(self.numofchannels):
-            self.layerslist.insert('', tk.END, values=(f"{i+1}", f"{itens[i]}"))
-
-    def Update_intensity(self):
-        intensity = self.parent.root.getvar(name="channel_intensity")
-        if(self.numofchannels > 1):
-            parse = ((intensity.split('[')[1]).split(']')[0]).split(', ')
-            chann_intensity = [int(float(i)) for i in parse]
-        else:
-            parse = (intensity.split('[')[1]).split(']')[0]
-            chann_intensity = [round(float(parse),2)]
-        self.Update_itens(intensity_arr=chann_intensity)
-        self.update_point_indicators()
-
-    def Update_itens(self, intensity_arr):
-        if(self.treeview_is_set):
-            itens = self.layerslist.get_children()
-            for i in range(len(itens)):
-                values = self.layerslist.item(itens[i],'values')
-                self.layerslist.item(itens[i], values=(values[0], intensity_arr[i]))
-        else:
-            self.CreateTreeView(intensity_arr)
-
-    def update_point_indicators(self):
-        point = Volctrl.get_original_vol_current_point()
-        self.cursorX.set(point[2]+1)
-        self.cursorY.set(point[1]+1)
-        self.cursorZ.set(point[0]+1)
+    def AddTreeviewItens(self, numofchannels):
+        for i in range(numofchannels):
+            self.treeview.insert('', tk.END, values=(f"{i+1}", "0"))

@@ -1,27 +1,19 @@
-from threading import Thread
-import Components.Images.ImageFrame_Update as Imupdate
-import Components.Images.ImageFrame_Loader as Loader
-from Components.Images.ImageFrame import *
+import tkinter as tk
+from components.image_viewer.ImageCanvas import ImageCanvas
 
-class ImagesFrame(Thread):
-    def __init__(self,root,frame):
-        self.root = root
-        self.frame = frame
-        super().__init__()
-        self.run()
+class ImagesFrame(tk.Frame):    
+    def __init__(self, master):
+        self.master = master
+        super().__init__(self.master, bd=4, bg= '#d4fe3ee', highlightbackground='#759fe6', highlightthickness=2)
+        self.place(x=205, rely=0, relwidth=1, relheight=1, width=-205)
+        self.CreateWidgets()
 
-    def run(self):
-        self.axis0 = ImageFrame(self.frame)
-        self.axis0.place(relheight=0.47, rely=0.02, relwidth=0.47, relx=0.02)
-        self.axis1 = ImageFrame(self.frame)
-        self.axis1.place(relheight=0.47, rely=0.02, relwidth=0.47, relx=0.52)
-        self.axis2 = ImageFrame(self.frame)
-        self.axis2.place(relheight=0.47, rely=0.52, relwidth=0.47, relx=0.52)
-        self.imageorientation = ImageFrame(self.frame)
+    def CreateWidgets(self):
+        self.axial = ImageCanvas(self)
+        self.axial.place(relheight=0.47, rely=0.02, relwidth=0.47, relx=0.02)
+        self.coronal = ImageCanvas(self)
+        self.coronal.place(relheight=0.47, rely=0.02, relwidth=0.47, relx=0.52)
+        self.sagital = ImageCanvas(self)
+        self.sagital.place(relheight=0.47, rely=0.52, relwidth=0.47, relx=0.52)
+        self.imageorientation = ImageCanvas(self)
         self.imageorientation.place(relheight=0.47, rely=0.52, relwidth=0.47, relx=0.02)
-        self.Loader = Loader.ImageFrame_Loader(self)
-
-    def clean_screen(self):
-        self.axis0.clean_screen()
-        self.axis1.clean_screen()
-        self.axis2.clean_screen()

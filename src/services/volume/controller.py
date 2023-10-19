@@ -2,16 +2,14 @@ import numpy as np
 import multiprocessing as mp
 from scipy.ndimage import zoom
 import math
-
-current_point = None
-current_point_original_vol = None
+from globals.globals import volume_infos
 
 def zoom_worker(x):
     channel, zoom_factor, order = x
     return zoom(channel, zoom_factor, order=order)
 
 
-def multi_channel_zoom(full_volume, zoom_factors, order, C=None):
+def multi_channel_zoom(full_volume, zoom_factors, order):
     '''
     full_volume: Full 4D volume (numpy)
     zoom_factors: intented shape / current shape
@@ -20,8 +18,7 @@ def multi_channel_zoom(full_volume, zoom_factors, order, C=None):
     '''
     assert len(full_volume.shape) == 4 and isinstance(full_volume, np.ndarray)
 
-    if C is None:
-        C = full_volume.shape[0]
+    C = full_volume.shape[0]
         
     pool = mp.Pool(C)
     channels = [(channel, zoom_factors, order) for channel in full_volume]
@@ -35,22 +32,8 @@ def multi_channel_zoom(full_volume, zoom_factors, order, C=None):
 
     return np.stack(zoomed_volumes)
 
-def reset_current_point():
-    global current_point
-    global current_point_original_vol
-    current_point = None
-    current_point_original_vol = None
-
-def get_current_point():
-     global current_point
-     return current_point
-
-def get_original_vol_current_point():
-    global current_point_original_vol
-    return current_point_original_vol
-
 def change_current_point(axis0, axis1, axis2, image):
-    global current_point
+    current_point = volume_infos.get_current_point()
     if(axis0 >=0):
         current_point[0] = axis0
     if(axis1 >=0):
@@ -58,11 +41,12 @@ def change_current_point(axis0, axis1, axis2, image):
     if(axis2 >=0):
         current_point[2] = axis2
     image.handler_param["point"] = current_point
+    volume_infos.set_current_point(current_point)
     change_current_point_original_vol(image)
 
 def change_current_point_original_vol(image):
-    global current_point
-    global current_point_original_vol
+    current_point = volume_infos.get_current_point()
+    current_point_original_vol = volume_infos.get_current_point_original_vol()
     interpolate = 1/np.array(image.handler_param["display_resize"])
     current_point_original_vol = current_point * interpolate
     for i in range(len(current_point_original_vol)):
@@ -74,11 +58,14 @@ def change_current_point_original_vol(image):
     if(current_point_original_vol[1] >= original_shape[n+1]): current_point_original_vol[1] -= 1 
     if(current_point_original_vol[2] >= original_shape[n+2]): current_point_original_vol[2] -= 1 
     image.handler_param["point_original_vol"] = current_point_original_vol
+    volume_infos.set_current_point(current_point)
+    volume_infos.set_current_point_original_vol(current_point_original_vol)
 
 def get_image_slices(image, channel_select):
-    global current_point
+    current_point = volume_infos.get_current_point()
     if current_point is None:
         current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
+        volume_infos.set_current_point(current_point)
         image.handler_param["point"] = current_point
         change_current_point_original_vol(image)
 
@@ -103,7 +90,7 @@ def get_image_slices(image, channel_select):
     return Image_2D_slices
 
 def get_mask_slices(image):
-    global current_point
+    current_point = volume_infos.get_current_point()
     axis0 = image.mask[current_point[0], :, :, :]
     axis1 = image.mask[:, current_point[1], :, :]
     axis2 = image.mask[:, :, current_point[2], :]

@@ -1,6 +1,6 @@
 import tkinter as tk
 
-class ImageFrame(tk.Canvas):
+class ImageCanvas(tk.Canvas):
     def __init__(self,root, background="lightblue"):
         super().__init__(root, background=background)
         self.root = root

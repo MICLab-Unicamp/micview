@@ -1,16 +1,17 @@
 import tkinter as tk
-from Components.SideWindows.OpenImage import *
-from Components.SideWindows.OpenSegmentation import *
+from globals.globals import optional_states, objects_ref
+from services.menu.callbacks_onclick import FileWindow,SegmentationWindow
 
-class Menu:
-    def __init__(self, parent):
-        self.parent = parent
-        self.rootframe = parent.root
-        self.menubar = tk.Menu(self.rootframe, tearoff=False, background='blue', foreground='white', activebackground='white', activeforeground='black')
-        self.cascades()
-        self.rootframe.config(menu=self.menubar)
+class Menu(tk.Menu):
+    def __init__(self, master):
+        self.master = master
+        self.root = master.root
+        super().__init__(self.root, tearoff=False, background='blue', foreground='white', activebackground='white', activeforeground='black')
+        self.init_sessions()
+        self.root.config(menu=self)
+        objects_ref.set_Menu(self)
 
-    def cascades(self):
+    def init_sessions(self):
         self.file_init()
         self.view_init()
         self.segmentation_init()
@@ -18,39 +19,34 @@ class Menu:
         self.tools_view()
 
     def file_init(self):
-        self.file_options = tk.Menu(self.menubar, tearoff=False, background='blue', foreground='white')
-        self.file_options.add_command(label="Open Main Image", command=self.OpenFileInputWindow)  
+        self.file_options = tk.Menu(self, tearoff=False, background='blue', foreground='white')
+        self.file_options.add_command(label="Open Main Image", command=FileWindow)  
         self.file_options.add_separator()  
-        self.file_options.add_command(label="Exit", command=self.rootframe.quit)  
-        self.menubar.add_cascade(label="File", menu=self.file_options)
+        self.file_options.add_command(label="Exit", command=self.root.quit)  
+        self.add_cascade(label="File", menu=self.file_options)
 
     def view_init(self):
-        self.radioboolvar = tk.BooleanVar(self.rootframe, self.rootframe.getvar(name="square_image_boolean"))
-        self.traceidradiobool = self.radioboolvar.trace_add("write", callback=lambda *args: self.rootframe.setvar(name="square_image_boolean", value=self.radioboolvar.get()))
-        self.view_options = tk.Menu(self.menubar, tearoff=False, background='blue', foreground='white')
+        self.radioboolvar = tk.BooleanVar(self.root, optional_states.get_image_is_square())
+        self.traceidradiobool = self.radioboolvar.trace_add("write", callback=lambda *args: optional_states.set_image_is_square(value=self.radioboolvar.get()))
+        self.view_options = tk.Menu(self, tearoff=False, background='blue', foreground='white')
         self.view_options.add_radiobutton(label="Original Size", variable=self.radioboolvar, value=False, state="disabled")
         self.view_options.add_radiobutton(label="Zoom To Fit", variable=self.radioboolvar, value=True, state="disabled")
-        self.menubar.add_cascade(label="View", menu=self.view_options)
+        self.add_cascade(label="View", menu=self.view_options)
     
-    def Update_radioboolvar(self):
-        self.radioboolvar.trace_remove("write", self.traceidradiobool)
-        self.radioboolvar.set(self.rootframe.getvar(name="square_image_boolean"))
-        self.traceidradiobool = self.radioboolvar.trace_add("write", callback=lambda *args: self.rootframe.setvar(name="square_image_boolean", value=self.radioboolvar.get()))
-
     def segmentation_init(self):
-        self.segmentation_options = tk.Menu(self.menubar, tearoff=False, background='blue', foreground='white')
-        self.segmentation_options.add_command(label="Open Segmentation", command=self.OpenSegmentationFileWindow)
+        self.segmentation_options = tk.Menu(self, tearoff=False, background='blue', foreground='white')
+        self.segmentation_options.add_command(label="Open Segmentation", command=SegmentationWindow)
         self.segmentation_options.add_command(label="Save Segmentation")
-        self.menubar.add_cascade(label="Segmentation", menu=self.segmentation_options)
+        self.add_cascade(label="Segmentation", menu=self.segmentation_options)
 
     def edit_view(self):
-        self.edit_options = tk.Menu(self.menubar, tearoff=False, background='blue', foreground='white')
+        self.edit_options = tk.Menu(self, tearoff=False, background='blue', foreground='white')
         self.edit_options.add_command(label="Polygon Mode")
         self.edit_options.add_command(label="Paintbrush Mode")
-        self.menubar.add_cascade(label="Edit", menu=self.edit_options)
+        self.add_cascade(label="Edit", menu=self.edit_options)
 
     def tools_view(self):
-        self.tools_options = tk.Menu(self.menubar, tearoff=False, background='blue', foreground='white')
+        self.tools_options = tk.Menu(self, tearoff=False, background='blue', foreground='white')
         self.tools_options.add_command(label="Cursor Inspector")
         self.tools_options.add_command(label="Zoom Inspector")
         self.tools_options.add_command(label="Image Contrast")
@@ -62,20 +58,4 @@ class Menu:
         self.tools_options.add_cascade(label="Info", menu=self.info_options)
 
         self.tools_options.add_command(label="Image Metadata")
-        self.menubar.add_cascade(label="Tools", menu=self.tools_options)
-
-    def change_buttons_state(self, *args):
-        image_is_set = self.rootframe.getvar(name="image_is_set")
-        state = "normal" if image_is_set else "disabled"
-        self.view_options.entryconfig("Original Size", state=state)        
-        self.view_options.entryconfig("Zoom To Fit", state=state)
-        self.file_options.entryconfig("Open Main Image", state=state)
-
-    def OpenFileInputWindow(self):
-        self.side_window = OpenFileInputWindow(self.parent, self.rootframe)
-    
-    def OpenSegmentationFileWindow(self):
-        self.side_window = OpenFileSegmentation(self.parent, self.rootframe)
-
-    def DelSideWindow(self):
-        del self.side_window
+        self.add_cascade(label="Tools", menu=self.tools_options)
