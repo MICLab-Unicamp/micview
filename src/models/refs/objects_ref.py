@@ -1,8 +1,7 @@
-import tkinter as tk
-from components.toolframe.ToolFrame import ToolFrame
-from components.image_viewer.ImagesFrame import ImagesFrame
-from components.menu.Menu import Menu
-from windows.side_windows.Parent import Parent
+from views.components.toolframe.ToolFrame import ToolFrame
+from views.components.image_viewer.ImagesFrame import ImagesFrame
+from views.components.menu.Menu import Menu
+from views.windows.toplevels.Parent import Parent
 
 class objects_ref_class:
     def __init__(self):
@@ -11,42 +10,51 @@ class objects_ref_class:
         self.__Menu = None
         self.__SideWindow = None
 
-    def get_ImagesFrame(self):
+    @property
+    def ImagesFrame(self):
         if self.__ImagesFrame is not None:
             assert type(self.__ImagesFrame) is ImagesFrame
             return self.__ImagesFrame
     
+    @ImagesFrame.setter
     def set_ImagesFrame(self, Object):
         assert type(Object) is ImagesFrame
         self.__ImagesFrame = Object
 
-    def get_ToolFrame(self):
+    @property
+    def ToolFrame(self):
         if self.__ToolFrame is not None:
             assert type(self.__ToolFrame) is ToolFrame
             return self.__ToolFrame
     
-    def set_ToolFrame(self, Object):
+    @ToolFrame.setter
+    def ToolFrame(self, Object):
         assert type(Object) is ToolFrame
         self.__ToolFrame = Object
 
-    def get_Menu(self):
+    @property
+    def Menu(self):
         if self.__Menu is not None:
             assert type(self.__Menu) is Menu
             return self.__Menu
     
-    def set_Menu(self, Object):
+    @Menu.setter
+    def Menu(self, Object):
         assert type(Object) is Menu
         self.__Menu = Object
 
-    def get_SideWindow(self):
+    @property
+    def SideWindow(self):
         if self.__SideWindow is not None:
             assert issubclass(self.__SideWindow, Parent)
             return self.__SideWindow
         
-    def set_SideWindow(self, Object):
+    @SideWindow.setter
+    def SideWindow(self, Object):
         assert issubclass(Object, Parent)
         self.__SideWindow = Object
 
-    def del_SideWindow(self):
+    @SideWindow.deleter
+    def SideWindow(self):
         del self.__SideWindow
         self.__SideWindow = None

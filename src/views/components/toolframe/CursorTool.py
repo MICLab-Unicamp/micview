@@ -1,14 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
-from globals.globals import volume_infos
-import services.image.controller as Volctrl
-from services.tools.cursor_tool import handle_selected_item
+from models.models import original_volume_data, cursor_data
+from controllers.services.tools.cursor_tool import *
 
 class CursorTool:
     def __init__(self, parent, root):
         self.parent = parent
         self.root = root
-        self.initial_point = volume_infos.get_current_point_original_vol()
+        self.initial_point = cursor_data.current_point_original_vol
         self.CreateVars()
         self.CreateWidgets()
 
@@ -34,7 +33,7 @@ class CursorTool:
 
     def CreateTreeView(self):
         mode = "none"
-        numofchannels = volume_infos.get_num_of_channels()
+        numofchannels = original_volume_data.num_of_channels
         if(numofchannels > 1): mode = "browse" 
         self.treeview = ttk.Treeview(self.root, height=5, columns=("col0", "col1"), show="headings", selectmode=mode)
         self.treeview.column("col0", anchor="center", stretch=False, width=85)

@@ -1,5 +1,5 @@
 import argparse
-import src.windows.MainWindow as wndw
+import src.views.windows.MainWindow as wndw
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="__init__.py")

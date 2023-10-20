@@ -1,3 +1,4 @@
+from models.models import files_data
 import SimpleITK
 
 def readImageFile(path):

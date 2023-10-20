@@ -1,8 +1,8 @@
 import tkinter as tk
 from threading import Thread
-from globals.globals import init_globals
-from services.screen_size.screensize import get_screensize,set_minsize
-from services.image.loader import loadImageFromShell
+from models.models import init_models
+from controllers.services.screen_size.screensize import get_screensize, set_minsize
+from controllers.services.image_viewer.loader import loadImageFromShell
 from components.image_viewer.ImagesFrame import ImagesFrame
 from components.menu.Menu import Menu
 from components.toolframe.ToolFrame import ToolFrame
@@ -16,7 +16,7 @@ class MainWindow(Thread):
     def run(self):
         self.window_name = "MICview"
         self.root = tk.Tk()
-        init_globals(self.root)
+        init_models(self.root)
         self.ScreenConfig()
         self.Frames()
         self.root.after(500, self.init_input)

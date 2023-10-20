@@ -1,6 +1,6 @@
 import tkinter as tk
-from globals.globals import optional_states, objects_ref
-from services.menu.callbacks_onclick import FileWindow,SegmentationWindow
+from models.models import objects_ref, options_states
+from controllers.services.menu.callbacks_onclick import FileWindow, SegmentationWindow
 
 class Menu(tk.Menu):
     def __init__(self, master):
@@ -9,7 +9,7 @@ class Menu(tk.Menu):
         super().__init__(self.root, tearoff=False, background='blue', foreground='white', activebackground='white', activeforeground='black')
         self.init_sessions()
         self.root.config(menu=self)
-        objects_ref.set_Menu(self)
+        objects_ref.Menu = self
 
     def init_sessions(self):
         self.file_init()
@@ -26,8 +26,8 @@ class Menu(tk.Menu):
         self.add_cascade(label="File", menu=self.file_options)
 
     def view_init(self):
-        self.radioboolvar = tk.BooleanVar(self.root, optional_states.get_image_is_square())
-        self.traceidradiobool = self.radioboolvar.trace_add("write", callback=lambda *args: optional_states.set_image_is_square(value=self.radioboolvar.get()))
+        self.radioboolvar = tk.BooleanVar(self.root, options_states.image_is_square)
+        self.traceidradiobool = self.radioboolvar.trace_add("write", callback=lambda *args: self.callback_radiobool)
         self.view_options = tk.Menu(self, tearoff=False, background='blue', foreground='white')
         self.view_options.add_radiobutton(label="Original Size", variable=self.radioboolvar, value=False, state="disabled")
         self.view_options.add_radiobutton(label="Zoom To Fit", variable=self.radioboolvar, value=True, state="disabled")
@@ -59,3 +59,6 @@ class Menu(tk.Menu):
 
         self.tools_options.add_command(label="Image Metadata")
         self.add_cascade(label="Tools", menu=self.tools_options)
+
+    def callback_radiobool(self):
+        options_states.image_is_square = self.radioboolvar.get()

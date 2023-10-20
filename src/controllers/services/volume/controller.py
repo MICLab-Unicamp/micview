@@ -2,8 +2,7 @@ import numpy as np
 import multiprocessing as mp
 from scipy.ndimage import zoom
 import math
-from globals.globals import volume_infos
-
+from models.models import original_volume_data, changed_volume_data, cursor_data, options_states, toolframe_states
 def zoom_worker(x):
     channel, zoom_factor, order = x
     return zoom(channel, zoom_factor, order=order)
@@ -32,86 +31,74 @@ def multi_channel_zoom(full_volume, zoom_factors, order):
 
     return np.stack(zoomed_volumes)
 
-def change_current_point(axis0, axis1, axis2, image):
-    current_point = volume_infos.get_current_point()
+def change_current_point(axis0, axis1, axis2):
+    current_point = cursor_data.current_point
     if(axis0 >=0):
         current_point[0] = axis0
     if(axis1 >=0):
         current_point[1] = axis1
     if(axis2 >=0):
         current_point[2] = axis2
-    image.handler_param["point"] = current_point
-    volume_infos.set_current_point(current_point)
-    change_current_point_original_vol(image)
+    cursor_data.current_point = current_point
+    change_current_point_original_vol()
 
-def change_current_point_original_vol(image):
-    current_point = volume_infos.get_current_point()
-    current_point_original_vol = volume_infos.get_current_point_original_vol()
-    interpolate = 1/np.array(image.handler_param["display_resize"])
+def change_current_point_original_vol():
+    zoom_factors = changed_volume_data.zoom_factors
+    current_point = cursor_data.current_point
+    current_point_original_vol = cursor_data.current_point_original_vol    
+    interpolate = 1/np.array(zoom_factors)
     current_point_original_vol = current_point * interpolate
     for i in range(len(current_point_original_vol)):
          current_point_original_vol[i] = round(current_point_original_vol[i])
+    
     current_point_original_vol = current_point_original_vol.astype(int)
-    original_shape = image.handler_param["original_volume"].shape
+    original_shape = original_volume_data.image_volume.shape
     n = 1 if len(original_shape) > 3 else 0
     if(current_point_original_vol[0] >= original_shape[n]): current_point_original_vol[0] -= 1 
     if(current_point_original_vol[1] >= original_shape[n+1]): current_point_original_vol[1] -= 1 
     if(current_point_original_vol[2] >= original_shape[n+2]): current_point_original_vol[2] -= 1 
-    image.handler_param["point_original_vol"] = current_point_original_vol
-    volume_infos.set_current_point(current_point)
-    volume_infos.set_current_point_original_vol(current_point_original_vol)
+    cursor_data.current_point_original_vol = current_point_original_vol
 
-def get_image_slices(image, channel_select):
-    current_point = volume_infos.get_current_point()
+def get_image_slices(axis):
+    channel_select = toolframe_states.channel_select
+    current_point = cursor_data.current_point
+    volume = changed_volume_data.changed_image_volume
+
     if current_point is None:
-        current_point = (np.array(image.volume.shape[-1:-4:-1][::-1])/2).astype(int)
-        volume_infos.set_current_point(current_point)
-        image.handler_param["point"] = current_point
-        change_current_point_original_vol(image)
+        cursor_data.current_point = (np.array(volume.shape[-1:-4:-1][::-1])/2).astype(int)
+        change_current_point_original_vol()
 
-    if channel_select < 0:
-        axis0 = image.volume[current_point[0], :, :]
-        axis1 = image.volume[:, current_point[1], :]
-        axis2 = image.volume[:, :, current_point[2]]
+    if original_volume_data.num_of_channels == 1:
+        match axis:
+            case 0:
+                return volume[current_point[0], :, :]
+            case 1:
+                return volume[:, current_point[1], :]
+            case 2:
+                return volume[:, :, current_point[2]]
+            case _:
+                raise LookupError #Revisar os erros padroes
     else:
-        try:
-            axis0 = image.volume[channel_select, current_point[0], :, :]
-            axis1 = image.volume[channel_select, :, current_point[1], :]
-            axis2 = image.volume[channel_select, :, :, current_point[2]]
-
-        except IndexError:
-            channel_select = 0
-            axis0 = image.volume[0, current_point[0], :, :]
-            axis1 = image.volume[0, :, current_point[1], :]
-            axis2 = image.volume[0, :, :, current_point[2]]
-
-    image.handler_param["channel"] = channel_select
-    Image_2D_slices = [axis0,axis1,axis2]
-    return Image_2D_slices
-
-def get_mask_slices(image):
-    current_point = volume_infos.get_current_point()
-    axis0 = image.mask[current_point[0], :, :, :]
-    axis1 = image.mask[:, current_point[1], :, :]
-    axis2 = image.mask[:, :, current_point[2], :]
-    Mask_2D_slices = [axis0,axis1,axis2]
-    return Mask_2D_slices    
-
-def get_2D_slices(image, channel_select=-1, show_mask=True):
-    image_slices = get_image_slices(image, channel_select)
-    if(show_mask):
-        mask_slices = get_mask_slices(image)
-        return image_slices, mask_slices
-    return image_slices
+        match axis:
+            case 0:
+                return volume[channel_select, current_point[0], :, :]
+            case 1:
+                return volume[channel_select, :, current_point[1], :]
+            case 2:
+                return volume[channel_select, :, :, current_point[2]]
+            case _:
+                raise LookupError #Revisar os erros padroes
 
 
-def ImageResizing(image,new_cube_size, channel_select):
-        n = 1 if channel_select > -1 else 0
-        sides = np.array(list(image.volume_shape))
-        max_side = sides.max()
-        new_sizes = [
-            (math.floor((new_cube_size/max_side)*sides[n+1]), math.floor((new_cube_size/max_side)*sides[n+2])),
-            (math.floor((new_cube_size/max_side)*sides[n+2]), math.floor((new_cube_size/max_side)*sides[n+0])),
-            (math.floor((new_cube_size/max_side)*sides[n+1]), math.floor((new_cube_size/max_side)*sides[n+0]))
-        ]
-        return new_sizes
+def get_mask_slices(axis):
+    current_point = cursor_data.current_point
+    mask = changed_volume_data.changed_mask_volume
+    match axis:
+        case 0:
+            return mask[current_point[0], :, :, :]
+        case 1:
+            return mask[:, current_point[1], :, :]
+        case 2:
+            return mask[:, :, current_point[2], :]
+        case _:
+            raise LookupError #Revisar os erros padroes

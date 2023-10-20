@@ -1,10 +1,10 @@
 import tkinter.filedialog as fd
 import os
 from services.menu.callbacks_onclick import DelSideWindow
-from globals.globals import objects_ref
+from models.models import objects_ref
 
 def browseFileHandler():
-        window = objects_ref.get_SideWindow()
+        window = objects_ref.SideWindow
         window.withdraw()
         name = fd.askopenfilename(initialdir="./", title="Select File", filetypes= (("NiFTI files","*.nii.gz"),("all files","*.*")))
         if(type(name) != str):
@@ -18,11 +18,11 @@ def browseFileHandler():
         window.deiconify()
 
 def callbackCurrentDir(*args):
-    window = objects_ref.get_SideWindow()
+    window = objects_ref.SideWindow
     window.pathtextvariable.set(f"Path: {window.currentdirectory.get()}")
 
 def callbackFilePath(*args):
-    window = objects_ref.get_SideWindow()
+    window = objects_ref.SideWindow
     path = window.filepath.get()
     if(path == ""):
         window.warning.set("")
@@ -43,12 +43,12 @@ def callbackFilePath(*args):
             window.openbutton['state'] = "disabled"
 
 def zoomOrderHandler(*args):
-    window = objects_ref.get_SideWindow()
+    window = objects_ref.SideWindow
     value = window.zoom_interpolation_order.get()
     window.zoomorder.set(int(value))
 
 def resizedImageHandler(*args):
-    window = objects_ref.get_SideWindow()
+    window = objects_ref.SideWindow
     value = window.image_format.get()
     if(value == "Normal"):
         window.resized_image.set(False)
@@ -56,7 +56,7 @@ def resizedImageHandler(*args):
         window.resized_image.set(True)
     
 def onClosing():
-    window = objects_ref.get_SideWindow()
+    window = objects_ref.SideWindow
     window.filepath.trace_remove("write", window.traceid1)
     window.currentdirectory.trace_remove("write", window.traceid2)
     window.destroy()

@@ -1,3 +1,4 @@
+'''
 import tkinter as tk
 from threading import Thread
 
@@ -44,3 +45,4 @@ class CircularProgressbar(tk.Canvas):
     def close(self):
         self.destroy()
         self.update_idletasks()
+'''
