@@ -1,5 +1,5 @@
 import tkinter as tk
-from controllers.services.image_viewer.ImageCanvasController import *
+from src.controllers.services.image_viewer.ImageCanvasController import *
 
 class ImageCanvasView(tk.Canvas):
     def __init__(self, master, id):
@@ -9,12 +9,10 @@ class ImageCanvasView(tk.Canvas):
         self.Config()
 
     def Config(self):
+        self.config(state='disabled')
         self.drawn_image = None
         self.drawn_mask = None
         self.controller = ImageCanvasController(self)
-        self.bind('<Configure>', self.controller.resize)
-        self.bind('<Button-1>', self.controller.click)
-        self.bind('<B1-Motion>', self.controller.click)
     
     def draw_image(self):
         self.drawn_image = self.create_image((self.winfo_width/2, self.winfo_height/2), image=self.controller.image_data, anchor="center")

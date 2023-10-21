@@ -1,9 +1,12 @@
-from models.models import image_canvas_states, objects_ref
+import importlib
+models = importlib.import_module('src.models.models')
 
 def action_on_child(* args):
-    print(args)
-    parent = objects_ref.ImagesFrame
-    child = image_canvas_states.action_on_child
+    print("action_on_child")
+    parent = models.get_objects_ref().ImagesFrame
+    child = models.get_image_canvas_states().action_on_child
+    print(parent)
+    print(child)
     match child:
         case 0:
             parent.axial.controller.event_handler()

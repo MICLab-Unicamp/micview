@@ -1,22 +1,25 @@
-from models.models import toolframe_states, loading_states
+import importlib
+models = importlib.import_module('src.models.models')
 
 def loading_hook(* args):
-    print(args)
-    if(loading_states.loading):
-        loading_states.image_is_loaded = False
-        loading_states.mask_is_loaded = False
+    print("loading_hook")
+    if(models.get_loading_states().loading):
+        models.get_loading_states().image_is_loaded = False
+        models.get_loading_states().mask_is_loaded = False
         ##disable image_viewer, menu, and toolframe
 
 def image_is_loaded_hook(* args):
-    if(loading_states.image_is_loaded):
-        toolframe_states.tool_is_set = True
+    print("image_is_loaded_hook")
+    if(models.get_loading_states().image_is_loaded):
+        models.get_toolframe_states().tool_is_set = True
         #enable some tools
     else:
-        toolframe_states.tool_is_set = False
+        models.get_toolframe_states().tool_is_set = False
         #disable some tools
 
 def mask_is_loaded_hook(* args):
-    if(loading_states.mask_is_loaded):
+    print("mask_is_loaded_hook")
+    if(models.get_loading_states().mask_is_loaded):
         pass
         #enable some tools
     else:

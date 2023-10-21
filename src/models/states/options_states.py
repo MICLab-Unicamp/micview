@@ -1,5 +1,5 @@
 import tkinter as tk
-from controllers.hooks.optional_states_hooks import *
+from src.controllers.hooks.optional_states_hooks import *
 
 class options_states_class:
         def __init__(self, master):

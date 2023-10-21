@@ -1,12 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
-from windows.side_windows.Parent import Parent
-from services.sidewindows.input_file_handler import zoomOrderHandler, resizedImageHandler, onClosing
-from services.image.loader import loadNewImage
+from src.views.windows.toplevels.Parent import Parent
+from src.controllers.services.toplevels.input_file_handler import zoomOrderHandler, resizedImageHandler, onClosing
+from src.controllers.services.image_viewer.loader import loadNewImage
 
 class OpenImage(Parent):
     def __init__(self, master, windowtitle="Open Image", TypeOfFile="Image"):
-        super().__init__(master, windowtitle, TypeOfFile)
+        self.master = master
+        super().__init__(master, windowtitle=windowtitle, TypeOfFile=TypeOfFile)
         self.DefineClassOptions()
         self.OptionsComboboxes()
 
@@ -23,7 +24,6 @@ class OpenImage(Parent):
         self.image_format.set("Normal")
         self.image_format.bind('<<ComboboxSelected>>', resizedImageHandler)
         self.image_format.place(rely= 0.55, relx=0.68, relheight=0.1, relwidth=0.20)
-        
         zoom_combobox_text = tk.Label(self, text="Zoom Interpolation Order", font=('Helvetica', 10), anchor="w", justify="left")
         zoom_combobox_text.place(rely=0.7, relx=0.02, relheight=0.1, relwidth=0.6)
         self.zoom_interpolation_order = ttk.Combobox(self, values=[ str(x) for x in range(6)], state="readonly", justify="center")
@@ -31,6 +31,7 @@ class OpenImage(Parent):
         self.zoom_interpolation_order.set("0")
         self.zoom_interpolation_order.bind('<<ComboboxSelected>>', zoomOrderHandler)
         self.zoom_interpolation_order.place(rely= 0.7, relx=0.68, relheight=0.1, relwidth=0.10)
+        print("end")
 
     def SubmitInfos(self):
         loadNewImage(file=self.finalpath.get(), order=self.zoomorder.get(), resized = self.resized_image.get())

@@ -1,5 +1,5 @@
 import tkinter as tk
-from controllers.hooks.image_canvas_hooks import *
+from src.controllers.hooks.image_canvas_hooks import *
 
 class image_canvas_states_class:
     def __init__(self, master):

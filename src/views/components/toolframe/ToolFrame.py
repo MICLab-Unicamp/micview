@@ -1,11 +1,11 @@
 import tkinter as tk
-from models.models import objects_ref
+from src.models.models import get_objects_ref
 
 class ToolFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master=master, width=185, background="lightgray")
         self.place(x=0, rely=0.1, relheight=0.8)
-        objects_ref.ToolFrame = self
+        get_objects_ref().ToolFrame = self
         self.actual_tool = None
 
     def set_actual_tool(self, ToolObject):

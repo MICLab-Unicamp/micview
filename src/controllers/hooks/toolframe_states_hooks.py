@@ -1,19 +1,22 @@
-from models.models import toolframe_states, objects_ref, loading_states, image_canvas_states
-from services.tools.toolframe import Set_Tool
+import importlib
+models = importlib.import_module('src.models.models')
+from src.controllers.services.tools.toolframe import Set_Tool
 
 def channel_select_hook(* args):
-    if(loading_states.image_is_loaded):
-        image_canvas_states.action_on_child = 3
+    print("channel_select_hook")
+    if(models.get_loading_states().image_is_loaded):
+        models.get_image_canvas_states().action_on_child = 3
 
 def selected_tool_hook(* args):
-    print(args)
-    tool = toolframe_states.selected_tool
-    master = objects_ref.ToolFrame
+    print("selected_tool_hook")
+    tool = models.get_toolframe_states().selected_tool
+    master = models.get_objects_ref().ToolFrame
     Set_Tool(tool, master)
 
 def tool_is_set_hook(* args):
-    if(toolframe_states.tool_is_set):
-        toolframe_states.selected_tool = "cursor"
+    print("tool_is_set_hook")
+    if(models.get_toolframe_states().tool_is_set):
+        models.get_toolframe_states().selected_tool = "cursor"
     else:
-        del objects_ref.ToolFrame
-        toolframe_states.selected_tool = "none"
+        del models.get_objects_ref().ToolFrame
+        models.get_toolframe_states().selected_tool = "none"

@@ -1,13 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
-from models.models import original_volume_data, cursor_data
-from controllers.services.tools.cursor_tool import *
+import importlib
+models = importlib.import_module('src.models.models')
+from src.controllers.services.tools.cursor_tool import *
 
 class CursorTool:
     def __init__(self, parent, root):
         self.parent = parent
         self.root = root
-        self.initial_point = cursor_data.current_point_original_vol
+        self.initial_point = models.get_cursor_data().current_point_original_vol
         self.CreateVars()
         self.CreateWidgets()
 
@@ -33,7 +34,7 @@ class CursorTool:
 
     def CreateTreeView(self):
         mode = "none"
-        numofchannels = original_volume_data.num_of_channels
+        numofchannels = models.get_original_volume_data().num_of_channels
         if(numofchannels > 1): mode = "browse" 
         self.treeview = ttk.Treeview(self.root, height=5, columns=("col0", "col1"), show="headings", selectmode=mode)
         self.treeview.column("col0", anchor="center", stretch=False, width=85)

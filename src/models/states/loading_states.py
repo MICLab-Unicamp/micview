@@ -1,6 +1,5 @@
 import tkinter as tk
-import tkinter as tk
-from controllers.hooks.loading_states_hooks import *
+from src.controllers.hooks.loading_states_hooks import *
 
 class loading_states_class:
     def __init__(self, master):

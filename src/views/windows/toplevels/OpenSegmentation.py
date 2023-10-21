@@ -1,6 +1,6 @@
-from windows.side_windows.Parent import Parent
-from services.sidewindows.input_file_handler import onClosing
-from services.image.loader import loadNewMask
+from src.views.windows.toplevels.Parent import Parent
+from src.controllers.services.toplevels.input_file_handler import onClosing
+from src.controllers.services.image_viewer.loader import loadNewMask
 
 class OpenSegmentation(Parent):
     def __init__(self, master, windowtitle="Open Segmentation", TypeOfFile="Segmentation"):

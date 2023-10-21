@@ -1,11 +1,11 @@
 import tkinter as tk
 import os
-from services.sidewindows.input_file_handler import browseFileHandler, callbackCurrentDir, callbackFilePath, onClosing
+from src.controllers.services.toplevels.input_file_handler import browseFileHandler, callbackCurrentDir, callbackFilePath, onClosing
 
 class Parent(tk.Toplevel):
     def __init__(self, master, windowtitle, TypeOfFile):
         super().__init__(master=master)
-        self.transient(master=master)
+        self.master = master
         self.title(windowtitle)
         self.TypeOfFile = TypeOfFile
         self.Config_window()
@@ -17,6 +17,7 @@ class Parent(tk.Toplevel):
         self.configure(background='gray75')
         self.geometry("400x300")
         self.resizable(False, False)
+        self.transient(master=self.master)
         self.protocol("WM_DELETE_WINDOW", onClosing)
         self.focus_force()
         self.grab_set()

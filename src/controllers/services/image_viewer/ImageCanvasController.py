@@ -1,8 +1,6 @@
-import math
-import tkinter as tk
 from PIL import Image, ImageTk
-from models.models import changed_volume_data, cursor_data, options_states, image_canvas_states
-from controllers.services.volume.controller import *
+from src.models.models import get_options_states, get_image_canvas_states
+from src.controllers.services.volume.controller import *
 
 class ImageCanvasController:
     def __init__(self, master):
@@ -13,16 +11,18 @@ class ImageCanvasController:
         self.mask_data = None
 
     def event_handler(self): #when other child suffer click
-        pass
+        print("eventoooo")
 
     def resize(self, e):
+        print("resizing")
+        print(e)
         image_shape = get_image_slices(self.id).shape
         self.resize_factors = calc_image_resize_factors(canvas_shape=(e.width, e.height), image_shape=image_shape)
         self.refresh()
 
     def click(self, e):
         print(e)
-        image_canvas_states.action_on_child = self.id
+        get_image_canvas_states().action_on_child = self.id
         '''
         pega o click, trata e interpola para o tamanho original da imagem
         seta o novo ponto do click
@@ -31,11 +31,24 @@ class ImageCanvasController:
         pass
 
     def refresh(self):
+        print("refreshing")
         self.image_data = ImageTk.PhotoImage(Image.fromarray(get_image_slices(self.id), mode='L').resize(self.resize_factors))
         self.master.draw_image()
-        if options_states.mask_is_set:
+        if get_options_states().mask_is_set:
             self.mask_data = ImageTk.PhotoImage(Image.fromarray(get_mask_slices(self.id), mode='RGBA').resize(self.resize_factors))
             self.master.draw_mask()
+
+    def disable_canvas(self):
+        self.master.config(state='disabled')
+        self.master.unbind('<Configure>')
+        self.master.unbind('<Button-1>')
+        self.master.unbind('<B1-Motion>')
+
+    def enable_canvas(self):
+        self.master.config(state='normal')
+        self.master.bind('<Configure>', self.resize)
+        self.master.bind('<Button-1>', self.click)
+        self.master.bind('<B1-Motion>', self.click)
 
     '''def UpdatePointAxis2(self, event):
         click = event.__dict__
@@ -61,7 +74,7 @@ class ImageCanvasController:
 def calc_image_resize_factors(canvas_shape=(0,0), image_shape=(0,0)):
         max_side = np.array(image_shape).max()
         resize_factors = (canvas_shape[0]/max_side, canvas_shape[0]/max_side)
-        if options_states.image_is_square:
+        if get_options_states().image_is_square:
             square_factor = (max_side/image_shape[0], max_side/image_shape[1])
             return square_factor * resize_factors
         return resize_factors

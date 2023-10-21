@@ -1,20 +1,21 @@
 import tkinter as tk
 from threading import Thread
-from models.models import init_models
-from controllers.services.screen_size.screensize import get_screensize, set_minsize
-from controllers.services.image_viewer.loader import loadImageFromShell
-from components.image_viewer.ImagesFrame import ImagesFrame
-from components.menu.Menu import Menu
-from components.toolframe.ToolFrame import ToolFrame
+from src.models.models import init_models
+from src.controllers.services.screen_size.screensize import get_screensize
+from src.controllers.services.image_viewer.loader import loadImageFromShell
+from src.views.components.image_viewer.ImagesFrame import ImagesFrame
+from src.views.components.menu.Menu import Menu
+from src.views.components.toolframe.ToolFrame import ToolFrame
 
 class MainWindow(Thread):
     def __init__(self, **kwargs):
         self.kwargs = kwargs
         super().__init__()
-        self.run()
+        self.start()
+        self.Create()
 
-    def run(self):
-        self.window_name = "MICview"
+    def Create(self):
+        self.window_name = "MICView"
         self.root = tk.Tk()
         init_models(self.root)
         self.ScreenConfig()
@@ -28,15 +29,14 @@ class MainWindow(Thread):
         self.root.configure(background= '#1e3743')
         self.root.geometry(f"{self.screensize['width']}x{self.screensize['height']}")
         self.root.resizable(True, True)
-        min_w,min_h = set_minsize(screen_w=self.screensize['width'], screen_h=self.screensize['height'])
-        self.root.minsize(width=min_w, height=min_h)
+        self.root.minsize(width=700, height=500)
 
     def Frames(self):
         self.Left_Frame = tk.Frame(self.root, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=2)
         self.Left_Frame.place(x=0, rely=0, width=200, relheight=1)
         self.ToolFrame = ToolFrame(self.Left_Frame)
-        self.ImagesFrame = ImagesFrame(self)
-        self.Menu = Menu(self)
+        self.ImagesFrame = ImagesFrame(self.root)
+        self.Menu = Menu(self.root)
 
     def init_input(self):
         if(self.kwargs):
