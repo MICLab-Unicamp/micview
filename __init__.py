@@ -21,13 +21,16 @@ if __name__ == "__main__":
 
         if args.input.endswith(".nii.gz"):
             if(args.order == None):
-                wndw.MainWindow(file=args.input, mask=mask_param, order=0, resized = args.resize).join()
+                window = wndw.MainWindow(file=args.input, mask=mask_param, order=0, resized = args.resize)
+                window.mainloop()
             else:
                 if(args.order < 0 or args.order > 5):
                     raise argparse.ArgumentTypeError("Order must be between 0 and 5")
                 else:
-                    wndw.MainWindow(file=args.input, mask=mask_param, order=args.order, resized = args.resize).join()
+                    window = wndw.MainWindow(file=args.input, mask=mask_param, order=args.order, resized = args.resize)
+                    window.mainloop()
         else:
             raise ValueError("File format not supported.")
     else:
-        wndw.MainWindow().join()
+        window = wndw.MainWindow()
+        window.mainloop()

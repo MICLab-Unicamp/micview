@@ -5,10 +5,8 @@ class loading_states_class:
     def __init__(self, master):
         self.__loading = tk.BooleanVar(master, False, name="loading")
         self.__loading.trace('w', loading_hook)       
-        self.__image_is_loaded = tk.BooleanVar(master, False, name="image_is_loaded")
-        self.__image_is_loaded.trace('w', image_is_loaded_hook)
-        self.__mask_is_loaded = tk.BooleanVar(master, False, name="mask_is_loaded")
-        self.__mask_is_loaded.trace('w', mask_is_loaded_hook)
+        self.__image_is_loaded = False
+        self.__mask_is_loaded = False
 
     @property
     def loading(self):
@@ -21,18 +19,18 @@ class loading_states_class:
 
     @property
     def image_is_loaded(self):
-        return self.__image_is_loaded.get()
+        return self.__image_is_loaded
     
     @image_is_loaded.setter
     def image_is_loaded(self, value):
         assert type(value) is bool
-        return self.__image_is_loaded.set(value)
+        self.__image_is_loaded = value
     
     @property
     def mask_is_loaded(self):
-        return self.__mask_is_loaded.get()
+        return self.__mask_is_loaded
     
     @mask_is_loaded.setter
     def mask_is_loaded(self, value):
         assert type(value) is bool
-        self.__mask_is_loaded.set(value)
+        self.__mask_is_loaded = value

@@ -11,5 +11,6 @@ class OpenSegmentation(Parent):
         self.openbutton.configure(command=self.SubmitInfos)
 
     def SubmitInfos(self):
-        loadNewMask(mask=self.finalpath)
-        onClosing()
+        mask = self.currentdirectory.get()+'/'+self.filepath.get()
+        self.after(50, onClosing())
+        loadNewMask(mask=mask)

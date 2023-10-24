@@ -36,9 +36,9 @@ def init_models(master):
     global objects_ref
     global image_canvas_states, loading_states, options_states, toolframe_states
     cursor_data = cursor_data_class()
-    toolframe_data = toolframe_data_class(master)
+    toolframe_data = toolframe_data_class()
     files_data = files_data_class()
-    original_volume_data = original_volume_data_class(master)
+    original_volume_data = original_volume_data_class()
     changed_volume_data = changed_volume_data_class()
     objects_ref = objects_ref_class()
     image_canvas_states = image_canvas_states_class(master)

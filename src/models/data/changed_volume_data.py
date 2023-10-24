@@ -14,7 +14,8 @@ class changed_volume_data_class:
 
     @changed_image_volume.deleter
     def changed_image_volume(self):
-        del self.__changed_image_volume
+        if(hasattr(self, '__changed_image_volume')):
+            del self.__changed_image_volume
     
     @property
     def changed_mask_volume(self):
@@ -26,7 +27,8 @@ class changed_volume_data_class:
     
     @changed_mask_volume.deleter
     def changed_mask_volume(self):
-        del self.__changed_mask_volume
+        if(hasattr(self, '__changed_mask_volume')):
+            del self.__changed_mask_volume
 
     @property
     def zoom_factors(self):
@@ -38,4 +40,5 @@ class changed_volume_data_class:
 
     @zoom_factors.deleter
     def zoom_factors(self):
-        del self.__zoom_factors
+        if(hasattr(self, '__zoom_factors')):
+            del self.__zoom_factors

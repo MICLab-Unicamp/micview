@@ -1,5 +1,5 @@
 class toolframe_data_class:
-        def __init__(self, master):
+        def __init__(self):
                 self.__channel_intensity = ""
 
         @property

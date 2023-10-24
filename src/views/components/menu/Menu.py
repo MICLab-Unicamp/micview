@@ -26,10 +26,9 @@ class Menu(tk.Menu):
 
     def view_init(self):
         self.radioboolvar = tk.BooleanVar(self.master, get_options_states().image_is_square)
-        self.traceidradiobool = self.radioboolvar.trace_add("write", callback=lambda *args: self.callback_radiobool)
         self.view_options = tk.Menu(self, tearoff=False, background='blue', foreground='white')
-        self.view_options.add_radiobutton(label="Original Size", variable=self.radioboolvar, value=False, state="disabled")
-        self.view_options.add_radiobutton(label="Zoom To Fit", variable=self.radioboolvar, value=True, state="disabled")
+        self.view_options.add_radiobutton(label="Original Size", variable=self.radioboolvar, value=False, command=self.callback_radiobool, state="disabled")
+        self.view_options.add_radiobutton(label="Zoom To Fit", variable=self.radioboolvar, value=True, command=self.callback_radiobool, state="disabled")
         self.add_cascade(label="View", menu=self.view_options)
     
     def segmentation_init(self):

@@ -63,10 +63,9 @@ def get_image_slices(axis):
     channel_select = get_toolframe_states().channel_select
     current_point = get_cursor_data().current_point
     volume = get_changed_volume_data().changed_image_volume
-    print("getting_image_slices")
-
     if current_point is None:
-        get_cursor_data().current_point = (np.array(volume.shape[-1:-4:-1][::-1])/2).astype(int)
+        current_point = (np.array(volume.shape[-1:-4:-1][::-1])/2).astype(int)
+        get_cursor_data().current_point = current_point
         change_current_point_original_vol()
 
     if get_original_volume_data().num_of_channels == 1:

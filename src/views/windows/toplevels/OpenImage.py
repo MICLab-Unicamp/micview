@@ -31,8 +31,10 @@ class OpenImage(Parent):
         self.zoom_interpolation_order.set("0")
         self.zoom_interpolation_order.bind('<<ComboboxSelected>>', zoomOrderHandler)
         self.zoom_interpolation_order.place(rely= 0.7, relx=0.68, relheight=0.1, relwidth=0.10)
-        print("end")
 
     def SubmitInfos(self):
-        loadNewImage(file=self.finalpath.get(), order=self.zoomorder.get(), resized = self.resized_image.get())
-        onClosing()
+        file=self.currentdirectory.get()+'/'+self.filepath.get()
+        order=self.zoomorder.get()
+        resized=self.resized_image.get()
+        self.after(50, onClosing())
+        loadNewImage(file=file, order=order, resized=resized)

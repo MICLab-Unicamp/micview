@@ -2,26 +2,19 @@ import importlib
 models = importlib.import_module('src.models.models')
 
 def loading_hook(* args):
-    print("loading_hook")
+    from src.controllers.services.menu.callbacks_onclick import change_buttons_state, handle_onLoading, update_radiobool
     if(models.get_loading_states().loading):
+        if(models.get_toolframe_states().tool_is_set):
+            models.get_toolframe_states().tool_is_set = False
+        models.get_image_canvas_states().action_on_child = 3
+        handle_onLoading(True)
         models.get_loading_states().image_is_loaded = False
         models.get_loading_states().mask_is_loaded = False
-        ##disable image_viewer, menu, and toolframe
 
-def image_is_loaded_hook(* args):
-    print("image_is_loaded_hook")
-    if(models.get_loading_states().image_is_loaded):
-        models.get_toolframe_states().tool_is_set = True
-        #enable some tools
     else:
-        models.get_toolframe_states().tool_is_set = False
-        #disable some tools
-
-def mask_is_loaded_hook(* args):
-    print("mask_is_loaded_hook")
-    if(models.get_loading_states().mask_is_loaded):
-        pass
-        #enable some tools
-    else:
-        pass
-        #diable some tools
+        if(models.get_loading_states().image_is_loaded):
+            models.get_toolframe_states().tool_is_set = True
+        models.get_image_canvas_states().action_on_child = 3
+        handle_onLoading(False)
+        change_buttons_state()
+        update_radiobool()

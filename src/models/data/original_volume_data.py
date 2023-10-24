@@ -1,5 +1,5 @@
 class original_volume_data_class:
-    def __init__(self, master):
+    def __init__(self):
         self.__image_volume = None
         self.__mask_volume = None
         self.__num_of_channels = 1
@@ -14,7 +14,8 @@ class original_volume_data_class:
 
     @image_volume.deleter
     def image_volume(self):
-        del self.__image_volume
+        if(hasattr(self, '__image_volume')):
+            del self.__image_volume
 
     @property
     def mask_volume(self):
@@ -26,7 +27,8 @@ class original_volume_data_class:
 
     @mask_volume.deleter
     def mask_volume(self):
-        del self.__mask_volume
+        if(hasattr(self, '__mask_volume')):
+            del self.__mask_volume
 
     @property
     def num_of_channels(self):
@@ -39,4 +41,5 @@ class original_volume_data_class:
 
     @num_of_channels.deleter
     def num_of_channels(self):
-        del self.__num_of_channels
+        if(hasattr(self, '__num_of_channels')):
+            del self.__num_of_channels

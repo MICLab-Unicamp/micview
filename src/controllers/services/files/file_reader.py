@@ -2,12 +2,10 @@ import SimpleITK
 
 def readImageFile(path):
     MetadatasFile = SimpleITK.ReadImage(path)
-    ###### setar metadatasfile global
-    ArrayFromImage = SimpleITK.GetArrayFromImage(path)
+    ArrayFromImage = SimpleITK.GetArrayFromImage(MetadatasFile)
     return ArrayFromImage
 
 def readMaskFile(path):
     MetadatasFile = SimpleITK.ReadImage(path)
-    ###### setar metadatasfilemask global
-    ArrayFromImage = SimpleITK.GetArrayFromImage(path)
+    ArrayFromImage = SimpleITK.GetArrayFromImage(MetadatasFile)
     return ArrayFromImage

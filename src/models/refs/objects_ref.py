@@ -23,6 +23,10 @@ class objects_ref_class:
     def ToolFrame(self, Object):
         self.__ToolFrame = Object
 
+    @ToolFrame.deleter
+    def ToolFrame(self):
+        self.__ToolFrame.del_actual_tool()
+
     @property
     def Menu(self):
         if self.__Menu is not None:
