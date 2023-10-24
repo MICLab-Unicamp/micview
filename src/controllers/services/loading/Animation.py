@@ -1,9 +1,8 @@
 import tkinter as tk
 from threading import Thread, Event
 from time import sleep
-from src.models.models import get_loading_states
 
-class HandleLoadingBar(Thread):
+class Animation(Thread):
     def __init__(self, master: tk.Canvas, event: Event):
         super().__init__()
         self.master = master

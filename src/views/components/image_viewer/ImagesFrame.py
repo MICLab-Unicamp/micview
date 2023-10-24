@@ -16,7 +16,7 @@ class ImagesFrame(tk.Frame):
             self.rowconfigure(index=i, weight=1, minsize=150)
             self.columnconfigure(index=i, weight=1, minsize=150)
 
-    def CreateWidgets(self):######## trocar esses nomes depois
+    def CreateWidgets(self):
         self.axial = ImageCanvasView(self, id=0)
         self.axial.grid(row=0, column=0, padx=5, pady=5, sticky='news')
         self.coronal = ImageCanvasView(self, id=1)

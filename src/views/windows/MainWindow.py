@@ -1,7 +1,7 @@
 import tkinter as tk
 from src.models.models import init_models
 from src.controllers.services.screen_size.screensize import get_screensize
-from src.controllers.services.image_viewer.loader import loadImageFromShell
+from src.controllers.services.loading.loader import loadImageFromShell
 from src.views.components.image_viewer.ImagesFrame import ImagesFrame
 from src.views.components.menu.Menu import Menu
 from src.views.components.toolframe.ToolFrame import ToolFrame
@@ -17,7 +17,7 @@ class MainWindow(tk.Tk):
         init_models(self)
         self.ScreenConfig()
         self.Frames()
-        self.after(500, self.init_input)
+        self.init_input()
 
     def ScreenConfig(self):
         self.screensize = get_screensize()
@@ -36,4 +36,5 @@ class MainWindow(tk.Tk):
 
     def init_input(self):
         if(self.kwargs):
-            loadImageFromShell(**self.kwargs)
+            self.loading_process = loadImageFromShell(**self.kwargs)
+            self.loading_process.start()

@@ -6,28 +6,26 @@ from src.models.models import get_cursor_data, get_original_volume_data, get_cha
 from src.controllers.services.files.file_reader import readImageFile, readMaskFile
 
 class image_and_mask_sync_loader(Thread):
-    def __init__(self, file, order=0, image_is_square=False, mask_file=None):
-        super().__init__()
+    def __init__(self, file, order=0, mask_file=None):
+        super().__init__(daemon=True)
         self.file = file
         self.order = order
-        self.image_is_square = image_is_square
         self.mask_file = mask_file
     
     def run(self):
-        self.image_loader_thread = image_volume_loader(path=self.file, order=self.order, image_is_square=self.image_is_square, ends_loading = False)
-        self.mask_loader_thread = mask_volume_loader(path=self.mask_file)
+        self.image_loader_thread = image_volume_loader(path=self.file, order=self.order)
         self.image_loader_thread.start()
         self.image_loader_thread.join()
-        self.mask_loader_thread.start()
-        self.mask_loader_thread.join()
+        if(self.mask_file is not None):
+            self.mask_loader_thread = mask_volume_loader(path=self.mask_file)
+            self.mask_loader_thread.start()
+            self.mask_loader_thread.join()
 
 class image_volume_loader(Thread):
-    def __init__(self, path, order=0, image_is_square=False, ends_loading = True):
-        super().__init__()
+    def __init__(self, path, order=0):
+        super().__init__(daemon=True)
         self.path = path
         self.order = order
-        self.image_is_square = image_is_square
-        self.ends_loading = ends_loading
 
     def run(self):
         self.volume = readImageFile(self.path)
@@ -39,14 +37,10 @@ class image_volume_loader(Thread):
         self.volume = zoom_volume(self.volume, order=self.order)
         self.volume = ((self.volume - self.volume.min())*(255/(self.volume.max() - self.volume.min()))).astype(np.uint8)
         get_changed_volume_data().changed_image_volume = self.volume
-        get_loading_states().image_is_loaded = True
-        get_options_states().image_is_square = self.image_is_square
-        if(self.ends_loading):
-            get_loading_states().loading =  False
         
 class mask_volume_loader(Thread):
     def __init__(self, path):
-        super().__init__()
+        super().__init__(daemon=True)
         self.path = path
 
     def run(self):
@@ -61,11 +55,6 @@ class mask_volume_loader(Thread):
         RGBA_mask = np.concatenate((R,G,B,A), axis=-1).astype(np.uint8)
         RGBA_mask = Mask_Label_Colors(RGBA_mask, zoomed_mask)
         get_changed_volume_data().changed_mask_volume = RGBA_mask
-        get_loading_states().image_is_loaded = True
-        get_loading_states().mask_is_loaded = True
-        get_options_states().mask_is_set = True
-        if(get_loading_states().image_is_loaded):
-            get_loading_states().loading = False
 
 def SettingMaskPallete(max):
     pallete = []
