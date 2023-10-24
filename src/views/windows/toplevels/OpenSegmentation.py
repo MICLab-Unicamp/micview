@@ -1,6 +1,6 @@
 from src.views.windows.toplevels.Parent import Parent
 from src.controllers.services.toplevels.input_file_handler import onClosing
-from src.controllers.services.image_viewer.loader import loadNewMask
+from src.controllers.services.loading.loader import loadNewMask
 
 class OpenSegmentation(Parent):
     def __init__(self, master, windowtitle="Open Segmentation", TypeOfFile="Segmentation"):
@@ -12,5 +12,6 @@ class OpenSegmentation(Parent):
 
     def SubmitInfos(self):
         mask = self.currentdirectory.get()+'/'+self.filepath.get()
-        self.after(50, onClosing())
-        loadNewMask(mask=mask)
+        self.loading_process = loadNewMask(mask=mask)
+        self.loading_process.start()
+        onClosing()

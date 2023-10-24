@@ -1,9 +1,8 @@
 from PIL import Image, ImageTk
-from threading import Event
-from src.models.models import get_options_states, get_image_canvas_states, get_loading_states
+import tkinter as tk
+from src.models.models import get_options_states, get_image_canvas_states
 from src.controllers.services.volume.controller import *
 from src.controllers.services.image_viewer.services import *
-from src.controllers.services.image_viewer.HandleLoadingBar import *
 
 class ImageCanvasController:
     def __init__(self, master: tk.Canvas):
@@ -11,7 +10,6 @@ class ImageCanvasController:
         self.id = self.master.id
         self.canvas_image_size = False
         self.proportion_factor = False
-        self.enabled = False
         self.image_data = None
         self.mask_data = None
 
@@ -19,23 +17,11 @@ class ImageCanvasController:
     def canvas_shape(self):
         return (self.master.winfo_width(), self.master.winfo_height())
 
-    def event_handler(self): #when other child suffer click
-        if(get_loading_states().loading):
-            self.disable_canvas()
-            self.event = Event()
-            self.loading_bar = HandleLoadingBar(self.master, self.event)
-            self.loading_bar.start()
-        elif(not get_loading_states().loading and not self.enabled):
-            self.event.set()
-            self.enable_canvas()
-            self.master.update()
-            image_shape = get_image_slices(self.id).shape
-            self.canvas_image_size = calc_canvas_image_size(canvas_shape=self.canvas_shape, image_shape=image_shape)
+    def event_handler(self, type: str): #when other child suffer click
+        if(type == "action_on_child"):
             self.refresh()
-        elif(get_image_canvas_states().action_on_child == 3):
+        elif(type == "update_all_childs"):
             self.resize()
-        else:
-            self.refresh()
 
     def resize(self, e=None):#Resizes the canvas widget
         image_shape = get_image_slices(self.id).shape
@@ -65,19 +51,3 @@ class ImageCanvasController:
 
     def draw_mask(self):
         self.drawn_mask = self.master.create_image((self.master.center_x, self.master.center_y), image=self.mask_data, anchor="center", tags=("mask",))
-
-    def disable_canvas(self):#disable canvas when loading
-        #self.master.config(state='disabled')
-        self.enabled = False
-        self.master.delete("all")
-        self.master.unbind('<Configure>')
-        self.master.unbind('<Button-1>')
-        self.master.unbind('<B1-Motion>')
-
-    def enable_canvas(self):#enables canvas after loading
-        #self.master.config(state='normal')
-        self.enabled = True
-        self.master.delete("all")
-        self.master.bind('<Configure>', self.resize)
-        self.master.bind('<Button-1>', self.click)
-        self.master.bind('<B1-Motion>', self.click)

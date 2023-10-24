@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from src.views.windows.toplevels.Parent import Parent
 from src.controllers.services.toplevels.input_file_handler import zoomOrderHandler, resizedImageHandler, onClosing
-from src.controllers.services.image_viewer.loader import loadNewImage
+from src.controllers.services.loading.loader import loadNewImage
 
 class OpenImage(Parent):
     def __init__(self, master, windowtitle="Open Image", TypeOfFile="Image"):
@@ -36,5 +36,6 @@ class OpenImage(Parent):
         file=self.currentdirectory.get()+'/'+self.filepath.get()
         order=self.zoomorder.get()
         resized=self.resized_image.get()
-        self.after(50, onClosing())
-        loadNewImage(file=file, order=order, resized=resized)
+        self.loading_process = loadNewImage(file=file, order=order, resized=resized)
+        self.loading_process.start()
+        onClosing()

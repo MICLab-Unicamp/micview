@@ -6,15 +6,11 @@ def loading_hook(* args):
     if(models.get_loading_states().loading):
         if(models.get_toolframe_states().tool_is_set):
             models.get_toolframe_states().tool_is_set = False
-        models.get_image_canvas_states().action_on_child = 3
         handle_onLoading(True)
-        models.get_loading_states().image_is_loaded = False
-        models.get_loading_states().mask_is_loaded = False
 
     else:
         if(models.get_loading_states().image_is_loaded):
             models.get_toolframe_states().tool_is_set = True
-        models.get_image_canvas_states().action_on_child = 3
         handle_onLoading(False)
         change_buttons_state()
         update_radiobool()

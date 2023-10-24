@@ -4,7 +4,7 @@ from src.controllers.services.tools.toolframe import Set_Tool
 
 def channel_select_hook(* args):
     if(models.get_loading_states().image_is_loaded and not models.get_loading_states().loading):
-        models.get_image_canvas_states().action_on_child = 3
+        models.get_image_canvas_states().update_all_childs = True
 
 def selected_tool_hook(* args):
     tool = models.get_toolframe_states().selected_tool
