@@ -7,17 +7,16 @@ def action_on_child(* args):
         update_channels_intensity()
     parent = models.get_objects_ref().ImagesFrame
     child = models.get_image_canvas_states().action_on_child
-    match child:
-        case 0: #click in axial
+    if(child == 0):#click in axial
             parent.coronal.controller.event_handler("action_on_child")
             parent.sagital.controller.event_handler("action_on_child")
-        case 1: #click in coronal
+    elif(child == 1): #click in coronal
             parent.axial.controller.event_handler("action_on_child")
             parent.sagital.controller.event_handler("action_on_child")    
-        case 2: #click in sagital
+    elif(child == 2): #click in sagital
             parent.coronal.controller.event_handler("action_on_child")
             parent.axial.controller.event_handler("action_on_child")
-        case _:
+    else:
             raise Exception ###################
         
 def update_all_childs(* args):

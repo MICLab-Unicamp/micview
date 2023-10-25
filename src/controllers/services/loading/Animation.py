@@ -2,6 +2,7 @@ import tkinter as tk
 from threading import Thread, Event
 from time import sleep
 
+
 class Animation(Thread):
     def __init__(self, master: tk.Canvas, event: Event):
         super().__init__()
@@ -35,7 +36,7 @@ class Animation(Thread):
             self.master.center_x + self.radius, self.master.center_y + self.radius,
             start=180, extent=0, outline="blue", width=5, style=tk.ARC
         )
-    
+
     def draw_arc(self):
         self.master.itemconfig(
             self.arc,

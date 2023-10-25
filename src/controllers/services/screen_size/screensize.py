@@ -1,8 +1,7 @@
-import math
 from screeninfo import get_monitors
 
-def get_screensize():
-    arr = get_monitors()
+def get_screensize() -> "dict[str, int]":
+    arr: List[Monitor] = get_monitors()
     for monitor in arr:
         if(monitor.is_primary):
             return {"width": monitor.width, "height": monitor.height}

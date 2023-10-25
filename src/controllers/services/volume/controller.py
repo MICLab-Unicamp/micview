@@ -69,36 +69,33 @@ def get_image_slices(axis):
         change_current_point_original_vol()
 
     if get_original_volume_data().num_of_channels == 1:
-        match axis:
-            case 0:
-                return volume[current_point[0], :, :]
-            case 1:
-                return volume[:, current_point[1], :]
-            case 2:
-                return volume[:, :, current_point[2]]
-            case _:
-                raise LookupError #Revisar os erros padroes
+        if(axis == 0):
+            return volume[current_point[0], :, :]
+        elif(axis == 1):
+            return volume[:, current_point[1], :]
+        elif(axis == 2):
+            return volume[:, :, current_point[2]]
+        else:
+            raise LookupError #Revisar os erros padroes
     else:
-        match axis:
-            case 0:
+        if(axis == 0):
                 return volume[channel_select, current_point[0], :, :]
-            case 1:
-                return volume[channel_select, :, current_point[1], :]
-            case 2:
-                return volume[channel_select, :, :, current_point[2]]
-            case _:
-                raise LookupError #Revisar os erros padroes
+        elif(axis == 1):
+            return volume[channel_select, :, current_point[1], :]
+        elif(axis == 2):
+            return volume[channel_select, :, :, current_point[2]]
+        else:
+            raise LookupError #Revisar os erros padroes
 
 
 def get_mask_slices(axis):
     current_point = get_cursor_data().current_point
     mask = get_changed_volume_data().changed_mask_volume
-    match axis:
-        case 0:
-            return mask[current_point[0], :, :, :]
-        case 1:
-            return mask[:, current_point[1], :, :]
-        case 2:
-            return mask[:, :, current_point[2], :]
-        case _:
-            raise LookupError #Revisar os erros padroes
+    if(axis == 0):
+        return mask[current_point[0], :, :, :]
+    elif(axis == 1):
+        return mask[:, current_point[1], :, :]
+    elif (axis == 2):
+        return mask[:, :, current_point[2], :]
+    else:
+        raise LookupError #Revisar os erros padroes
