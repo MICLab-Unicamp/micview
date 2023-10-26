@@ -2,7 +2,7 @@ import importlib
 models = importlib.import_module('micview.models.models')
 
 def loading_hook(* args):
-    from src.controllers.services.menu.callbacks_onclick import change_buttons_state, handle_onLoading, update_radiobool
+    from micview.controllers.services.menu.callbacks_onclick import change_buttons_state, handle_onLoading, update_radiobool
     if(models.get_loading_states().loading):
         if(models.get_toolframe_states().tool_is_set):
             models.get_toolframe_states().tool_is_set = False

@@ -55,7 +55,7 @@ def resizedImageHandler(*args):
         window.resized_image.set(True)
     
 def onClosing():
-    from src.controllers.services.menu.callbacks_onclick import DelSideWindow
+    from micview.controllers.services.menu.callbacks_onclick import DelSideWindow
     window = get_objects_ref().SideWindow
     window.filepath.trace_remove("write", window.traceid1)
     window.currentdirectory.trace_remove("write", window.traceid2)
