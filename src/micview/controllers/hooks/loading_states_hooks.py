@@ -11,6 +11,8 @@ def loading_hook(* args):
     else:
         if(models.states['loading_states'].image_is_loaded):
             models.states['toolframe_states'].tool_is_set = True
+            models.states['image_canvas_states'].update_all_childs = True
         handle_onLoading(False)
         change_buttons_state()
         update_radiobool()
+

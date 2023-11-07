@@ -1,5 +1,5 @@
 import importlib
-models = importlib.import_module('src.micview.models.geters')
+models = importlib.import_module('src.micview.models.getters')
 from src.micview.controllers.services.tools.toolframe import Set_Tool
 
 def channel_select_hook(* args):

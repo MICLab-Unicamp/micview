@@ -15,7 +15,7 @@ class loadImageFromShell(Thread):
         self.event = Event()
         self.animation = LoadingCircles(self.event)
         self.animation.start()
-        self.loading_process = image_and_mask_sync_loader(file=self.params["file"], order=self.params["order"], mask_file=self.params["mask"])
+        self.loading_process = image_and_mask_sync_loader(file=self.params["file"], mask_file=self.params["mask"])
         self.loading_process.start()
         self.loading_process.join()
         self.event.set()
@@ -23,15 +23,15 @@ class loadImageFromShell(Thread):
         states['loading_states'].image_is_loaded = True
         if(self.params["mask"] is not None):
             states['loading_states'].mask_is_loaded = True
+            states['options_states'].mask_is_set = True
         states['options_states'].image_is_square = self.params["resized"]
-        states['options_states'].mask_is_set = True
         enable_all_canvas()
-        states['image_canvas_states'].update_all_childs = True
         states['loading_states'].loading =  False
 
 class loadNewImage(Thread):
     def __init__(self, **kwargs):
         self.params = checkKwargs(**kwargs)
+        self.loading_process = None
         super().__init__(daemon=True)
 
     def run(self):
@@ -42,7 +42,7 @@ class loadNewImage(Thread):
         self.event = Event()
         self.animation = LoadingCircles(self.event)
         self.animation.start()
-        self.loading_process = image_volume_loader(path=self.params["file"], order=self.params["order"])
+        self.loading_process = image_volume_loader(path=self.params["file"])
         self.loading_process.start()
         self.loading_process.join()
         self.event.set()
@@ -50,7 +50,6 @@ class loadNewImage(Thread):
         states['loading_states'].image_is_loaded = True
         states['options_states'].image_is_square = self.params["resized"]
         enable_all_canvas()
-        states['image_canvas_states'].update_all_childs = True
         states['loading_states'].loading =  False
 
 class loadNewMask(Thread):
@@ -73,13 +72,11 @@ class loadNewMask(Thread):
         states['loading_states'].mask_is_loaded = True
         states['options_states'].mask_is_set = True
         enable_all_canvas()
-        states['image_canvas_states'].update_all_childs = True
         states['loading_states'].loading =  False
 
 def delImage():
     states['loading_states'].image_is_loaded = False
     del data['changed_volume_data'].changed_image_volume
-    del data['changed_volume_data'].zoom_factors
     del data['original_volume_data'].image_volume
     del data['original_volume_data'].num_of_channels
 

@@ -2,7 +2,6 @@ class changed_volume_data_class:
     def __init__(self):
         self.__changed_image_volume = None
         self.__changed_mask_volume = None
-        self.__zoom_factors = None
 
     @property
     def changed_image_volume(self):
@@ -29,16 +28,3 @@ class changed_volume_data_class:
     def changed_mask_volume(self):
         if(hasattr(self, '__changed_mask_volume')):
             del self.__changed_mask_volume
-
-    @property
-    def zoom_factors(self):
-        return self.__zoom_factors
-    
-    @zoom_factors.setter
-    def zoom_factors(self, value):
-        self.__zoom_factors = value
-
-    @zoom_factors.deleter
-    def zoom_factors(self):
-        if(hasattr(self, '__zoom_factors')):
-            del self.__zoom_factors

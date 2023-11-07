@@ -2,18 +2,17 @@ import numpy as np
 from threading import Thread
 from src.micview.controllers.services.volume.controller import *
 from src.micview.controllers.services.volume.Mask_Pallete import *
-from src.micview.models.getters import data, states
+from src.micview.models.getters import data
 from src.micview.controllers.services.files.file_reader import readImageFile, readMaskFile
 
 class image_and_mask_sync_loader(Thread):
-    def __init__(self, file, order=0, mask_file=None):
+    def __init__(self, file, mask_file=None):
         super().__init__(daemon=True)
         self.file = file
-        self.order = order
         self.mask_file = mask_file
     
     def run(self):
-        self.image_loader_thread = image_volume_loader(path=self.file, order=self.order)
+        self.image_loader_thread = image_volume_loader(path=self.file)
         self.image_loader_thread.start()
         self.image_loader_thread.join()
         if(self.mask_file is not None):
@@ -22,10 +21,9 @@ class image_and_mask_sync_loader(Thread):
             self.mask_loader_thread.join()
 
 class image_volume_loader(Thread):
-    def __init__(self, path, order=0):
+    def __init__(self, path):
         super().__init__(daemon=True)
         self.path = path
-        self.order = order
 
     def run(self):
         self.volume = readImageFile(self.path)
@@ -34,7 +32,6 @@ class image_volume_loader(Thread):
             assert np.argmin(self.volume.shape) == 0, "Couldn't solve wrong dimension channel. Put channel on dimension 0."
         data['original_volume_data'].image_volume = self.volume
         set_channels_intensity(self.volume)
-        self.volume = zoom_volume(self.volume, order=self.order)
         self.volume = ((self.volume - self.volume.min())*(255/(self.volume.max() - self.volume.min()))).astype(np.uint8)
         data['changed_volume_data'].changed_image_volume = self.volume
         
@@ -45,15 +42,13 @@ class mask_volume_loader(Thread):
 
     def run(self):
         self.mask = readMaskFile(path=self.path)
-        mask_zoom = data['changed_volume_data'].zoom_factors
         data['original_volume_data'].mask_volume = self.mask
-        zoomed_mask = zoom(self.mask, mask_zoom, order=0).astype(np.uint8)
-        R = np.expand_dims(np.zeros_like(zoomed_mask), axis=-1).astype(np.uint8)
+        R = np.expand_dims(np.zeros_like(self.mask), axis=-1).astype(np.uint8)
         G = np.zeros_like(R)
         B = np.zeros_like(R)
-        A = np.expand_dims(np.where(zoomed_mask > 0, 255, 0), axis=-1)
+        A = np.expand_dims(np.where(self.mask > 0, 255, 0), axis=-1)
         RGBA_mask = np.concatenate((R,G,B,A), axis=-1).astype(np.uint8)
-        RGBA_mask = Mask_Label_Colors(RGBA_mask, zoomed_mask)
+        RGBA_mask = Mask_Label_Colors(RGBA_mask, self.mask)
         data['changed_volume_data'].changed_mask_volume = RGBA_mask
 
 def SettingMaskPallete(max):
@@ -62,12 +57,12 @@ def SettingMaskPallete(max):
         pallete.append(MaskPallete(i))
     return pallete
 
-def Mask_Label_Colors(RGBA_mask, zoomed_mask):
-    pallete = SettingMaskPallete(zoomed_mask.max())
+def Mask_Label_Colors(RGBA_mask, mask):
+    pallete = SettingMaskPallete(mask.max())
     for label in pallete:
-        RGBA_mask[:,:,:, 0] = np.where(zoomed_mask == label["Number"], label["RGB"][0], RGBA_mask[:,:,:,0])
-        RGBA_mask[:,:,:, 1] = np.where(zoomed_mask == label["Number"], label["RGB"][1], RGBA_mask[:,:,:,1])
-        RGBA_mask[:,:,:, 2] = np.where(zoomed_mask == label["Number"], label["RGB"][2], RGBA_mask[:,:,:,2])
+        RGBA_mask[:,:,:, 0] = np.where(mask == label["Number"], label["RGB"][0], RGBA_mask[:,:,:,0])
+        RGBA_mask[:,:,:, 1] = np.where(mask == label["Number"], label["RGB"][1], RGBA_mask[:,:,:,1])
+        RGBA_mask[:,:,:, 2] = np.where(mask == label["Number"], label["RGB"][2], RGBA_mask[:,:,:,2])
     del pallete
     return RGBA_mask
 
@@ -82,14 +77,3 @@ def set_channels_intensity(volume):
     else:
         data['toolframe_data'].channel_intensity = str([volume[point[0], point[1], point[2]]])
         data['original_volume_data'].num_of_channels = 1
-
-def zoom_volume(volume, order, cube_side=200):
-    multichannel = len(volume.shape) > 3
-    sides = np.array(list(volume.shape))
-    max_side = sides.max()
-    data['changed_volume_data'].zoom_factors = (cube_side/max_side, cube_side/max_side, cube_side/max_side)
-    if multichannel:
-        volume = multi_channel_zoom(data['me, get_changed_volume_data'].zoom_factors, order=order)
-    else:
-        volume = zoom(data['me, get_changed_volume_data'].zoom_factors, order=order)
-    return volume

@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from src.micview.views.windows.toplevels.Parent import Parent
-from src.micview.controllers.services.toplevels.input_file_handler import zoomOrderHandler, resizedImageHandler, onClosing
+from src.micview.controllers.services.toplevels.input_file_handler import resizedImageHandler, onClosing
 from src.micview.controllers.services.loading.loader import loadNewImage
 
 class OpenImage(Parent):
@@ -21,21 +21,13 @@ class OpenImage(Parent):
         imageformat_text.place(rely=0.55, relx=0.02, relheight=0.1, relwidth=0.6)
         self.image_format= ttk.Combobox(self, values=["Normal", "Resized"], state="readonly", justify="center")
         self.image_format.option_add('*TCombobox*Listbox.Justify', 'center')
-        self.image_format.set("Normal")
-        self.image_format.bind('<<ComboboxSelected>>', resizedImageHandler)
+        self.image_format.set(value="Normal")
+        self.image_format.bind(sequence='<<ComboboxSelected>>', func=lambda event: resizedImageHandler(event))
         self.image_format.place(rely= 0.55, relx=0.68, relheight=0.1, relwidth=0.20)
-        zoom_combobox_text = tk.Label(self, text="Zoom Interpolation Order", font=('Helvetica', 10), anchor="w", justify="left")
-        zoom_combobox_text.place(rely=0.7, relx=0.02, relheight=0.1, relwidth=0.6)
-        self.zoom_interpolation_order = ttk.Combobox(self, values=[ str(x) for x in range(6)], state="readonly", justify="center")
-        self.zoom_interpolation_order.option_add('*TCombobox*Listbox.Justify', 'center')
-        self.zoom_interpolation_order.set("0")
-        self.zoom_interpolation_order.bind('<<ComboboxSelected>>', zoomOrderHandler)
-        self.zoom_interpolation_order.place(rely= 0.7, relx=0.68, relheight=0.1, relwidth=0.10)
 
     def SubmitInfos(self):
         file=self.currentdirectory.get()+'/'+self.filepath.get()
-        order=self.zoomorder.get()
         resized=self.resized_image.get()
-        self.loading_process = loadNewImage(file=file, order=order, resized=resized)
+        self.loading_process = loadNewImage(file=file, resized=resized)
         self.loading_process.start()
         onClosing()

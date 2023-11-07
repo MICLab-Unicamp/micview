@@ -41,11 +41,6 @@ def callbackFilePath(*args):
             window.warning.set("File format not suported")
             window.openbutton['state'] = "disabled"
 
-def zoomOrderHandler(*args):
-    window = views['objects_ref'].SideWindow
-    value = window.zoom_interpolation_order.get()
-    window.zoomorder.set(int(value))
-
 def resizedImageHandler(*args):
     window = views['objects_ref'].SideWindow
     value = window.image_format.get()

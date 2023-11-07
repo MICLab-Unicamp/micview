@@ -40,10 +40,10 @@ class ImageCanvasController:
         states['image_canvas_states'].action_on_child = self.id
 
     def refresh(self):# Refreshs the canvas objects
-        self.image_data = ImageTk.PhotoImage(Image.fromarray(get_image_slices(self.id), mode='L').resize(self.canvas_image_size))
+        self.image_data = ImageTk.PhotoImage(Image.fromarray(get_image_slices(self.id), mode='L').resize(size=self.canvas_image_size, resample=Image.NEAREST))
         self.draw_image()
         if states['options_states'].mask_is_set:
-            self.mask_data = ImageTk.PhotoImage(Image.fromarray(get_mask_slices(self.id), mode='RGBA').resize(self.canvas_image_size))
+            self.mask_data = ImageTk.PhotoImage(Image.fromarray(get_mask_slices(self.id), mode='RGBA').resize(size=self.canvas_image_size, resample=Image.NEAREST))
             self.draw_mask()
 
     def draw_image(self):
