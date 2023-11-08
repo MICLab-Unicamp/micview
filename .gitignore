@@ -1,3 +1,8 @@
+# Prod and tests
+scripts/
+tests/
+.env*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,10 +13,13 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+.vscode
 build/
 develop-eggs/
 dist/
 downloads/
+update_package.sh
+.env
 eggs/
 .eggs/
 lib/
@@ -127,7 +135,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-
+myenv/
+/.python-version
 # Spyder project settings
 .spyderproject
 .spyproject
