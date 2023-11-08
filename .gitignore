@@ -1,6 +1,7 @@
 # Prod and tests
 scripts/
 tests/
+.env*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
