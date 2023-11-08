@@ -1,3 +1,7 @@
+# Prod and tests
+scripts/
+tests/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -14,7 +18,7 @@ develop-eggs/
 dist/
 downloads/
 update_package.sh
-scripts/
+.env
 eggs/
 .eggs/
 lib/
