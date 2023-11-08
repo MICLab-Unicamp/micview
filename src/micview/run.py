@@ -20,12 +20,12 @@ def main():
 
         if args.input.endswith(".nii.gz"):
             window = MainWindow(file=args.input, mask=mask_param, resized = args.resize)
-            window.mainloop()
+            return window.mainloop()
         else:
             raise ValueError("File format not supported.")
     else:
         window = MainWindow()
-        window.mainloop()
+        return window.mainloop()
 
 if __name__ == "__main__":
     main()
