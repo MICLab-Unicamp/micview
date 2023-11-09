@@ -1,5 +1,5 @@
 from argparse import ArgumentParser, ArgumentTypeError
-from __init__ import __version__
+from micview import __version__
 from micview.views.windows.MainWindow import MainWindow
 
 def niigz(s: str) -> None:
