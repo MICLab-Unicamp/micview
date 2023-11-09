@@ -11,7 +11,7 @@ setuptools.setup(
     version=__version__,
     author="Caio Ruiz Coldebella",
     author_email="c232621@dac.unicamp.br",
-    description="Open-source GUI for multimodal medical images and segmentations viewing",
+    description="Open-source GUI for visualization of multimodal medical images and segmentations viewing",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/MICLab-Unicamp/micview.git",

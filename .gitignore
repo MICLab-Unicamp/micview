@@ -1,7 +1,7 @@
 # Prod and tests
 scripts/
 tests/
-.env*
+#.env*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -18,7 +18,6 @@ build/
 develop-eggs/
 dist/
 downloads/
-update_package.sh
 .env
 eggs/
 .eggs/
