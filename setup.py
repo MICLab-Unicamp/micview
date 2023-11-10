@@ -1,5 +1,5 @@
 import setuptools
-from src import __version__
+from micview import __version__
 
 with open(file="README.md", mode="r") as fh:
     long_description: str = fh.read()
@@ -24,6 +24,6 @@ setuptools.setup(
     python_requires='>=3.8',
     install_requires=['setuptools', 'numpy>=1.22', 'scipy>=1.6.0', 'pillow>=9.0.0', 'SimpleITK>=2.3.0', 'screeninfo>=0.8.1'],
     entry_points={
-        'console_scripts': ["micview = src.micview.run:main"]
+        'console_scripts': ["micview = micview.run:main"]
     }
 )
