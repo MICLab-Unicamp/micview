@@ -23,25 +23,25 @@ class Animation(Thread):
         self.master.create_oval(
             self.master.center_x - self.radius, self.master.center_y - self.radius,
             self.master.center_x + self.radius, self.master.center_y + self.radius,
-            outline="blue", width=4,
+            outline="#EA2027", width=10,
         )
         self.master.create_oval(
             self.master.center_x - self.radius, self.master.center_y - self.radius,
             self.master.center_x + self.radius, self.master.center_y + self.radius,
-            outline="blue", width=4,
+            outline="#EA2027", width=10,
         )
 
         self.arc = self.master.create_arc(
             self.master.center_x - self.radius, self.master.center_y - self.radius,
             self.master.center_x + self.radius, self.master.center_y + self.radius,
-            start=180, extent=0, outline="blue", width=5, style=tk.ARC
+            start=180, extent=0, outline="#EA2027", width=10, style=tk.ARC
         )
 
     def draw_arc(self):
         self.master.itemconfig(
             self.arc,
             extent=self.angle,
-            outline="gray"
+            outline="#f1f2f6"
         )
 
     def update(self):

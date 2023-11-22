@@ -17,17 +17,17 @@ class CursorTool:
         self.cursorZ = tk.IntVar(self.master, value=self.initial_point[0]+1, name="cursorZ")
 
     def CreateWidgets(self):
-        self.title = tk.Label(self.master, text="Cursor Inspector", font=('Helvetica', 15, 'bold'))
+        self.title = tk.Label(self.master, text="Cursor Inspector", font=('Cambria', 13, 'bold'), bg="#f1f2f6")
         self.title.place(x=5, y=10)
-        self.cursorpositiontitle = tk.Label(self.master, text="Cursor position (x,y,z):", font=('Helvetica', 10))
+        self.cursorpositiontitle = tk.Label(self.master, text="Cursor position (x,y,z):", font=('Cambria', 10), bg="#f1f2f6")
         self.cursorpositiontitle.place(x=5, y=40)
-        self.posx = tk.Label(self.master, textvariable=self.cursorX, font=('Helvetica', 8))
+        self.posx = tk.Label(self.master, textvariable=self.cursorX, font=('Cambria', 8), bg="#ffffff")
         self.posx.place(x=5, y=60, width=30, height=30)
-        self.posy = tk.Label(self.master, textvariable=self.cursorY, font=('Helvetica', 8))
+        self.posy = tk.Label(self.master, textvariable=self.cursorY, font=('Cambria', 8), bg="#ffffff")
         self.posy.place(x=40, y=60, width=30, height=30)
-        self.posz = tk.Label(self.master, textvariable=self.cursorZ, font=('Helvetica', 8))
+        self.posz = tk.Label(self.master, textvariable=self.cursorZ, font=('Cambria', 8), bg="#ffffff")
         self.posz.place(x=75, y=60, width=30, height=30)
-        self.instensitytitle = tk.Label(self.master, text="Intensity under cursor:", font=('Helvetica', 10))
+        self.instensitytitle = tk.Label(self.master, text="Intensity under cursor:", font=('Cambria', 10), bg="#f1f2f6")
         self.instensitytitle.place(x=5, y=110)
         self.CreateTreeView()
 

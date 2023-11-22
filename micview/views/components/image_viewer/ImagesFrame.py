@@ -5,7 +5,7 @@ from micview.models.getters import views
 class ImagesFrame(tk.Frame):    
     def __init__(self, master):
         self.master = master
-        super().__init__(self.master, bd=4, bg= '#dfe3ee', highlightbackground='#759fe6', highlightthickness=2)
+        super().__init__(self.master, bd=4, bg= '#d1d8e0', highlightbackground='#759fe6', highlightthickness=2)
         self.place(x=205, rely=0, relwidth=1, relheight=1, width=-205)
         self.ConfigFrame()
         self.CreateWidgets()
@@ -23,5 +23,5 @@ class ImagesFrame(tk.Frame):
         self.coronal.grid(row=0, column=1, padx=5, pady=5, sticky='news')
         self.sagital = ImageCanvasView(self, id=2)
         self.sagital.grid(row=1, column=1, padx=5, pady=5, sticky='news')
-        self.imageorientation = tk.Canvas(self, background='lightblue')
+        self.imageorientation = tk.Canvas(self, background='#f1f2f6')
         self.imageorientation.grid(row=1, column=0, padx=5, pady=5, sticky='news')

@@ -17,7 +17,7 @@ class OpenImage(Parent):
         self.openbutton.configure(command=self.SubmitInfos)
 
     def OptionsComboboxes(self):
-        imageformat_text = tk.Label(self, text="Image Format", font=('Helvetica', 10), anchor="w", justify="left")
+        imageformat_text = tk.Label(self, text="Image Format", font=('Helvetica', 12, 'bold'), bg="#70a1ff", anchor="w", justify="left")
         imageformat_text.place(rely=0.55, relx=0.02, relheight=0.1, relwidth=0.6)
         self.image_format= ttk.Combobox(self, values=["Normal", "Resized"], state="readonly", justify="center")
         self.image_format.option_add('*TCombobox*Listbox.Justify', 'center')

@@ -14,7 +14,7 @@ class Parent(tk.Toplevel):
         self.ActionButtons()
 
     def Config_window(self):
-        self.configure(background='gray75')
+        self.configure(background='#70a1ff')
         self.geometry("400x300")
         self.resizable(False, False)
         self.transient(master=self.master)
@@ -31,15 +31,15 @@ class Parent(tk.Toplevel):
         self.pathtextvariable = tk.StringVar(self, value=f"Path: {os.getcwd()}", name="pathtextvariable")
 
     def Create_widgets(self):
-        title = tk.Label(self, text=f"Select {self.TypeOfFile}", font=('Helvetica', 15, 'bold'))
-        title.place(rely=0.02, relx=0.02, relwidth=0.45,relheight=0.1)
-        filenametext = tk.Label(self, text=f"{self.TypeOfFile} Filename:", font=('Helvetica', 11))
-        filenametext.place(rely=0.14, relx=0.02, relwidth=0.3,relheight=0.08)
-        warningtext = tk.Label(self, textvariable=self.warning, fg="red", font=('Helvetica', 8))
+        title = tk.Label(self, text=f"Select {self.TypeOfFile}", font=('Helvetica', 15, 'bold'), bg="#70a1ff",  justify="left", anchor="w")
+        title.place(rely=0.02, relx=0.02, relwidth=0.9,relheight=0.1)
+        filenametext = tk.Label(self, text=f"{self.TypeOfFile} Filename:", font=('Helvetica', 11), bg="#70a1ff", justify="left", anchor="w")
+        filenametext.place(rely=0.14, relx=0.02, relwidth=0.9,relheight=0.08)
+        warningtext = tk.Label(self, textvariable=self.warning, fg="red", font=('Helvetica', 8), bg="#70a1ff")
         warningtext.place(rely=0.14, relx=0.68, relwidth=0.3,relheight=0.08)
         self.input_text = tk.Entry(self, textvariable=self.filepath, font=('Helvetica', 10))
         self.input_text.place(rely=0.26, relx=0.02, relwidth=0.96, relheight=0.08)
-        pathtext = tk.Label(self, textvariable=self.pathtextvariable, fg="blue", font=('Helvetica', 8), anchor="w", justify="left")
+        pathtext = tk.Label(self, textvariable=self.pathtextvariable, fg="#4cd137", font=('Helvetica', 8), bg="#f1f2f3", anchor="w", justify="left")
         pathtext.place(rely=0.36, relx=0.02, relwidth=0.96,relheight=0.08)
 
     def ActionButtons(self):
