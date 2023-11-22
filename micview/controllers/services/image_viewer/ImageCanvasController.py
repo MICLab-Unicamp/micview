@@ -42,6 +42,8 @@ class ImageCanvasController:
     def refresh(self):# Refreshs the canvas objects
         self.image_data = ImageTk.PhotoImage(Image.fromarray(get_image_slices(self.id), mode='L').resize(size=self.canvas_image_size, resample=Image.NEAREST))
         self.draw_image()
+        self.master.delete('orient_text')
+        self.draw_orient_text()
         if states['options_states'].mask_is_set:
             self.mask_data = ImageTk.PhotoImage(Image.fromarray(get_mask_slices(self.id), mode='RGBA').resize(size=self.canvas_image_size, resample=Image.NEAREST))
             self.draw_mask()
@@ -51,3 +53,6 @@ class ImageCanvasController:
 
     def draw_mask(self):
         self.drawn_mask = self.master.create_image((self.master.center_x, self.master.center_y), image=self.mask_data, anchor="center", tags=("mask",))
+    
+    def draw_orient_text(self):
+        self.drawn_orient_text = self.master.create_text((1,self.master.center_y), text=f"L", anchor="w", tags=("orient_text",))

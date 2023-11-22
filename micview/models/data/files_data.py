@@ -2,7 +2,8 @@ class files_data_class:
     def __init__(self):
         self.__image_file = None
         self.__mask_file = None
-        self.__metadatas = None
+        self.__image_metadatas = None
+        self.__mask_metadatas = None
 
     @property
     def image_file(self):
@@ -21,9 +22,17 @@ class files_data_class:
         self.__mask_file = value
 
     @property
-    def metadatas(self):
-        return self.__metadatas
+    def image_metadatas(self):
+        return self.__image_metadatas
     
-    @metadatas.setter
-    def metadatas(self, value):
-        self.__metadatas = value
+    @image_metadatas.setter
+    def image_metadatas(self, value):
+        self.__image_metadatas = value
+    
+    @property
+    def mask_metadatas(self):
+        return self.__mask_metadatas
+    
+    @mask_metadatas.setter
+    def mask_metadatas(self, value):
+        self.__mask_metadatas = value
