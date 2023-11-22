@@ -3,7 +3,15 @@ import SimpleITK as sitk
 from micview.models.getters import data
 
 def OrientImage(file: sitk.Image):
-    oriented_image: sitk.Image = sitk.DICOMOrient(file, desiredCoordinateOrientation="LPI")
+    Orient = sitk.DICOMOrientImageFilter()
+    Orient.SetDesiredCoordinateOrientation(DesiredCoordinateOrientation="LPI")
+    oriented_image = Orient.Execute(file)
+    data['files_data'].flipped_axes = Orient.GetFlipAxes()
+    data['files_data'].orient_text = dict({
+        0: ["R", "A", "L", "P"],
+        1: ["R", "S", "L", "I"],
+        2: ["A", "S", "P", "I"]
+    })
     extracted = np.array(sitk.GetArrayFromImage(image=oriented_image))
     return extracted
 

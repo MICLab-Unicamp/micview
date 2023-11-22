@@ -55,4 +55,8 @@ class ImageCanvasController:
         self.drawn_mask = self.master.create_image((self.master.center_x, self.master.center_y), image=self.mask_data, anchor="center", tags=("mask",))
     
     def draw_orient_text(self):
-        self.drawn_orient_text = self.master.create_text((1,self.master.center_y), text=f"L", anchor="w", tags=("orient_text",))
+        self.orient_text = data['files_data'].orient_text[self.id]
+        self.drawn_orient_text = self.master.create_text((3,self.master.center_y), text=f"{self.orient_text[0]}", font=('Helvetica',15,'bold'), fill="Red", anchor="w", tags=("orient_text",))
+        self.drawn_orient_text = self.master.create_text((self.master.center_x,3), text=f"{self.orient_text[1]}", font=('Helvetica',15,'bold'), fill="Green", anchor="n", tags=("orient_text",))
+        self.drawn_orient_text = self.master.create_text((self.master.winfo_width()-3,self.master.center_y), text=f"{self.orient_text[2]}", fill="Green", font=('Helvetica',15,'bold'), anchor="e", tags=("orient_text",))
+        self.drawn_orient_text = self.master.create_text((self.master.center_x,self.master.winfo_height()-3), text=f"{self.orient_text[3]}", fill="Green", font=('Helvetica',15,'bold'), anchor="s", tags=("orient_text",))

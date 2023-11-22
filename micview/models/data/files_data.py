@@ -4,6 +4,8 @@ class files_data_class:
         self.__mask_file = None
         self.__image_metadatas = None
         self.__mask_metadatas = None
+        self.__flipped_axes = None
+        self.__orient_text = None
 
     @property
     def image_file(self):
@@ -36,3 +38,19 @@ class files_data_class:
     @mask_metadatas.setter
     def mask_metadatas(self, value):
         self.__mask_metadatas = value
+
+    @property
+    def flipped_axes(self):
+        return self.__flipped_axes
+    
+    @flipped_axes.setter
+    def flipped_axes(self, value):
+        self.__flipped_axes = value
+
+    @property
+    def orient_text(self):
+        return self.__orient_text
+
+    @orient_text.setter
+    def orient_text(self, value):
+        self.__orient_text = value

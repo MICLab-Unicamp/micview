@@ -42,6 +42,17 @@ def update_itens(intensity_arr, CursorTool):
 
 def update_point_indicators(CursorTool):
     point = models.data['cursor_data'].current_point
-    CursorTool.cursorX.set(point[2]+1)
-    CursorTool.cursorY.set(point[1]+1)
-    CursorTool.cursorZ.set(point[0]+1)
+    axes_shape = models.data['original_volume_data'].image_volume.shape[-3:]
+    flipped = models.data['files_data'].flipped_axes
+    if(flipped[0]):
+        CursorTool.cursorX.set(axes_shape[2]-point[2])
+    else:
+        CursorTool.cursorX.set(point[2]+1)
+    if(flipped[1]):
+        CursorTool.cursorY.set(axes_shape[1]-point[1])
+    else:
+        CursorTool.cursorY.set(point[1]+1)
+    if(flipped[2]):
+        CursorTool.cursorZ.set(axes_shape[0]-point[0])
+    else:
+        CursorTool.cursorZ.set(point[0]+1)
