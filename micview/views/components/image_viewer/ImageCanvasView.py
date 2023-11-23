@@ -1,5 +1,5 @@
 import tkinter as tk
-from micview.controllers.services.image_viewer.ImageCanvasController import *
+from micview.controllers.services.image_viewer.ImageCanvasController import ImageCanvasController
 
 class ImageCanvasView(tk.Canvas):
     def __init__(self, master: tk.Frame, id: int) -> None:

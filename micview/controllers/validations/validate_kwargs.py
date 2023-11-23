@@ -1,5 +1,7 @@
-def checkKwargs(**kwargs):
-    params = {'file': "", 'resized': False, 'mask': ""}
+from typing import Any, Dict
+
+def checkKwargs(**kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    params: Dict[str, Any]= {'file': "", 'resized': False, 'mask': ""}
     for key, value in kwargs.items():
         if(key == "file"):
             params["file"] = value
