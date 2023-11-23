@@ -4,12 +4,12 @@ from time import sleep
 
 
 class Animation(Thread):
-    def __init__(self, master: tk.Canvas, event: Event):
+    def __init__(self, master: tk.Canvas, event: Event) -> None:
         super().__init__()
-        self.master = master
-        self.event = event
+        self.master: tk.Canvas = master
+        self.event: Event = event
 
-    def run(self):
+    def run(self) -> None:
         self.radius = 50
         self.angle = 360
         self.speed = 10
@@ -19,32 +19,32 @@ class Animation(Thread):
             self.update()
         del self.arc
 
-    def create_forms(self):
+    def create_forms(self) -> None:
         self.master.create_oval(
             self.master.center_x - self.radius, self.master.center_y - self.radius,
             self.master.center_x + self.radius, self.master.center_y + self.radius,
-            outline="blue", width=4,
+            outline="#EA2027", width=10,
         )
         self.master.create_oval(
             self.master.center_x - self.radius, self.master.center_y - self.radius,
             self.master.center_x + self.radius, self.master.center_y + self.radius,
-            outline="blue", width=4,
+            outline="#EA2027", width=10,
         )
 
         self.arc = self.master.create_arc(
             self.master.center_x - self.radius, self.master.center_y - self.radius,
             self.master.center_x + self.radius, self.master.center_y + self.radius,
-            start=180, extent=0, outline="blue", width=5, style=tk.ARC
+            start=180, extent=0, outline="#EA2027", width=10, style=tk.ARC
         )
 
-    def draw_arc(self):
+    def draw_arc(self) -> None:
         self.master.itemconfig(
-            self.arc,
+            tagOrId=self.arc,
             extent=self.angle,
-            outline="gray"
+            outline="#f1f2f6"
         )
 
-    def update(self):
+    def update(self) -> None:
         self.angle -= self.speed
         if self.angle <= 0:
             self.angle = 360

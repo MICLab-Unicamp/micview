@@ -1,4 +1,6 @@
-pallete = [
+from typing import Dict, Any, List, Tuple
+
+pallete: List[Dict[str, Tuple[int,int,int]]] = [
     {'Number': 1, 'RGB': (255, 0, 0)},
     {'Number': 2, 'RGB': (0, 255, 0)},
     {'Number': 3, 'RGB': (0, 0, 255)},
@@ -8,15 +10,15 @@ pallete = [
     {'Number': 7, 'RGB': (255, 255, 255)}
 ]
 
-def MaskPallete(index):
+def MaskPallete(index: int) -> Dict[str, Any]:
     if(index < 7):
         return dict.copy(pallete[index])
     else:
-        color = dict.copy(pallete[index%7])
+        color: Dict[str, Any] = dict.copy(self=pallete[index%7])
         color["Number"] = index + 1
-        rgb = [0,0,0]
+        rgb: List[int] = [0,0,0]
         for i in range(3):
-            ton = abs(color["RGB"][i] - 30*(index//7))
+            ton: float = abs(color["RGB"][i] - 30*(index//7))
             if(ton>255):
                 ton = 255
             rgb[i] = ton

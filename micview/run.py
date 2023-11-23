@@ -1,5 +1,5 @@
 import sys
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser, ArgumentTypeError, Namespace
 from micview import __version__
 from micview.views.windows.MainWindow import MainWindow
 from typing import Optional, Sequence
@@ -23,7 +23,7 @@ def main(argv: Optional[Sequence[str]] = sys.argv[1:]) -> None:
     parser.add_argument('-t', '--test', action="store_true", help="Test if argument is valid, dont opens the window", required=False)
     parser.add_argument('-d', '--description', action="version", version="Open-source GUI for visualization of multimodal medical images and segmentations viewing")
 
-    args = parser.parse_args(args=argv)    
+    args: Namespace = parser.parse_args(args=argv)    
 
     if args.mask and not args.input:
         raise ValueError("Mask argument requires input argument")

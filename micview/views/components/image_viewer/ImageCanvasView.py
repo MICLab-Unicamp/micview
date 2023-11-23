@@ -1,12 +1,12 @@
 import tkinter as tk
-from micview.controllers.services.image_viewer.ImageCanvasController import *
+from micview.controllers.services.image_viewer.ImageCanvasController import ImageCanvasController
 
 class ImageCanvasView(tk.Canvas):
     def __init__(self, master: tk.Frame, id: int) -> None:
         self.master = master
         self.id: int = id
         self.controller = None
-        super().__init__(master=master, background="lightblue")
+        super().__init__(master=master, background="#f1f2f6")
         self.Config()
 
     def Config(self) -> None:
