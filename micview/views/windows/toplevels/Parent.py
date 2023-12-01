@@ -3,17 +3,17 @@ import os
 from micview.controllers.services.toplevels.input_file_handler import browseFileHandler, callbackCurrentDir, callbackFilePath, onClosing
 
 class Parent(tk.Toplevel):
-    def __init__(self, master: tk.Tk, windowtitle: str, TypeOfFile: str) -> None:
+    def __init__(self, master: tk.Tk, windowtitle: str, type_of_file: str) -> None:
         super().__init__(master=master)
         self.master = master
         self.title(string=windowtitle)
-        self.TypeOfFile: str = TypeOfFile
-        self.Config_window()
-        self.CreateVars()
-        self.Create_widgets()
-        self.ActionButtons()
+        self.type_of_file: str = type_of_file
+        self.configWindow()
+        self.createVars()
+        self.createWidgets()
+        self.actionButtons()
 
-    def Config_window(self) -> None:
+    def configWindow(self) -> None:
         self.configure(background='#70a1ff')
         self.geometry(newGeometry="400x300")
         self.resizable(width=False, height=False)
@@ -22,7 +22,7 @@ class Parent(tk.Toplevel):
         self.focus_force()
         self.grab_set()
 
-    def CreateVars(self) -> None:
+    def createVars(self) -> None:
         self.warning = tk.StringVar(master=self, value="", name="warning")
         self.filepath = tk.StringVar(master=self, value="", name="filepath")
         self.currentdirectory = tk.StringVar(master=self, value=os.getcwd(), name="currentdirectory")
@@ -30,10 +30,10 @@ class Parent(tk.Toplevel):
         self.traceid2: str = self.currentdirectory.trace_add(mode="write", callback=callbackCurrentDir)
         self.pathtextvariable = tk.StringVar(master=self, value=f"Path: {os.getcwd()}", name="pathtextvariable")
 
-    def Create_widgets(self) -> None:
-        title = tk.Label(master=self, text=f"Select {self.TypeOfFile}", font=('Helvetica', 15, 'bold'), bg="#70a1ff",  justify="left", anchor="w")
+    def createWidgets(self) -> None:
+        title = tk.Label(master=self, text=f"Select {self.type_of_file}", font=('Helvetica', 15, 'bold'), bg="#70a1ff",  justify="left", anchor="w")
         title.place(rely=0.02, relx=0.02, relwidth=0.9,relheight=0.1)
-        filenametext = tk.Label(master=self, text=f"{self.TypeOfFile} Filename:", font=('Helvetica', 11), bg="#70a1ff", justify="left", anchor="w")
+        filenametext = tk.Label(master=self, text=f"{self.type_of_file} Filename:", font=('Helvetica', 11), bg="#70a1ff", justify="left", anchor="w")
         filenametext.place(rely=0.14, relx=0.02, relwidth=0.9,relheight=0.08)
         warningtext = tk.Label(master=self, textvariable=self.warning, fg="red", font=('Helvetica', 8), bg="#70a1ff")
         warningtext.place(rely=0.14, relx=0.68, relwidth=0.3,relheight=0.08)
@@ -42,7 +42,7 @@ class Parent(tk.Toplevel):
         pathtext = tk.Label(master=self, textvariable=self.pathtextvariable, fg="#4cd137", font=('Helvetica', 8), bg="#f1f2f3", anchor="w", justify="left")
         pathtext.place(rely=0.36, relx=0.02, relwidth=0.96,relheight=0.08)
 
-    def ActionButtons(self) -> None:
+    def actionButtons(self) -> None:
         self.cancel = tk.Button(master=self, text="Cancel")
         self.browse = tk.Button(master=self, text="Browse", command=browseFileHandler)
         self.openbutton = tk.Button(master=self, text="Open File", state="disabled")

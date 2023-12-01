@@ -4,14 +4,14 @@ from micview.controllers.services.toplevels.input_file_handler import onClosing
 from micview.controllers.services.loading.loader import loadNewMask
 
 class OpenSegmentation(Parent):
-    def __init__(self, master: Tk, windowtitle: str ="Open Segmentation", TypeOfFile: str ="Segmentation") -> None:
-        super().__init__(master=master, windowtitle=windowtitle, TypeOfFile=TypeOfFile)
-        self.DefineClassOptions()
+    def __init__(self, master: Tk, windowtitle: str ="Open Segmentation", type_of_file: str ="Segmentation") -> None:
+        super().__init__(master=master, windowtitle=windowtitle, type_of_file=type_of_file)
+        self.defineClassOptions()
 
-    def DefineClassOptions(self) -> None:
-        self.openbutton.configure(command=self.SubmitInfos)
+    def defineClassOptions(self) -> None:
+        self.openbutton.configure(command=self.submitInfos)
 
-    def SubmitInfos(self) -> None:
+    def submitInfos(self) -> None:
         mask: str = self.currentdirectory.get()+'/'+self.filepath.get()
         self.loading_process = loadNewMask(mask=mask)
         self.loading_process.start()

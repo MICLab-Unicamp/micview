@@ -7,43 +7,43 @@ class Menu(tk.Menu):
         self.master = master
         super().__init__(master=self.master, tearoff=False, background='#4b7bec', foreground='white', activebackground='white', activeforeground='black')
         views['objects_ref'].Menu = self
-        self.init_sessions()
+        self.initSessions()
         self.master.config(menu=self)
 
-    def init_sessions(self) -> None:
-        self.file_init()
-        self.view_init()
-        self.segmentation_init()
-        self.edit_view()
-        self.tools_view()
+    def initSessions(self) -> None:
+        self.fileInit()
+        self.viewInit()
+        self.segmentationInit()
+        self.editView()
+        self.toolsView()
 
-    def file_init(self) -> None:
+    def fileInit(self) -> None:
         self.file_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
         self.file_options.add_command(label="Open Main Image", command=FileWindow)  
         self.file_options.add_separator()  
         self.file_options.add_command(label="Exit", command=self.master.quit)  
         self.add_cascade(label="File", menu=self.file_options)
 
-    def view_init(self) -> None:
+    def viewInit(self) -> None:
         self.radioboolvar = tk.BooleanVar(master=self.master, value = states['options_states'].image_is_square)
         self.view_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
-        self.view_options.add_radiobutton(label="Original Size", variable=self.radioboolvar, value=False, command=self.callback_radiobool, state="disabled")
-        self.view_options.add_radiobutton(label="Zoom To Fit", variable=self.radioboolvar, value=True, command=self.callback_radiobool, state="disabled")
+        self.view_options.add_radiobutton(label="Original Size", variable=self.radioboolvar, value=False, command=self.callbackRadiobool, state="disabled")
+        self.view_options.add_radiobutton(label="Zoom To Fit", variable=self.radioboolvar, value=True, command=self.callbackRadiobool, state="disabled")
         self.add_cascade(label="View", menu=self.view_options)
     
-    def segmentation_init(self) -> None:
+    def segmentationInit(self) -> None:
         self.segmentation_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
         self.segmentation_options.add_command(label="Open Segmentation", command=SegmentationWindow)
         self.segmentation_options.add_command(label="Save Segmentation")
         self.add_cascade(label="Segmentation", menu=self.segmentation_options)
 
-    def edit_view(self) -> None:
+    def editView(self) -> None:
         self.edit_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
         self.edit_options.add_command(label="Polygon Mode")
         self.edit_options.add_command(label="Paintbrush Mode")
         self.add_cascade(label="Edit", menu=self.edit_options)
 
-    def tools_view(self) -> None:
+    def toolsView(self) -> None:
         self.tools_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
         self.tools_options.add_command(label="Cursor Inspector")
         self.tools_options.add_command(label="Zoom Inspector")
@@ -58,5 +58,5 @@ class Menu(tk.Menu):
         self.tools_options.add_command(label="Image Metadata")
         self.add_cascade(label="Tools", menu=self.tools_options)
 
-    def callback_radiobool(self) -> None:
+    def callbackRadiobool(self) -> None:
         states['options_states'].image_is_square = self.radioboolvar.get()

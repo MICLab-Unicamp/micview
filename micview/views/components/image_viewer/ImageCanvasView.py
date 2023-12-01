@@ -7,15 +7,15 @@ class ImageCanvasView(tk.Canvas):
         self.id: int = id
         self.controller = None
         super().__init__(master=master, background="#f1f2f6")
-        self.Config()
+        self.config()
 
-    def Config(self) -> None:
+    def config(self) -> None:
         self.controller = ImageCanvasController(master=self)
 
     @property
-    def center_x(self) -> int:
+    def centerX(self) -> int:
         return self.winfo_width() // 2
     
     @property
-    def center_y(self) -> int:
+    def centerY(self) -> int:
         return self.winfo_height() // 2
