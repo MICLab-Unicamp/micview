@@ -21,19 +21,19 @@ class Animation(Thread):
 
     def create_forms(self) -> None:
         self.master.create_oval(
-            self.master.center_x - self.radius, self.master.center_y - self.radius,
-            self.master.center_x + self.radius, self.master.center_y + self.radius,
+            self.master.centerX - self.radius, self.master.centerY - self.radius,
+            self.master.centerX + self.radius, self.master.centerY + self.radius,
             outline="#EA2027", width=10,
         )
         self.master.create_oval(
-            self.master.center_x - self.radius, self.master.center_y - self.radius,
-            self.master.center_x + self.radius, self.master.center_y + self.radius,
+            self.master.centerX - self.radius, self.master.centerY - self.radius,
+            self.master.centerX + self.radius, self.master.centerY + self.radius,
             outline="#EA2027", width=10,
         )
 
         self.arc = self.master.create_arc(
-            self.master.center_x - self.radius, self.master.center_y - self.radius,
-            self.master.center_x + self.radius, self.master.center_y + self.radius,
+            self.master.centerX - self.radius, self.master.centerY - self.radius,
+            self.master.centerX + self.radius, self.master.centerY + self.radius,
             start=180, extent=0, outline="#EA2027", width=10, style=tk.ARC
         )
 

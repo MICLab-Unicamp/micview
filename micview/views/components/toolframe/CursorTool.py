@@ -10,15 +10,15 @@ class CursorTool:
         super().__init__()  # Call the __init__ method of the parent class
         self.master: tk.Tk = master
         self.initial_point: tuple[int] = models.data['cursor_data'].current_point
-        self.CreateVars()
-        self.CreateWidgets()
+        self.createVars()
+        self.createWidgets()
 
-    def CreateVars(self) -> None:
+    def createVars(self) -> None:
         self.cursorX = tk.IntVar(master=self.master, value=self.initial_point[2]+1, name="cursorX")
         self.cursorY = tk.IntVar(master=self.master, value=self.initial_point[1]+1, name="cursorY")
         self.cursorZ = tk.IntVar(master=self.master, value=self.initial_point[0]+1, name="cursorZ")
 
-    def CreateWidgets(self) -> None:
+    def createWidgets(self) -> None:
         self.title = tk.Label(master=self.master, text="Cursor Inspector", font=('Cambria', 13, 'bold'), bg="#f1f2f6")
         self.title.place(x=5, y=10)
         self.cursorpositiontitle = tk.Label(master=self.master, text="Cursor position (x,y,z):", font=('Cambria', 10), bg="#f1f2f6")
@@ -43,9 +43,9 @@ class CursorTool:
         self.treeview.heading(column="col0", text="Channel")
         self.treeview.heading(column="col1", text="Intensity")
         self.treeview.place(x=0, y=150, relheight=0.4, relwidth=1)
-        self.AddTreeviewItens(numofchannels=numofchannels)
+        self.addTreeviewItens(numofchannels=numofchannels)
         self.treeview.bind(sequence='<<TreeviewSelect>>', func=handle_selected_item)
 
-    def AddTreeviewItens(self, numofchannels: int) -> None:
+    def addTreeviewItens(self, numofchannels: int) -> None:
         for i in range(numofchannels):
             self.treeview.insert(parent='', index=tk.END, values=(f"{i+1}", "0"))

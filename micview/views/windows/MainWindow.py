@@ -13,15 +13,15 @@ class MainWindow(tk.Tk):
     def __init__(self, **kwargs: "dict[str, str]") -> None:
         self.kwargs: dict[str, dict[str, str]] = kwargs
         super().__init__()
-        self.Create()
+        self.create()
 
-    def Create(self) -> None:
-        self.ConfigWindow()
-        self.ScreenConfig()
-        self.Frames()
-        self.init_input()
+    def create(self) -> None:
+        self.configWindow()
+        self.screenConfig()
+        self.frames()
+        self.initInput()
 
-    def ConfigWindow(self) -> None:
+    def configWindow(self) -> None:
         self.window_name = "MICView"
         try:
             LOGO: str = os.path.join(site.getsitepackages()[0], "micview", "assets/miclab_logo.jpg")
@@ -31,7 +31,7 @@ class MainWindow(tk.Tk):
             pass
         init_models(master=self)
 
-    def ScreenConfig(self) -> None:
+    def screenConfig(self) -> None:
         self.screensize: dict[str, int] = get_screensize()
         self.title(string=self.window_name)
         self.configure(background= '#2d98da')
@@ -39,14 +39,14 @@ class MainWindow(tk.Tk):
         self.resizable(width=True, height=True)
         self.minsize(width=700, height=500)
 
-    def Frames(self) -> None:
+    def frames(self) -> None:
         self.Left_Frame = tk.Frame(master=self, bd=4, bg= '#d1d8e0', highlightbackground= '#759fe6', highlightthickness=2)
         self.Left_Frame.place(x=0, rely=0, width=200, relheight=1)
         self.ToolFrame = ToolFrame(master=self.Left_Frame)
         self.ImagesFrame = ImagesFrame(master=self)
         self.Menu = Menu(master=self)
 
-    def init_input(self) -> None:
+    def initInput(self) -> None:
         if(self.kwargs):
             self.loading_process = loadImageFromShell(**self.kwargs)
             self.loading_process.start()
