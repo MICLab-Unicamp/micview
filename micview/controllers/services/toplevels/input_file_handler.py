@@ -6,7 +6,7 @@ from micview.models.getters import views
 def browseFileHandler() -> None:
         window: object = views['objects_ref'].SideWindow
         window.withdraw()
-        name: str = fd.askopenfilename(initialdir="./", title="Select File", filetypes= (("NiFTI files","*.nii.gz"),("all files","*.*")))
+        name: str = fd.askopenfilename(initialdir="./", title="Select File", filetypes= (("NiFTI files","*.nii.gz"),("DICOM files","*.dcm") ,("all files","*.*")))
         if(type(name) != str):
             window.deiconify()
             return
@@ -29,7 +29,7 @@ def callbackFilePath(*args: None) -> None:
         window.openbutton['state'] = "disabled"
     else:
         path_split: List[str] = path.split('.')
-        if(len(path_split) > 2 and path_split[-1] == "gz" and path_split[-2] == "nii"):
+        if((len(path_split) > 2 and path_split[-1] == "gz" and path_split[-2] == "nii") or (len(path_split) > 1 and path_split[-1] == "dcm")):
             finalpath: str = window.currentdirectory.get()+"/"+path
             if(os.path.exists(path=finalpath)):
                 window.finalpath = finalpath
