@@ -19,7 +19,7 @@ def actionOnChild(* args: Any) -> None:
             parent.coronal.controller.eventHandler("action_on_child")
             parent.axial.controller.eventHandler("action_on_child")
     else:
-            raise Exception ###################
+            raise IndexError
         
 def updateAllChilds(* args: Any) -> None:
     if(models.states['toolframe_states'].selected_tool == "cursor"):

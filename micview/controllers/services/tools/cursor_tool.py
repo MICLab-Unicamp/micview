@@ -42,7 +42,7 @@ def updateItens(intensity_arr: List[str], CursorTool: object) -> None:
         values: List[Any] = treeview.item(itens[i],'values')
         treeview.item(itens[i], values=(values[0], intensity_arr[i]))
 
-def updatePointIndicators(CursorTool) -> None:
+def updatePointIndicators(CursorTool: object) -> None:
     point: Tuple[int] = models.data['cursor_data'].current_point
     axes_shape: Tuple[int] = models.data['original_volume_data'].image_volume.shape[-3:]
     flipped: Tuple[bool] = models.data['files_data'].flipped_axes
