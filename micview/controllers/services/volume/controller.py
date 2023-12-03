@@ -27,7 +27,7 @@ def getImageSlices(axis: int) -> List[Any]:
         elif (axis == 2):
             return volume[:, :, current_point[2]]
         else:
-            raise LookupError  # Revisar os erros padroes
+            raise IndexError
     else:
         if (axis == 0):
             return volume[channel_select, current_point[0], :, :]
@@ -36,7 +36,7 @@ def getImageSlices(axis: int) -> List[Any]:
         elif (axis == 2):
             return volume[channel_select, :, :, current_point[2]]
         else:
-            raise LookupError  # Revisar os erros padroes
+            raise IndexError
 
 
 def getMaskSlices(axis: int) -> List[Any]:
@@ -49,4 +49,4 @@ def getMaskSlices(axis: int) -> List[Any]:
     elif (axis == 2):
         return mask[:, :, current_point[2], :]
     else:
-        raise LookupError  # Revisar os erros padroes
+        raise IndexError

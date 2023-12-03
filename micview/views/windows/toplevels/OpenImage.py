@@ -16,14 +16,16 @@ class OpenImage(Parent):
         self.resized_image = tk.BooleanVar(master=self, value=False, name="resized_image")
         self.openbutton.configure(command=self.submitInfos)
 
+
     def optionsComboboxes(self) -> None:
         imageformat_text = tk.Label(master=self, text="Image Format", font=('Helvetica', 12, 'bold'), bg="#70a1ff", anchor="w", justify="left")
         imageformat_text.place(rely=0.55, relx=0.02, relheight=0.1, relwidth=0.6)
         self.image_format= ttk.Combobox(master=self, values=["Normal", "Resized"], state="readonly", justify="center")
-        self.image_format.option_add(pattern='*TCombobox*Listbox.Justify', value='center')
+        self.image_format.option_add(pattern= '*TCombobox*Listbox.Justify', value='center')
         self.image_format.set(value="Normal")
         self.image_format.bind(sequence='<<ComboboxSelected>>', func=lambda event: resizedImageHandler(event))
         self.image_format.place(rely= 0.55, relx=0.68, relheight=0.1, relwidth=0.20)
+
 
     def submitInfos(self) -> None:
         file: str=self.currentdirectory.get()+'/'+self.filepath.get()
