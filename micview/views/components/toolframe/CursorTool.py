@@ -3,7 +3,7 @@ from tkinter import ttk
 import importlib
 from types import ModuleType
 models: ModuleType = importlib.import_module(name='micview.models.getters')
-from micview.controllers.services.tools.cursor_tool import handle_selected_item
+from micview.controllers.services.tools.cursor_tool import handleSelectedItem
 
 class CursorTool:
     def __init__(self, master: tk.Tk) -> None:
@@ -44,7 +44,7 @@ class CursorTool:
         self.treeview.heading(column="col1", text="Intensity")
         self.treeview.place(x=0, y=150, relheight=0.4, relwidth=1)
         self.addTreeviewItens(numofchannels=numofchannels)
-        self.treeview.bind(sequence='<<TreeviewSelect>>', func=handle_selected_item)
+        self.treeview.bind(sequence='<<TreeviewSelect>>', func=handleSelectedItem)
 
     def addTreeviewItens(self, numofchannels: int) -> None:
         for i in range(numofchannels):

@@ -13,13 +13,13 @@ class Animation(Thread):
         self.radius = 50
         self.angle = 360
         self.speed = 10
-        self.create_forms()
+        self.createForms()
         while not self.event.is_set():
             sleep(0.05)
             self.update()
         del self.arc
 
-    def create_forms(self) -> None:
+    def createForms(self) -> None:
         self.master.create_oval(
             self.master.centerX - self.radius, self.master.centerY - self.radius,
             self.master.centerX + self.radius, self.master.centerY + self.radius,
@@ -37,7 +37,7 @@ class Animation(Thread):
             start=180, extent=0, outline="#EA2027", width=10, style=tk.ARC
         )
 
-    def draw_arc(self) -> None:
+    def drawArc(self) -> None:
         self.master.itemconfig(
             tagOrId=self.arc,
             extent=self.angle,
@@ -48,4 +48,4 @@ class Animation(Thread):
         self.angle -= self.speed
         if self.angle <= 0:
             self.angle = 360
-        self.draw_arc()
+        self.drawArc()

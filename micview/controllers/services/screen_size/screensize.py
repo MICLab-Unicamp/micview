@@ -1,7 +1,7 @@
 from typing import List
 from screeninfo import get_monitors
 
-def get_screensize() -> "dict[str, int]":
+def getScreensize() -> "dict[str, int]":
     arr: List[object] = get_monitors()
     for monitor in arr:
         if(monitor.is_primary):

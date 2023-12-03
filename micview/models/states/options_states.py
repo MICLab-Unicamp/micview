@@ -1,13 +1,13 @@
 import tkinter as tk
-from micview.controllers.hooks.optional_states_hooks import image_is_square_hook, mask_is_set_hook
+from micview.controllers.hooks.optional_states_hooks import imageIsSquareHook, maskIsSetHook
 
-class options_states_class:
+class OptionsStatesClass:
         def __init__(self, master: tk.Tk) -> None:
                 super().__init__()
                 self.__image_is_square = tk.BooleanVar(master=master, value=False, name="image_is_square")
-                self.__image_is_square.trace_add(mode="write", callback=image_is_square_hook)
+                self.__image_is_square.trace_add(mode="write", callback=imageIsSquareHook)
                 self.__mask_is_set = tk.BooleanVar(master=master, value=False, name="mask_is_set")
-                self.__mask_is_set.trace_add(mode="write", callback=mask_is_set_hook)
+                self.__mask_is_set.trace_add(mode="write", callback=maskIsSetHook)
 
         @property
         def image_is_square(self) -> bool:

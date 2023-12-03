@@ -1,7 +1,7 @@
 from tkinter import Tk
 from micview.views.windows.toplevels.Parent import Parent
 from micview.controllers.services.toplevels.input_file_handler import onClosing
-from micview.controllers.services.loading.loader import loadNewMask
+from micview.controllers.services.loading.loader import LoadNewMask
 
 class OpenSegmentation(Parent):
     def __init__(self, master: Tk, windowtitle: str ="Open Segmentation", type_of_file: str ="Segmentation") -> None:
@@ -13,6 +13,6 @@ class OpenSegmentation(Parent):
 
     def submitInfos(self) -> None:
         mask: str = self.currentdirectory.get()+'/'+self.filepath.get()
-        self.loading_process = loadNewMask(mask=mask)
+        self.loading_process = LoadNewMask(mask=mask)
         self.loading_process.start()
         onClosing()

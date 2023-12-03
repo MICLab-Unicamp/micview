@@ -2,7 +2,7 @@ from typing import Any, List, Literal, Tuple
 from micview.models.getters import states, data
 from typing import List, Tuple
 
-def calc_canvas_image_size(canvas_shape: Tuple[int,int]=(0,0), image_shape: Tuple[int,int]=(0,0)) -> Tuple[int, int]:
+def calcCanvasImageSize(canvas_shape: Tuple[int,int]=(0,0), image_shape: Tuple[int,int]=(0,0)) -> Tuple[int, int]:
         '''
         Calcs the image size that will be displayed on canvas
         '''
@@ -12,7 +12,7 @@ def calc_canvas_image_size(canvas_shape: Tuple[int,int]=(0,0), image_shape: Tupl
         mult_factor: float = canvas_shape[1]/image_shape[max_side]
         return (int(mult_factor*image_shape[1]), int(mult_factor*image_shape[0]))
 
-def calc_proportion_factor(id: int ,canvas_image_size: Tuple[float, float]) -> Tuple[float, float]:
+def calcProportionFactor(id: int ,canvas_image_size: Tuple[float, float]) -> Tuple[float, float]:
     '''
     Calcs the proportion factor between image in canvas and volume
     '''
@@ -27,7 +27,7 @@ def calc_proportion_factor(id: int ,canvas_image_size: Tuple[float, float]) -> T
     if(id == 2):
         return (volume_shape[1 + shift]/canvas_image_size[0], volume_shape[0 + shift]/canvas_image_size[1])
     
-def get_3D_coordinate(id:int, x:int, y:int) -> List[int]:
+def get3DCoordinate(id:int, x:int, y:int) -> List[int]:
     '''
     Gets the 3D coordinate on volume
     '''
@@ -38,7 +38,7 @@ def get_3D_coordinate(id:int, x:int, y:int) -> List[int]:
     if(id == 2):
         return [y, x, 0]
     
-def get_equivalent_point(canvas_shape: List[int], canvas_image_size: Tuple[float, float], proportion_factor: float, e: Any) -> Tuple[int, int]:
+def getEquivalentPoint(canvas_shape: List[int], canvas_image_size: Tuple[float, float], proportion_factor: float, e: Any) -> Tuple[int, int]:
     '''
     Gets equivalent point of canvas on volume surface
     '''

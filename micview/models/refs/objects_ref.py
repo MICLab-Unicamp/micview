@@ -1,4 +1,4 @@
-class objects_ref_class:
+class ObjectsRefClass:
     def __init__(self) -> None:
         super().__init__()
         self.__ImagesFrame: object = None
@@ -26,7 +26,7 @@ class objects_ref_class:
 
     @ToolFrame.deleter
     def ToolFrame(self) -> None:
-        self.__ToolFrame.del_actual_tool()
+        self.__ToolFrame.delActualTool()
 
     @property
     def Menu(self) -> object:

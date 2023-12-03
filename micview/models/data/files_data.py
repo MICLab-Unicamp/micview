@@ -1,7 +1,7 @@
 from typing import Any, Dict
 import SimpleITK as sitk
 
-class files_data_class:
+class FilesDataClass:
     def __init__(self) -> None:
         super().__init__()
         self.__image_file: sitk.Image = None

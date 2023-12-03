@@ -1,6 +1,6 @@
 import tkinter as tk
 from micview.models.getters import views, states
-from micview.controllers.services.menu.callbacks_onclick import FileWindow, SegmentationWindow
+from micview.controllers.services.menu.callbacks_onclick import fileWindow, segmentationWindow
 
 class Menu(tk.Menu):
     def __init__(self, master: tk.Tk) -> None:
@@ -19,7 +19,7 @@ class Menu(tk.Menu):
 
     def fileInit(self) -> None:
         self.file_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
-        self.file_options.add_command(label="Open Main Image", command=FileWindow)  
+        self.file_options.add_command(label="Open Main Image", command=fileWindow)  
         self.file_options.add_separator()  
         self.file_options.add_command(label="Exit", command=self.master.quit)  
         self.add_cascade(label="File", menu=self.file_options)
@@ -33,7 +33,7 @@ class Menu(tk.Menu):
     
     def segmentationInit(self) -> None:
         self.segmentation_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
-        self.segmentation_options.add_command(label="Open Segmentation", command=SegmentationWindow)
+        self.segmentation_options.add_command(label="Open Segmentation", command=segmentationWindow)
         self.segmentation_options.add_command(label="Save Segmentation")
         self.add_cascade(label="Segmentation", menu=self.segmentation_options)
 

@@ -1,6 +1,6 @@
 from typing import Any, List
 
-class toolframe_data_class:
+class ToolframeDataClass:
         def __init__(self) -> None:
                 super().__init__()
                 self.__channel_intensity: List[Any] = ""
