@@ -4,19 +4,19 @@ from micview import __version__
 from micview.views.windows.MainWindow import MainWindow
 from typing import Optional, Sequence
 
-def niigz(s: str) -> None:
-    if(s.endswith(".nii.gz")):
+def verifyType(s: str) -> None:
+    if(s.endswith(".nii.gz" or ".dcm")):
         return s
     else:
-        raise ArgumentTypeError("File format not supported, expected .nii.gz")
+        raise ArgumentTypeError("File format not supported, expected .nii.gz or .dcm")
 
 
 def main(argv: Optional[Sequence[str]] = sys.argv[1:]) -> None:
     parser = ArgumentParser(prog="micview")
 
     parser_file = parser.add_argument_group(title="run_file", description="Opens micview passing a file as argument")
-    parser_file.add_argument('-i', '--input', type=niigz, help="Input image file, archive must ends with .nii.gz", required=False)
-    parser_file.add_argument('-m', '--mask', type=niigz, help="Mask image file, requires input argument, archive must ends with .nii.gz", required=False)
+    parser_file.add_argument('-i', '--input', type=verifyType, help="Input image file, archive must ends with .nii.gz or .dcm", required=False)
+    parser_file.add_argument('-m', '--mask', type=verifyType, help="Mask image file, requires input argument, archive must ends with .nii.gz or .dcm", required=False)
     parser_file.add_argument('-r','--resize', action="store_true", help="Resize image to fit screen, requires input argument", required=False)
     
     parser.add_argument('-v', '--version', action='version', version=__version__)
