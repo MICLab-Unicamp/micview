@@ -1,4 +1,4 @@
-class cursor_data_class:
+class CursorDataClass:
     def __init__(self) -> None:
         super().__init__()
         self.__current_point: "tuple[int,int,int]" = None

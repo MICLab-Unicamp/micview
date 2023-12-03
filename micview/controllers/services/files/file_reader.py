@@ -3,7 +3,7 @@ from typing import Any, List, Dict
 import SimpleITK as sitk
 from micview.models.getters import data
 
-def OrientImage(file: sitk.Image) -> List[Any]:
+def orientImage(file: sitk.Image) -> List[Any]:
     Orient = sitk.DICOMOrientImageFilter()
     Orient.SetDesiredCoordinateOrientation(DesiredCoordinateOrientation="LPI")
     oriented_image: Any = Orient.Execute(image1=file)
@@ -22,7 +22,7 @@ def readImageFile(path: str) -> List[Any]:
     for key in MetadatasFile.GetMetaDataKeys():
         image_metadatas[key] = MetadatasFile.GetMetaData(key=key)
     data['files_data'].image_metadatas = image_metadatas
-    ArrayFromImage: List[Any] = OrientImage(file=MetadatasFile)
+    ArrayFromImage: List[Any] = orientImage(file=MetadatasFile)
     return ArrayFromImage
 
 def readMaskFile(path: str) -> List[Any]:
@@ -31,5 +31,5 @@ def readMaskFile(path: str) -> List[Any]:
     for key in MetadatasFile.GetMetaDataKeys():
         mask_metadatas[key] = MetadatasFile.GetMetaData(key=key)
     data['files_data'].mask_metadatas = mask_metadatas
-    ArrayFromImage: List[Any] = OrientImage(file=MetadatasFile)
+    ArrayFromImage: List[Any] = orientImage(file=MetadatasFile)
     return ArrayFromImage

@@ -1,20 +1,20 @@
 import tkinter as tk
-from micview.models.data.cursor_data import cursor_data_class
-from micview.models.data.toolframe_data import toolframe_data_class
-from micview.models.data.files_data import files_data_class
-from micview.models.data.original_volume_data import original_volume_data_class
-from micview.models.data.changed_volume_data import changed_volume_data_class
-from micview.models.refs.objects_ref import objects_ref_class
-from micview.models.states.image_canvas_states import image_canvas_states_class
-from micview.models.states.loading_states import loading_states_class
-from micview.models.states.toolframe_states import toolframe_states_class
-from micview.models.states.options_states import options_states_class
+from micview.models.data.cursor_data import CursorDataClass
+from micview.models.data.toolframe_data import ToolframeDataClass
+from micview.models.data.files_data import FilesDataClass
+from micview.models.data.original_volume_data import OriginalVolumeDataClass
+from micview.models.data.changed_volume_data import ChangedVolumeDataClass
+from micview.models.refs.objects_ref import ObjectsRefClass
+from micview.models.states.image_canvas_states import ImageCanvasStatesClass
+from micview.models.states.loading_states import LoadingStatesClass
+from micview.models.states.toolframe_states import ToolframeStatesClass
+from micview.models.states.options_states import OptionsStatesClass
 
 data: "dict[str,str]" = dict()
 views: "dict[str,str]" = dict()
 states: "dict[str,str]" = dict()
 
-def init_models(master: tk.Tk) -> None:
+def initModels(master: tk.Tk) -> None:
     """
     Initializes the models used in the application.
 
@@ -25,16 +25,16 @@ def init_models(master: tk.Tk) -> None:
         None
     """
     global data, views, states
-    data['cursor_data'] = cursor_data_class()
-    data['toolframe_data'] = toolframe_data_class()
-    data['files_data'] = files_data_class()
-    data['original_volume_data'] = original_volume_data_class()
-    data['changed_volume_data'] = changed_volume_data_class()
-    views['objects_ref'] = objects_ref_class()
-    states['image_canvas_states'] = image_canvas_states_class(master=master)
-    states['loading_states'] = loading_states_class(master=master)
-    states['options_states'] = options_states_class(master=master)
-    states['toolframe_states'] = toolframe_states_class(master=master)
+    data['cursor_data'] = CursorDataClass()
+    data['toolframe_data'] = ToolframeDataClass()
+    data['files_data'] = FilesDataClass()
+    data['original_volume_data'] = OriginalVolumeDataClass()
+    data['changed_volume_data'] = ChangedVolumeDataClass()
+    views['objects_ref'] = ObjectsRefClass()
+    states['image_canvas_states'] = ImageCanvasStatesClass(master=master)
+    states['loading_states'] = LoadingStatesClass(master=master)
+    states['options_states'] = OptionsStatesClass(master=master)
+    states['toolframe_states'] = ToolframeStatesClass(master=master)
     master.states = states
     master.views = views
     master.data = data

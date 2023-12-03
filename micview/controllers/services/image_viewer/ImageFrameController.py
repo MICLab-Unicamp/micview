@@ -21,7 +21,7 @@ class LoadingCircles(Thread):
         self.animation_c.join()
         self.animation_s.join()
 
-def enable_all_canvas() -> None:
+def enableAllCanvas() -> None:
     images_frame: object = views['objects_ref'].ImagesFrame
     images_frame.axial.delete("all")
     images_frame.axial.bind('<Configure>', images_frame.axial.controller.resize)
@@ -37,7 +37,7 @@ def enable_all_canvas() -> None:
     images_frame.sagital.bind('<B1-Motion>', images_frame.sagital.controller.click)
     images_frame.update()
 
-def disable_all_canvas() -> None:
+def disableAllCanvas() -> None:
     images_frame: object = views['objects_ref'].ImagesFrame
     images_frame.axial.delete("all")
     images_frame.axial.unbind('<Configure>')

@@ -1,6 +1,6 @@
 from typing import Any
 
-class original_volume_data_class:
+class OriginalVolumeDataClass:
     def __init__(self) -> None:
         super().__init__()
         self.__image_volume: Any = None

@@ -2,7 +2,7 @@ from typing import Any, Tuple, List
 import numpy as np
 from micview.models.getters import states, data
 
-def change_current_point(axis0: int, axis1: int, axis2: int) -> None:
+def changeCurrentPoint(axis0: int, axis1: int, axis2: int) -> None:
     current_point: Tuple[int] = data['cursor_data'].current_point
     if (axis0 >= 0):
         current_point[0] = axis0
@@ -12,7 +12,7 @@ def change_current_point(axis0: int, axis1: int, axis2: int) -> None:
         current_point[2] = axis2
     data['cursor_data'].current_point = current_point
 
-def get_image_slices(axis: int) -> List[Any]:
+def getImageSlices(axis: int) -> List[Any]:
     channel_select: int = states['toolframe_states'].channel_select
     current_point: Tuple[int] = data['cursor_data'].current_point
     volume: List[Any] = data['changed_volume_data'].changed_image_volume
@@ -39,7 +39,7 @@ def get_image_slices(axis: int) -> List[Any]:
             raise LookupError  # Revisar os erros padroes
 
 
-def get_mask_slices(axis: int) -> List[Any]:
+def getMaskSlices(axis: int) -> List[Any]:
     current_point: Tuple[int] = data['cursor_data'].current_point
     mask: List[Any] = data['changed_volume_data'].changed_mask_volume
     if (axis == 0):

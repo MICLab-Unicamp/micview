@@ -10,7 +10,7 @@ pallete: List[Dict[str, Tuple[int,int,int]]] = [
     {'Number': 7, 'RGB': (255, 255, 255)}
 ]
 
-def MaskPallete(index: int) -> Dict[str, Any]:
+def maskPallete(index: int) -> Dict[str, Any]:
     if(index < 7):
         return dict.copy(pallete[index])
     else:

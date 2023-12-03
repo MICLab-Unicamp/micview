@@ -8,9 +8,9 @@ class ToolFrame(tk.Frame):
         views['objects_ref'].ToolFrame = self
         self.actual_tool = None
 
-    def set_actual_tool(self, ToolObject: object) -> None:
+    def setActualTool(self, ToolObject: object) -> None:
         self.actual_tool: object = ToolObject
 
-    def del_actual_tool(self) -> None:
+    def delActualTool(self) -> None:
         if(self.actual_tool is not None):
             del self.actual_tool

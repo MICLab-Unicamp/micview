@@ -2,9 +2,9 @@ import os
 import site
 import tkinter as tk
 from PIL import Image, ImageTk
-from micview.models.getters import init_models
-from micview.controllers.services.screen_size.screensize import get_screensize
-from micview.controllers.services.loading.loader import loadImageFromShell
+from micview.models.getters import initModels
+from micview.controllers.services.screen_size.screensize import getScreensize
+from micview.controllers.services.loading.loader import LoadImageFromShell
 from micview.views.components.image_viewer.ImagesFrame import ImagesFrame
 from micview.views.components.menu.Menu import Menu
 from micview.views.components.toolframe.ToolFrame import ToolFrame
@@ -29,10 +29,10 @@ class MainWindow(tk.Tk):
             self.iconphoto(default=False, __image1=self.image_icon)
         except:
             pass
-        init_models(master=self)
+        initModels(master=self)
 
     def screenConfig(self) -> None:
-        self.screensize: dict[str, int] = get_screensize()
+        self.screensize: dict[str, int] = getScreensize()
         self.title(string=self.window_name)
         self.configure(background= '#2d98da')
         self.geometry(newGeometry=f"{self.screensize['width']}x{self.screensize['height']}")
@@ -48,5 +48,5 @@ class MainWindow(tk.Tk):
 
     def initInput(self) -> None:
         if(self.kwargs):
-            self.loading_process = loadImageFromShell(**self.kwargs)
+            self.loading_process = LoadImageFromShell(**self.kwargs)
             self.loading_process.start()

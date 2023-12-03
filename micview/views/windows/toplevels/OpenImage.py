@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from micview.views.windows.toplevels.Parent import Parent
 from micview.controllers.services.toplevels.input_file_handler import resizedImageHandler, onClosing
-from micview.controllers.services.loading.loader import loadNewImage
+from micview.controllers.services.loading.loader import LoadNewImage
 
 class OpenImage(Parent):
     def __init__(self, master: tk.Tk, windowtitle: str ="Open Image", type_of_file: str ="Image") -> None:
@@ -28,6 +28,6 @@ class OpenImage(Parent):
     def submitInfos(self) -> None:
         file: str=self.currentdirectory.get()+'/'+self.filepath.get()
         resized: bool=self.resized_image.get()
-        self.loading_process = loadNewImage(file=file, resized=resized)
+        self.loading_process = LoadNewImage(file=file, resized=resized)
         self.loading_process.start()
         onClosing()

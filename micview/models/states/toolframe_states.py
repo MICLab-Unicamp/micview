@@ -1,15 +1,15 @@
 import tkinter as tk
-from micview.controllers.hooks.toolframe_states_hooks import channel_select_hook, selected_tool_hook, tool_is_set_hook
+from micview.controllers.hooks.toolframe_states_hooks import channelSelectHook, selectedToolHook, toolIsSetHook
 
-class toolframe_states_class:
+class ToolframeStatesClass:
     def __init__(self, master: tk.Tk) -> None:
         super().__init__()      
         self.__channel_select = tk.IntVar(master=master, value=0, name="channel_select")
-        self.__channel_select.trace(mode='w', callback=channel_select_hook)
+        self.__channel_select.trace(mode='w', callback=channelSelectHook)
         self.__selected_tool = tk.StringVar(master=master, value="none", name="selected_tool")
-        self.__selected_tool.trace(mode='w', callback=selected_tool_hook)
+        self.__selected_tool.trace(mode='w', callback=selectedToolHook)
         self.__tool_is_set = tk.BooleanVar(master=master, value=False, name="tool_is_set")
-        self.__tool_is_set.trace(mode='w', callback=tool_is_set_hook)
+        self.__tool_is_set.trace(mode='w', callback=toolIsSetHook)
 
     @property
     def channel_select(self) -> int:

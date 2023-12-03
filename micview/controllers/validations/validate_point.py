@@ -1,6 +1,6 @@
 from micview.models.getters import data
 
-def get_nearest_valid_point(x: float, y: float, z: float) -> "list[float]":
+def getNearestValidPoint(x: float, y: float, z: float) -> "list[float]":
     volume_shape: list[int] = data['changed_volume_data'].changed_image_volume.shape
     valid_points: list[int] = [round(number=x), round(number=y), round(number=z)]
     for i in range(3):

@@ -1,11 +1,11 @@
 import tkinter as tk
-from micview.controllers.hooks.loading_states_hooks import loading_hook
+from micview.controllers.hooks.loading_states_hooks import loadingHook
 
-class loading_states_class:
+class LoadingStatesClass:
     def __init__(self, master: tk.Tk) -> None:
         super().__init__()
         self.__loading = tk.BooleanVar(master=master, value=False, name="loading")
-        self.__loading.trace(mode='w', callback=loading_hook)       
+        self.__loading.trace(mode='w', callback=loadingHook)       
         self.__image_is_loaded = False
         self.__mask_is_loaded = False
 

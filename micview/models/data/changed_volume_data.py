@@ -1,6 +1,6 @@
 from typing import Any, List
 
-class changed_volume_data_class:
+class ChangedVolumeDataClass:
     def __init__(self) -> None:
         super().__init__()
         self.__changed_image_volume: List[Any] = None
