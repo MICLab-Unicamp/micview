@@ -65,10 +65,11 @@ class ImageCanvasController:
     
     def drawOrientText(self) -> None:
         self.orient_text: Dict[str, Any] = data['files_data'].orient_text[self.id]
-        self.drawn_orient_text: int = self.master.create_text((10,self.master.centerY), text=f"{self.orient_text[0]}", font=('Cambria',15,'bold'), fill="#EA2027", anchor="w", tags=("orient_text",))
-        self.drawn_orient_text: int = self.master.create_text((self.master.centerX,3), text=f"{self.orient_text[1]}", font=('Cambria',13,'bold'), fill="#EA2027", anchor="n", tags=("orient_text",))
-        self.drawn_orient_text: int = self.master.create_text((self.canvas_shape[0] -10,self.master.centerY), text=f"{self.orient_text[2]}", fill="#EA2027", font=('Cambria',15,'bold'), anchor="e", tags=("orient_text",))
-        self.drawn_orient_text: int = self.master.create_text((self.master.centerX,self.canvas_shape[1] -3), text=f"{self.orient_text[3]}", fill="#EA2027", font=('Cambria',13,'bold'), anchor="s", tags=("orient_text",))
+        if(self.orient_text):
+            self.drawn_orient_text: int = self.master.create_text((10,self.master.centerY), text=f"{self.orient_text[0]}", font=('Cambria',15,'bold'), fill="#EA2027", anchor="w", tags=("orient_text",))
+            self.drawn_orient_text: int = self.master.create_text((self.master.centerX,3), text=f"{self.orient_text[1]}", font=('Cambria',13,'bold'), fill="#EA2027", anchor="n", tags=("orient_text",))
+            self.drawn_orient_text: int = self.master.create_text((self.canvas_shape[0] -10,self.master.centerY), text=f"{self.orient_text[2]}", fill="#EA2027", font=('Cambria',15,'bold'), anchor="e", tags=("orient_text",))
+            self.drawn_orient_text: int = self.master.create_text((self.master.centerX,self.canvas_shape[1] -3), text=f"{self.orient_text[3]}", fill="#EA2027", font=('Cambria',13,'bold'), anchor="s", tags=("orient_text",))
 
     def drawCross(self) -> None:
         points = data["cursor_data"].current_point

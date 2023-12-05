@@ -17,6 +17,10 @@ class CursorTool:
         self.cursorX = tk.IntVar(master=self.master, value=self.initial_point[2]+1, name="cursorX")
         self.cursorY = tk.IntVar(master=self.master, value=self.initial_point[1]+1, name="cursorY")
         self.cursorZ = tk.IntVar(master=self.master, value=self.initial_point[0]+1, name="cursorZ")
+        initial_label = "No Label"
+        if(models.data['cursor_data'].label_under_cursor != 0):
+            initial_label = f"Label {models.data['cursor_data'].label_under_cursor}"
+        self.label_under_cursor = tk.StringVar(master=self.master, value=initial_label, name="label_under_cursor")
 
     def createWidgets(self) -> None:
         self.title = tk.Label(master=self.master, text="Cursor Inspector", font=('Cambria', 13, 'bold'), bg="#f1f2f6")
@@ -29,8 +33,12 @@ class CursorTool:
         self.posy.place(x=40, y=60, width=30, height=30)
         self.posz = tk.Label(master=self.master, textvariable=self.cursorZ, font=('Cambria', 8), bg="#ffffff")
         self.posz.place(x=75, y=60, width=30, height=30)
+        self.labelUnderCursorTitle = tk.Label(master=self.master, text="Label under cursor:", font=('Cambria', 10), bg="#f1f2f6")
+        self.labelUnderCursorTitle.place(x=5, y=110)
+        self.labelUnderCursor = tk.Label(master=self.master, textvariable=self.label_under_cursor, font=('Cambria', 8), bg="#ffffff")
+        self.labelUnderCursor.place(x=5, y=130, width=90, height=30)
         self.instensitytitle = tk.Label(master=self.master, text="Intensity under cursor:", font=('Cambria', 10), bg="#f1f2f6")
-        self.instensitytitle.place(x=5, y=110)
+        self.instensitytitle.place(x=5, y=170)
         self.CreateTreeView()
 
     def CreateTreeView(self) -> None:
@@ -42,7 +50,7 @@ class CursorTool:
         self.treeview.column(column="col1", anchor="center", stretch=False, width=99)
         self.treeview.heading(column="col0", text="Channel")
         self.treeview.heading(column="col1", text="Intensity")
-        self.treeview.place(x=0, y=150, relheight=0.4, relwidth=1)
+        self.treeview.place(x=0, y=200, relheight=0.4, relwidth=1)
         self.addTreeviewItens(numofchannels=numofchannels)
         self.treeview.bind(sequence='<<TreeviewSelect>>', func=handleSelectedItem)
 
