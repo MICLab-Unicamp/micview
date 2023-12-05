@@ -12,13 +12,13 @@ def openfile(file: str, mask: str=None, resized: bool=False, block: bool=False) 
     if(resized):
         argv.append('-r')
 
-    import threading
+    from multiprocessing import Process
     from micview.run import main
 
     if block:
         main(argv)
     else:
-        daemon = threading.Thread(target=main, args=(argv,))
-        daemon.setDaemon(True)
+        daemon = Process(target=main, args=(argv,))
+        daemon.daemon = True
         daemon.start()
         
