@@ -4,12 +4,21 @@ def open():
     import micview.run as run
     run.main([])
 
-def openfile(file: str, mask: str=None, resized: bool=False) -> None:
+def openfile(file: str, mask: str=None, resized: bool=False, block: bool=False) -> None:
     mask = str(mask) if mask else None
     argv: 'list[str]' = ['-i', file]
     if(mask):
         argv.extend(['-m', mask])
     if(resized):
         argv.append('-r')
-    import micview.run as run
-    run.main(argv)
+
+    from multiprocessing import Process
+    from micview.run import main
+
+    if block:
+        main(argv)
+    else:
+        daemon = Process(target=main, args=(argv,))
+        daemon.daemon = True
+        daemon.start()
+        
