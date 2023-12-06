@@ -1,6 +1,9 @@
 import tkinter as tk
 import os
+import importlib
+from types import ModuleType
 from micview.controllers.services.toplevels.input_file_handler import browseFileHandler, callbackCurrentDir, callbackFilePath, onClosing
+models: ModuleType = importlib.import_module(name='micview.models.getters')
 
 class Parent(tk.Toplevel):
     def __init__(self, master: tk.Tk, windowtitle: str, type_of_file: str) -> None:
@@ -25,10 +28,11 @@ class Parent(tk.Toplevel):
     def createVars(self) -> None:
         self.warning = tk.StringVar(master=self, value="", name="warning")
         self.filepath = tk.StringVar(master=self, value="", name="filepath")
-        self.currentdirectory = tk.StringVar(master=self, value=os.getcwd(), name="currentdirectory")
+        currentdir = models.data['toolframe_data'].dirpath
+        self.currentdirectory = tk.StringVar(master=self, value= currentdir if(len(currentdir)>0) else os.getcwd(), name="currentdirectory")
         self.traceid1: str = self.filepath.trace_add(mode="write", callback=callbackFilePath)
         self.traceid2: str = self.currentdirectory.trace_add(mode="write", callback=callbackCurrentDir)
-        self.pathtextvariable = tk.StringVar(master=self, value=f"Path: {os.getcwd()}", name="pathtextvariable")
+        self.pathtextvariable = tk.StringVar(master=self, value=f"Path: {currentdir if(len(currentdir)>0) else os.getcwd()}", name="pathtextvariable")
 
     def createWidgets(self) -> None:
         title = tk.Label(master=self, text=f"Select {self.type_of_file}", font=('Helvetica', 15, 'bold'), bg="#70a1ff",  justify="left", anchor="w")

@@ -1,20 +1,23 @@
 import tkinter.filedialog as fd
 import os
 from typing import List
-from micview.models.getters import views
+from micview.models.getters import views, data
 
 def browseFileHandler() -> None:
         window: object = views['objects_ref'].SideWindow
         window.withdraw()
-        name: str = fd.askopenfilename(initialdir="./", title="Select File", filetypes= (("NiFTI files","*.nii.gz"),("DICOM files","*.dcm") ,("all files","*.*")))
+        actualdir = data['toolframe_data'].dirpath
+        name: str = fd.askopenfilename(initialdir= actualdir if(len(actualdir)>0) else "./", title="Select File", filetypes= (("NiFTI files","*.nii.gz"),("DICOM files","*.dcm") ,("all files","*.*")))
         if(type(name) != str):
             window.deiconify()
             return
         aux: List[str] = name.split('/')
         filepath: str = aux[-1]
         currentdirectory: str = "/".join(aux[:-1])
-        window.currentdirectory.set(currentdirectory)
-        window.filepath.set(filepath)
+        if(len(filepath) > 0 and len(currentdirectory) > 0):
+            window.currentdirectory.set(currentdirectory)
+            data['toolframe_data'].dirpath = currentdirectory
+            window.filepath.set(filepath)
         window.deiconify()
 
 def callbackCurrentDir(*args: None) -> None:
