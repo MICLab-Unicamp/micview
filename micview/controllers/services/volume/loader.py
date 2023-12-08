@@ -28,6 +28,11 @@ class ImageVolumeLoader(Thread):
         self.array: bool = array
 
     def run(self) -> None:
+        del data['original_volume_data'].mask_volume
+        del data['changed_volume_data'].changed_mask_volume
+        data['cursor_data'].label_under_cursor = 0
+        del data['original_volume_data'].image_volume
+        del data['changed_volume_data'].changed_image_volume        
         if(self.array):
             data['files_data'].flipped_axes = (False, False, False)
             data['files_data'].orient_text = dict({0: False, 1: False, 2: False})
@@ -50,12 +55,15 @@ class MaskVolumeLoader(Thread):
         self.array: bool = array
 
     def run(self) -> None:
+        del data['original_volume_data'].mask_volume
+        del data['changed_volume_data'].changed_mask_volume
         if(self.array):
             self.mask: List[Any] = np.load(self.path + '.npy')
             os.unlink(self.path)
         else:
             self.mask: List[Any] = readMaskFile(path=self.path)
         data['original_volume_data'].mask_volume = self.mask
+        setLabelUnderCursor(mask=self.mask)
         R: List[Any] = np.expand_dims(np.zeros_like(self.mask), axis=-1).astype(dtype=np.uint8)
         G: List[Any] = np.zeros_like(R)
         B: List[Any] = np.zeros_like(R)
@@ -89,3 +97,8 @@ def setChannelsIntensity(volume: List[Any]) -> None:
     else:
         data['toolframe_data'].channel_intensity = str([volume[point[0], point[1], point[2]]])
         data['original_volume_data'].num_of_channels = 1
+
+def setLabelUnderCursor(mask: List[Any]) -> None:
+    point: List[Any] = (np.array(mask.shape[-1:-4:-1][::-1])/2).astype(dtype=int)
+    data['cursor_data'].current_point = point
+    data['cursor_data'].label_under_cursor = str(mask[point[0], point[1], point[2]])

@@ -11,6 +11,14 @@ def changeCurrentPoint(axis0: int, axis1: int, axis2: int) -> None:
     if (axis2 >= 0):
         current_point[2] = axis2
     data['cursor_data'].current_point = current_point
+    changeLabelUnderCursor(current_point)
+
+def changeLabelUnderCursor(current_point: Tuple[int]) -> None:
+    mask: List[Any] = data['original_volume_data'].mask_volume
+    if mask is not None:
+        data['cursor_data'].label_under_cursor = mask[current_point[0], current_point[1], current_point[2]]
+    else:
+        data['cursor_data'].label_under_cursor = 0
 
 def getImageSlices(axis: int) -> List[Any]:
     channel_select: int = states['toolframe_states'].channel_select

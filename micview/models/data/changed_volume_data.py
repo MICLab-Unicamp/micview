@@ -16,8 +16,9 @@ class ChangedVolumeDataClass:
 
     @changed_image_volume.deleter
     def changed_image_volume(self) -> None:
-        if(hasattr(self, '__changed_image_volume')):
+        if(self.__changed_image_volume is not None):
             del self.__changed_image_volume
+            self.__changed_image_volume = None
     
     @property
     def changed_mask_volume(self) -> List[Any]:
@@ -29,5 +30,6 @@ class ChangedVolumeDataClass:
     
     @changed_mask_volume.deleter
     def changed_mask_volume(self) -> None:
-        if(hasattr(self, '__changed_mask_volume')):
+        if(self.__changed_mask_volume is not None):
             del self.__changed_mask_volume
+            self.__changed_mask_volume = None
