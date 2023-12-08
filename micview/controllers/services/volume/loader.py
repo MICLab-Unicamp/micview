@@ -1,3 +1,4 @@
+import os
 from typing import Any, List
 import numpy as np
 from threading import Thread
@@ -6,27 +7,34 @@ from micview.models.getters import data
 from micview.controllers.services.files.file_reader import readImageFile, readMaskFile
 
 class ImageAndMaskSyncLoader(Thread):
-    def __init__(self, file: str, mask_file: str=None):
+    def __init__(self, file: str, mask_file: str=None, array: bool=False) -> None:
         super().__init__(daemon=True)
         self.file: str = file
         self.mask_file: str = mask_file
-    
+        self.array: bool = array    
     def run(self) -> None:
-        self.image_loader_thread = ImageVolumeLoader(path=self.file)
+        self.image_loader_thread = ImageVolumeLoader(path=self.file, array=self.array)
         self.image_loader_thread.start()
         self.image_loader_thread.join()
         if(self.mask_file is not None):
-            self.mask_loader_thread = MaskVolumeLoader(path=self.mask_file)
+            self.mask_loader_thread = MaskVolumeLoader(path=self.mask_file, array=self.array)
             self.mask_loader_thread.start()
             self.mask_loader_thread.join()
 
 class ImageVolumeLoader(Thread):
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: str, array: bool=False) -> None:
         super().__init__(daemon=True)
         self.path: str = path
+        self.array: bool = array
 
     def run(self) -> None:
-        self.volume: List[Any] = readImageFile(path=self.path)
+        if(self.array):
+            data['files_data'].flipped_axes = (False, False, False)
+            data['files_data'].orient_text = dict({0: False, 1: False, 2: False})
+            self.volume: List[Any] = np.load(self.path + '.npy')
+            os.unlink(self.path)
+        else:
+            self.volume: List[Any] = readImageFile(path=self.path)
         if len(self.volume.shape) == 4 and np.argmin(self.volume.shape) == 3:
             self.volume = self.volume.transpose(3, 0, 1, 2)
             assert np.argmin(self.volume.shape) == 0, "Couldn't solve wrong dimension channel. Put channel on dimension 0."
@@ -36,12 +44,17 @@ class ImageVolumeLoader(Thread):
         data['changed_volume_data'].changed_image_volume = self.volume
         
 class MaskVolumeLoader(Thread):
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: str, array: bool=False) -> None:
         super().__init__(daemon=True)
         self.path: str = path
+        self.array: bool = array
 
     def run(self) -> None:
-        self.mask: List[Any] = readMaskFile(path=self.path)
+        if(self.array):
+            self.mask: List[Any] = np.load(self.path + '.npy')
+            os.unlink(self.path)
+        else:
+            self.mask: List[Any] = readMaskFile(path=self.path)
         data['original_volume_data'].mask_volume = self.mask
         R: List[Any] = np.expand_dims(np.zeros_like(self.mask), axis=-1).astype(dtype=np.uint8)
         G: List[Any] = np.zeros_like(R)
