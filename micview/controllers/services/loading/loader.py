@@ -1,3 +1,4 @@
+import array
 from typing import Any, Dict
 from threading import Event, Thread
 from micview.controllers.validations.validate_kwargs import checkKwargs
@@ -16,7 +17,7 @@ class LoadImageFromShell(Thread):
         self.event = Event()
         self.animation = LoadingCircles(event=self.event)
         self.animation.start()
-        self.loading_process = ImageAndMaskSyncLoader(file=self.params["file"], mask_file=self.params["mask"])
+        self.loading_process = ImageAndMaskSyncLoader(file=self.params["file"], mask_file=self.params["mask"], array=self.params["array"])
         self.loading_process.start()
         self.loading_process.join()
         self.event.set()

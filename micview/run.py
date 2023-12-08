@@ -18,6 +18,10 @@ def main(argv: Optional[Sequence[str]] = sys.argv[1:]) -> None:
     parser_file.add_argument('-i', '--input', type=verifyType, help="Input image file, archive must ends with .nii.gz or .dcm", required=False)
     parser_file.add_argument('-m', '--mask', type=verifyType, help="Mask image file, requires input argument, archive must ends with .nii.gz or .dcm", required=False)
     parser_file.add_argument('-r','--resize', action="store_true", help="Resize image to fit screen, requires input argument", required=False)
+
+    parser_array = parser.add_argument_group(title="run_array", description="Opens micview passing a numpy.ndarray as argument")
+    parser_array.add_argument('-ia', '--inputArray', help="Input image array, must be a numpy.ndarray", required=False)
+    parser_array.add_argument('-ma', '--maskArray', help="Input mask array, must be a numpy.ndarray", required=False)
     
     parser.add_argument('-v', '--version', action='version', version=__version__)
     parser.add_argument('-t', '--test', action="store_true", help="Test if argument is valid, dont opens the window", required=False)
@@ -27,11 +31,15 @@ def main(argv: Optional[Sequence[str]] = sys.argv[1:]) -> None:
 
     if args.mask and not args.input:
         raise ValueError("Mask argument requires input argument")
-    if args.resize and not args.input:
+    if args.maskArray and not args.inputArray:
+        raise ValueError("Mask argument requires input argument")
+    if args.resize and not (args.input or args.inputArray):
         raise ValueError("Resize argument requires input argument")
-
+    
     if(args.input):
-            window = MainWindow(file=args.input, mask=args.mask, resized = args.resize)
+        window = MainWindow(file=args.input, mask=args.mask, resized = args.resize)
+    elif(args.inputArray):
+        window = MainWindow(file=args.inputArray, mask=args.maskArray, resized = args.resize, array=True)
     else:
         window = MainWindow()
 
