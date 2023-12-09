@@ -34,6 +34,7 @@ def updateIntensityIndicators() -> None:
     CursorTool: object = models.views['objects_ref'].ToolFrame.actual_tool
     updateItens(intensity_arr=chann_intensity, CursorTool=CursorTool)
     updatePointIndicators(CursorTool=CursorTool)
+    updateLabelUnderCursor(CursorTool=CursorTool)
 
 def updateItens(intensity_arr: List[str], CursorTool: object) -> None:
     treeview: object = CursorTool.treeview
@@ -58,3 +59,10 @@ def updatePointIndicators(CursorTool: object) -> None:
         CursorTool.cursorZ.set(axes_shape[0]-point[0])
     else:
         CursorTool.cursorZ.set(point[0]+1)
+
+def updateLabelUnderCursor(CursorTool: object) -> None:
+    label: int = models.data['cursor_data'].label_under_cursor
+    text = "No Label"
+    if(label != 0):
+        text = f"Label {label}"
+    CursorTool.label_under_cursor.set(text)

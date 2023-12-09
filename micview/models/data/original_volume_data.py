@@ -17,8 +17,9 @@ class OriginalVolumeDataClass:
 
     @image_volume.deleter
     def image_volume(self) -> None:
-        if(hasattr(self, '__image_volume')):
+        if(self.__image_volume is not None):
             del self.__image_volume
+            self.__image_volume = None
 
     @property
     def mask_volume(self) -> Any:
@@ -30,8 +31,9 @@ class OriginalVolumeDataClass:
 
     @mask_volume.deleter
     def mask_volume(self) -> None:
-        if(hasattr(self, '__mask_volume')):
+        if(self.__mask_volume is not None):
             del self.__mask_volume
+            self.__mask_volume = None
 
     @property
     def num_of_channels(self) -> Any:
