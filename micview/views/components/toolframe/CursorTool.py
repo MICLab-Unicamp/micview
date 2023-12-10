@@ -3,7 +3,7 @@ from tkinter import ttk
 import importlib
 from types import ModuleType
 models: ModuleType = importlib.import_module(name='micview.models.getters')
-from micview.controllers.services.tools.cursor_tool import handleSelectedItem
+from micview.controllers.services.tools.cursor_tool import handleSelectedItem, updateTransparency
 
 class CursorTool:
     def __init__(self, master: tk.Tk) -> None:
@@ -37,8 +37,13 @@ class CursorTool:
         self.labelUnderCursorTitle.place(x=5, y=110)
         self.labelUnderCursor = tk.Label(master=self.master, textvariable=self.label_under_cursor, font=('Cambria', 8), bg="#ffffff")
         self.labelUnderCursor.place(x=5, y=130, width=90, height=30)
+        self.transparencyTitle = tk.Label(master=self.master, text="Label transparency:", font=('Cambria', 10), bg="#f1f2f6")
+        self.transparencyTitle.place(x=5, y=170)
+        self.transparencyScale = tk.Scale(master=self.master, from_=0, to=100, resolution=1, orient=tk.HORIZONTAL, length=100, bg="#f1f2f6", troughcolor="#ffffff", sliderlength=20, sliderrelief=tk.FLAT, command=updateTransparency)
+        self.transparencyScale.place(x=5, y=190)
+        self.transparencyScale.set(100)
         self.instensitytitle = tk.Label(master=self.master, text="Intensity under cursor:", font=('Cambria', 10), bg="#f1f2f6")
-        self.instensitytitle.place(x=5, y=170)
+        self.instensitytitle.place(x=5, y=230)
         self.CreateTreeView()
 
     def CreateTreeView(self) -> None:
@@ -50,7 +55,7 @@ class CursorTool:
         self.treeview.column(column="col1", anchor="center", stretch=False, width=99)
         self.treeview.heading(column="col0", text="Channel")
         self.treeview.heading(column="col1", text="Intensity")
-        self.treeview.place(x=0, y=200, relheight=0.4, relwidth=1)
+        self.treeview.place(x=0, y=260, relheight=0.4, relwidth=1)
         self.addTreeviewItens(numofchannels=numofchannels)
         self.treeview.bind(sequence='<<TreeviewSelect>>', func=handleSelectedItem)
 
