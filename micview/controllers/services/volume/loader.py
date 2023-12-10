@@ -44,6 +44,8 @@ class ImageVolumeLoader(Thread):
             self.volume = self.volume.transpose(3, 0, 1, 2)
             assert np.argmin(self.volume.shape) == 0, "Couldn't solve wrong dimension channel. Put channel on dimension 0."
         data['original_volume_data'].image_volume = self.volume
+        data['original_volume_data'].min_and_max_values = (self.volume.min(), self.volume.max())
+        data['changed_volume_data'].min_and_max_values = (self.volume.min(), self.volume.max())
         setChannelsIntensity(volume=self.volume)
         self.volume = ((self.volume - self.volume.min())*(255/(self.volume.max() - self.volume.min()))).astype(np.uint8)
         data['changed_volume_data'].changed_image_volume = self.volume

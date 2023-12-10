@@ -31,6 +31,10 @@ class ToolframeStatesClass:
         assert type(value) is str
         self.__selected_tool.set(value=value)
 
+    @selected_tool.deleter
+    def selected_tool(self) -> None:
+        self.__selected_tool.set(value="none")
+
     @property
     def tool_is_set(self) -> bool:
         return self.__tool_is_set.get()

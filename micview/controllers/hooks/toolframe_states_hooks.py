@@ -9,9 +9,10 @@ def channelSelectHook(* args: Any) -> None:
         models.states['image_canvas_states'].update_all_childs = True
 
 def selectedToolHook(* args: Any) -> None:
-    tool: object = models.states['toolframe_states'].selected_tool
+    tool: str = models.states['toolframe_states'].selected_tool
     master: object = models.views['objects_ref'].ToolFrame
     setTool(tool=tool, master=master)
+    models.states['image_canvas_states'].update_all_childs = True
 
 def toolIsSetHook(* args: Any) -> None:
     if(models.states['toolframe_states'].tool_is_set):
