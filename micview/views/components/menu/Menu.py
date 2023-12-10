@@ -1,6 +1,6 @@
 import tkinter as tk
 from micview.models.getters import views, states
-from micview.controllers.services.menu.callbacks_onclick import fileWindow, segmentationWindow
+from micview.controllers.services.menu.callbacks_onclick import fileWindow, segmentationWindow, setToolCursor, setToolZoom, setToolEdit, setToolContrast, setImageInfo, setMaskInfo
 
 class Menu(tk.Menu):
     def __init__(self, master: tk.Tk) -> None:
@@ -14,8 +14,8 @@ class Menu(tk.Menu):
         self.fileInit()
         self.viewInit()
         self.segmentationInit()
-        self.editView()
         self.toolsView()
+        self.infoView()
 
     def fileInit(self) -> None:
         self.file_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
@@ -37,38 +37,20 @@ class Menu(tk.Menu):
         self.segmentation_options.add_command(label="Save Segmentation")
         self.add_cascade(label="Segmentation", menu=self.segmentation_options)
 
-    def editView(self) -> None:
-        self.edit_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
-        self.edit_options.add_command(label="Polygon Mode")
-        self.edit_options.add_command(label="Paintbrush Mode")
-        self.add_cascade(label="Edit", menu=self.edit_options)
-
     def toolsView(self) -> None:
         self.tools_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
-        self.tools_options.add_command(label="Cursor Inspector", command=self.setToolCursor)
-        self.tools_options.add_command(label="Zoom Inspector", command=self.setToolZoom)
-        self.tools_options.add_command(label="Image Contrast", command=self.setToolContrast)
-        self.tools_options.add_command(label="Edit Tool", command=self.setToolEdit)
-
-        self.info_options = tk.Menu(master=self.tools_options, tearoff=False, background='#4b7bec', foreground='white')
-        self.info_options.add_command(label="Main Image")
-        self.info_options.add_command(label="Segmentation")
-        self.tools_options.add_cascade(label="Info", menu=self.info_options)
-
-        self.tools_options.add_command(label="Image Metadata")
+        self.tools_options.add_command(label="Cursor Inspector", command=setToolCursor)
+        self.tools_options.add_command(label="Zoom Inspector", command=setToolZoom)
+        self.tools_options.add_command(label="Image Contrast", command=setToolContrast)
+        self.tools_options.add_command(label="Edit Tool", command=setToolEdit)
         self.add_cascade(label="Tools", menu=self.tools_options)
+
+    def infoView(self) -> None:
+        self.info_options = tk.Menu(master=self.tools_options, tearoff=False, background='#4b7bec', foreground='white')
+        self.info_options.add_command(label="Main Image", command=setImageInfo)
+        self.info_options.add_command(label="Segmentation", command=setMaskInfo)
+        self.info_options.add_command(label="Image Metadata")
+        self.add_cascade(label="Info", menu=self.info_options)
 
     def callbackRadiobool(self) -> None:
         states['options_states'].image_is_square = self.radioboolvar.get()
-
-    def setToolCursor(self) -> None:
-        states['toolframe_states'].selected_tool = "cursor"
-    
-    def setToolZoom(self) -> None:
-        states['toolframe_states'].selected_tool = "zoom"
-
-    def setToolContrast(self) -> None:
-        states['toolframe_states'].selected_tool = "contrast"
-
-    def setToolEdit(self) -> None:
-        states['toolframe_states'].selected_tool = "edit"
