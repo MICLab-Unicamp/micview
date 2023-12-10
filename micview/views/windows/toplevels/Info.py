@@ -26,8 +26,7 @@ class Info(tk.Toplevel):
         self.dimensions: tuple[str, str, str] = (self.metadatas['dim[1]'], self.metadatas['dim[2]'], self.metadatas['dim[3]'])
         self.spacing: tuple[str, str, str] = (self.metadatas['pixdim[1]'], self.metadatas['pixdim[2]'], self.metadatas['pixdim[3]'])
         self.origin: list[int, int, int] = [-1*int(self.metadatas['qoffset_x']),-1*int(self.metadatas['qoffset_y']),-1*int(self.metadatas['qoffset_z'])]
-        if(self.title == "Main Image Info"):
-            self.intensity_range: tuple[str, str] = models.data["original_volume_data"].min_and_max_values
+        self.intensity_range: tuple[str, str] = models.data["original_volume_data"].min_and_max_values
 
     def createWidgets(self) -> None:
         title = tk.Label(master=self, text=f"{self.title}", font=('Helvetica', 15, 'bold'), bg="#f1f2f6",  justify="left", anchor="w")
@@ -40,9 +39,8 @@ class Info(tk.Toplevel):
         origin.place(rely=0.38, relx=0.02, relwidth=0.9,relheight=0.08)
         orientation = tk.Label(master=self, text=f"Orientation: LPI", font=('Helvetica', 11, 'bold'), bg="#f1f2f6", justify="left", anchor="w")
         orientation.place(rely=0.50, relx=0.02, relwidth=0.9,relheight=0.08)
-        if(self.title == "Main Image Info"):
-            intensity_range = tk.Label(master=self, text=f"Intensity Range: min:{self.intensity_range[0]}, max:{self.intensity_range[1]}", font=('Helvetica', 11), bg="#f1f2f6", justify="left", anchor="w")
-            intensity_range.place(rely=0.62, relx=0.02, relwidth=0.9,relheight=0.08)
+        intensity_range = tk.Label(master=self, text=f"Intensity Range: min:{self.intensity_range[0]}, max:{self.intensity_range[1]}", font=('Helvetica', 11), bg="#f1f2f6", justify="left", anchor="w")
+        intensity_range.place(rely=0.62, relx=0.02, relwidth=0.9,relheight=0.08)
 
     def onClosing(self) -> None:
         from micview.controllers.services.menu.callbacks_onclick import delSideWindow

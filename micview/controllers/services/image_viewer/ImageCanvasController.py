@@ -54,8 +54,6 @@ class ImageCanvasController:
         self.master.delete('orient_text')
         self.drawOrientText()
         self.master.delete('cross')
-        if(states['toolframe_states'].selected_tool == "cursor"):
-            self.drawCross()
         if states['options_states'].mask_is_set:
             mask_array = np.array(getMaskSlices(axis=self.id), dtype=np.uint8)
             data = np.array(mask_array)
@@ -64,6 +62,8 @@ class ImageCanvasController:
             data[:,:,3][mask_areas.T] = int(255*states["toolframe_states"].transparency_level)
             self.mask_data = ImageTk.PhotoImage(image=Image.fromarray(obj=data, mode='RGBA').resize(size=self.canvas_image_size, resample=Image.NEAREST))
             self.drawMask()
+        if(states['toolframe_states'].selected_tool == "cursor"):
+            self.drawCross()
 
     def drawImage(self) -> None:
         self.drawn_image: int = self.master.create_image((self.master.centerX, self.master.centerY), image=self.image_data, anchor="center", tags=("image",))

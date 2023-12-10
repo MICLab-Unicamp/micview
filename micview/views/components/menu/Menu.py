@@ -1,6 +1,6 @@
 import tkinter as tk
 from micview.models.getters import views, states
-from micview.controllers.services.menu.callbacks_onclick import fileWindow, segmentationWindow, setToolCursor, setToolZoom, setToolEdit, setToolContrast, setImageInfo, setMaskInfo
+from micview.controllers.services.menu.callbacks_onclick import fileWindow, segmentationWindow, setImageMetadata, setToolCursor, setToolZoom, setToolEdit, setToolContrast, setImageInfo
 
 class Menu(tk.Menu):
     def __init__(self, master: tk.Tk) -> None:
@@ -48,8 +48,7 @@ class Menu(tk.Menu):
     def infoView(self) -> None:
         self.info_options = tk.Menu(master=self.tools_options, tearoff=False, background='#4b7bec', foreground='white')
         self.info_options.add_command(label="Main Image", command=setImageInfo)
-        self.info_options.add_command(label="Segmentation", command=setMaskInfo)
-        self.info_options.add_command(label="Image Metadata")
+        self.info_options.add_command(label="Image Metadata", command=setImageMetadata)
         self.add_cascade(label="Info", menu=self.info_options)
 
     def callbackRadiobool(self) -> None:
