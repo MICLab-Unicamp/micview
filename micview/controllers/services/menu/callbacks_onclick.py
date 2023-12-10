@@ -1,5 +1,6 @@
 from typing import Any, Literal
-from micview.models.getters import states, views
+from micview.models.getters import states, views, data
+from micview.views.windows.toplevels.Metadata import Metadata
 from micview.views.windows.toplevels.OpenImage import OpenImage
 from micview.views.windows.toplevels.OpenSegmentation import OpenSegmentation
 from micview.views.windows.toplevels.Info import Info
@@ -17,7 +18,8 @@ def handleOnLoading(loading: bool) -> None:
         menu.entryconfig("View", state="normal")
         menu.entryconfig("Segmentation", state="normal")
         menu.entryconfig("Tools", state="normal")
-        menu.entryconfig("Info", state="normal")
+        if(data["files_data"].image_metadatas is not None):
+            menu.entryconfig("Info", state="normal")
         
 def changeButtonsState(*args: Any) -> None:
     image_is_loaded: bool = states['loading_states'].image_is_loaded
@@ -59,6 +61,6 @@ def setImageInfo() -> None:
     menu: object = views['objects_ref'].Menu
     views['objects_ref'].SideWindow = Info(master=menu.master, windowtitle="Main Image Info")
 
-def setMaskInfo() -> None:
+def setImageMetadata() -> None:
     menu: object = views['objects_ref'].Menu
-    views['objects_ref'].SideWindow = Info(master=menu.master, windowtitle="Segmentation Info")
+    views['objects_ref'].SideWindow = Metadata(master=menu.master)
