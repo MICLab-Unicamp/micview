@@ -45,10 +45,10 @@ class Menu(tk.Menu):
 
     def toolsView(self) -> None:
         self.tools_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
-        self.tools_options.add_command(label="Cursor Inspector")
-        self.tools_options.add_command(label="Zoom Inspector")
-        self.tools_options.add_command(label="Image Contrast")
-        self.tools_options.add_command(label="Segmentation Opacity")
+        self.tools_options.add_command(label="Cursor Inspector", command=self.setToolCursor)
+        self.tools_options.add_command(label="Zoom Inspector", command=self.setToolZoom)
+        self.tools_options.add_command(label="Image Contrast", command=self.setToolContrast)
+        self.tools_options.add_command(label="Edit Tool", command=self.setToolEdit)
 
         self.info_options = tk.Menu(master=self.tools_options, tearoff=False, background='#4b7bec', foreground='white')
         self.info_options.add_command(label="Main Image")
@@ -60,3 +60,15 @@ class Menu(tk.Menu):
 
     def callbackRadiobool(self) -> None:
         states['options_states'].image_is_square = self.radioboolvar.get()
+
+    def setToolCursor(self) -> None:
+        states['toolframe_states'].selected_tool = "cursor"
+    
+    def setToolZoom(self) -> None:
+        states['toolframe_states'].selected_tool = "zoom"
+
+    def setToolContrast(self) -> None:
+        states['toolframe_states'].selected_tool = "contrast"
+
+    def setToolEdit(self) -> None:
+        states['toolframe_states'].selected_tool = "edit"

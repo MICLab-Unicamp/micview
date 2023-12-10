@@ -43,7 +43,8 @@ class ImageCanvasController:
         valid_points[self.id] = -1
         changeCurrentPoint(axis0=valid_points[0] ,axis1=valid_points[1], axis2=valid_points[2])
         self.master.delete('cross')
-        self.drawCross()
+        if(states['toolframe_states'].selected_tool == "cursor"):
+            self.drawCross()
         states['image_canvas_states'].action_on_child = self.id
 
     def refresh(self) -> None:# Refreshs the canvas objects
@@ -53,10 +54,15 @@ class ImageCanvasController:
         self.master.delete('orient_text')
         self.drawOrientText()
         self.master.delete('cross')
-        self.drawCross()
+        if(states['toolframe_states'].selected_tool == "cursor"):
+            self.drawCross()
         if states['options_states'].mask_is_set:
-            mask_array = np.array(getMaskSlices(axis=self.id)*states["toolframe_states"].transparency_level, dtype=np.uint8)
-            self.mask_data = ImageTk.PhotoImage(image=Image.fromarray(obj=mask_array, mode='RGBA').resize(size=self.canvas_image_size, resample=Image.NEAREST))
+            mask_array = np.array(getMaskSlices(axis=self.id), dtype=np.uint8)
+            data = np.array(mask_array)
+            red, green, blue = data.T[0:3]
+            mask_areas = (red > 0) | (blue > 0) | (green > 0)
+            data[:,:,3][mask_areas.T] = int(255*states["toolframe_states"].transparency_level)
+            self.mask_data = ImageTk.PhotoImage(image=Image.fromarray(obj=data, mode='RGBA').resize(size=self.canvas_image_size, resample=Image.NEAREST))
             self.drawMask()
 
     def drawImage(self) -> None:

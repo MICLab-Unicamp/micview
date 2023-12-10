@@ -13,4 +13,7 @@ class ToolFrame(tk.Frame):
 
     def delActualTool(self) -> None:
         if(self.actual_tool is not None):
+            for widget in self.winfo_children():
+                widget.destroy()
             del self.actual_tool
+            self.actual_tool = None

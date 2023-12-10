@@ -5,7 +5,8 @@ class OriginalVolumeDataClass:
         super().__init__()
         self.__image_volume: Any = None
         self.__mask_volume: Any = None
-        self.__num_of_channels: Any = 1
+        self.__num_of_channels: int = 1
+        self.__min_and_max_values: tuple[float, float] = (0, 0)
 
     @property
     def image_volume(self) -> Any:
@@ -48,3 +49,13 @@ class OriginalVolumeDataClass:
     def num_of_channels(self) -> None:
         if(hasattr(self, '__num_of_channels')):
             del self.__num_of_channels
+
+    @property
+    def min_and_max_values(self) -> "tuple[float, float]":
+        return self.__min_and_max_values
+    
+    @min_and_max_values.setter
+    def min_and_max_values(self, value: "tuple[float, float]") -> None:
+        assert type(value) is tuple
+        assert len(value) == 2
+        self.__min_and_max_values = value
