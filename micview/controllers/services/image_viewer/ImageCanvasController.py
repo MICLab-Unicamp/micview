@@ -1,4 +1,5 @@
 from ast import Dict
+import numpy as np
 from PIL import Image, ImageTk
 import tkinter as tk
 from typing import Any, Tuple, List
@@ -54,7 +55,8 @@ class ImageCanvasController:
         self.master.delete('cross')
         self.drawCross()
         if states['options_states'].mask_is_set:
-            self.mask_data = ImageTk.PhotoImage(image=Image.fromarray(obj=getMaskSlices(axis=self.id), mode='RGBA').resize(size=self.canvas_image_size, resample=Image.NEAREST))
+            mask_array = np.array(getMaskSlices(axis=self.id)*states["toolframe_states"].transparency_level, dtype=np.uint8)
+            self.mask_data = ImageTk.PhotoImage(image=Image.fromarray(obj=mask_array, mode='RGBA').resize(size=self.canvas_image_size, resample=Image.NEAREST))
             self.drawMask()
 
     def drawImage(self) -> None:

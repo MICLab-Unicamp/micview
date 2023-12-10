@@ -8,6 +8,9 @@ def handleSelectedItem(event: Any) -> None:
     itemid: int = CursorTool.treeview.focus()
     models.states['toolframe_states'].channel_select = int(CursorTool.treeview.item(itemid, 'values')[0]) - 1
 
+def updateTransparency(value: float) -> None:
+    models.states['toolframe_states'].transparency_level = float(value)/100
+
 def updateChannelsIntensity() -> None:
     original_vol: List[float] = models.data['original_volume_data'].image_volume
     original_shape: Tuple[int] = original_vol.shape
