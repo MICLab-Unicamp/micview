@@ -2,6 +2,7 @@ from typing import Any, Literal
 from micview.models.getters import states, views
 from micview.views.windows.toplevels.OpenImage import OpenImage
 from micview.views.windows.toplevels.OpenSegmentation import OpenSegmentation
+from micview.views.windows.toplevels.Info import Info
 
 def handleOnLoading(loading: bool) -> None:
     menu: object = views['objects_ref'].Menu
@@ -9,14 +10,14 @@ def handleOnLoading(loading: bool) -> None:
         menu.entryconfig("File", state="disabled")
         menu.entryconfig("View", state="disabled")
         menu.entryconfig("Segmentation", state="disabled")
-        menu.entryconfig("Edit", state="disabled")
         menu.entryconfig("Tools", state="disabled")
+        menu.entryconfig("Info", state="disabled")
     else:
         menu.entryconfig("File", state="normal")
         menu.entryconfig("View", state="normal")
         menu.entryconfig("Segmentation", state="normal")
-        menu.entryconfig("Edit", state="normal")
         menu.entryconfig("Tools", state="normal")
+        menu.entryconfig("Info", state="normal")
         
 def changeButtonsState(*args: Any) -> None:
     image_is_loaded: bool = states['loading_states'].image_is_loaded
@@ -41,3 +42,23 @@ def segmentationWindow() -> None:
 
 def delSideWindow() -> None:
     del views['objects_ref'].SideWindow
+
+def setToolCursor() -> None:
+    states['toolframe_states'].selected_tool = "cursor"
+
+def setToolZoom() -> None:
+    states['toolframe_states'].selected_tool = "zoom"
+
+def setToolContrast() -> None:
+    states['toolframe_states'].selected_tool = "contrast"
+
+def setToolEdit() -> None:
+    states['toolframe_states'].selected_tool = "edit"
+
+def setImageInfo() -> None:
+    menu: object = views['objects_ref'].Menu
+    views['objects_ref'].SideWindow = Info(master=menu.master, windowtitle="Main Image Info")
+
+def setMaskInfo() -> None:
+    menu: object = views['objects_ref'].Menu
+    views['objects_ref'].SideWindow = Info(master=menu.master, windowtitle="Segmentation Info")
