@@ -19,3 +19,6 @@ def toolIsSetHook(* args: Any) -> None:
     else:
         del models.views['objects_ref'].ToolFrame
         models.states['toolframe_states'].selected_tool = "none"
+
+def transparencyLevelHook(* args: Any) -> None:
+    models.states['image_canvas_states'].update_all_childs = True
