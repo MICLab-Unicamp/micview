@@ -9,14 +9,13 @@ class CursorTool:
     def __init__(self, master: tk.Tk) -> None:
         super().__init__()  # Call the __init__ method of the parent class
         self.master: tk.Tk = master
-        self.initial_point: tuple[int] = models.data['cursor_data'].current_point
         self.createVars()
         self.createWidgets()
 
     def createVars(self) -> None:
-        self.cursorX = tk.IntVar(master=self.master, value=self.initial_point[2]+1, name="cursorX")
-        self.cursorY = tk.IntVar(master=self.master, value=self.initial_point[1]+1, name="cursorY")
-        self.cursorZ = tk.IntVar(master=self.master, value=self.initial_point[0]+1, name="cursorZ")
+        self.cursorX = tk.IntVar(master=self.master, value=0, name="cursorX")
+        self.cursorY = tk.IntVar(master=self.master, value=0, name="cursorY")
+        self.cursorZ = tk.IntVar(master=self.master, value=0, name="cursorZ")
         initial_label = "No Label"
         if(models.data['cursor_data'].label_under_cursor != 0):
             initial_label = f"Label {models.data['cursor_data'].label_under_cursor}"
@@ -41,7 +40,7 @@ class CursorTool:
         self.transparencyTitle.place(x=5, y=170)
         self.transparencyScale = tk.Scale(master=self.master, from_=0, to=100, resolution=1, orient=tk.HORIZONTAL, length=100, bg="#f1f2f6", troughcolor="#ffffff", sliderlength=20, sliderrelief=tk.FLAT, command=updateTransparency)
         self.transparencyScale.place(x=5, y=190)
-        self.transparencyScale.set(100)
+        self.transparencyScale.set(int(models.states['toolframe_states'].transparency_level*100))
         self.instensitytitle = tk.Label(master=self.master, text="Intensity under cursor:", font=('Cambria', 10), bg="#f1f2f6")
         self.instensitytitle.place(x=5, y=230)
         self.CreateTreeView()
