@@ -1,5 +1,5 @@
 import tkinter as tk
-from micview.controllers.hooks.toolframe_states_hooks import channelSelectHook, selectedToolHook, toolIsSetHook, transparencyLevelHook
+from micview.controllers.hooks.toolframe_states_hooks import channelSelectHook, selectedToolHook, toolIsSetHook, transparencyLevelHook, zoomHook
 
 class ToolframeStatesClass:
     def __init__(self, master: tk.Tk) -> None:
@@ -12,6 +12,8 @@ class ToolframeStatesClass:
         self.__tool_is_set.trace(mode='w', callback=toolIsSetHook)
         self.__transparency_level = tk.DoubleVar(master=master, value=1.0, name="transparency_level")
         self.__transparency_level.trace(mode='w', callback=transparencyLevelHook)
+        self.__zoom = tk.DoubleVar(master=master, value=1.0, name="zoom")
+        self.__zoom.trace(mode='w', callback=zoomHook)    
 
     @property
     def channel_select(self) -> int:
@@ -52,3 +54,12 @@ class ToolframeStatesClass:
     def transparency_level(self, value: float) -> None:
         assert type(value) is float
         self.__transparency_level.set(value=value)
+
+    @property
+    def zoom(self) -> float:
+        return self.__zoom.get()
+    
+    @zoom.setter
+    def zoom(self, value: float) -> None:
+        assert type(value) is float
+        self.__zoom.set(value=value)

@@ -11,21 +11,6 @@ def calcCanvasImageSize(canvas_shape: Tuple[int,int]=(0,0), image_shape: Tuple[i
             return (int(canvas_shape[1]), int(canvas_shape[1]))
         mult_factor: float = canvas_shape[1]/image_shape[max_side]
         return (int(mult_factor*image_shape[1]), int(mult_factor*image_shape[0]))
-
-def calcProportionFactor(id: int ,canvas_image_size: Tuple[float, float]) -> Tuple[float, float]:
-    '''
-    Calcs the proportion factor between image in canvas and volume
-    '''
-    volume_shape: List[float] = data['changed_volume_data'].changed_image_volume.shape
-    shift = 0
-    if(len(volume_shape) > 3):
-        shift = 1
-    if(id == 0):
-        return (volume_shape[2 + shift]/canvas_image_size[0], volume_shape[1 + shift]/canvas_image_size[1])
-    if(id == 1):
-        return (volume_shape[2 + shift]/canvas_image_size[0], volume_shape[0 + shift]/canvas_image_size[1])
-    if(id == 2):
-        return (volume_shape[1 + shift]/canvas_image_size[0], volume_shape[0 + shift]/canvas_image_size[1])
     
 def get3DCoordinate(id:int, x:int, y:int) -> List[int]:
     '''
@@ -38,15 +23,42 @@ def get3DCoordinate(id:int, x:int, y:int) -> List[int]:
     if(id == 2):
         return [y, x, 0]
     
-def getEquivalentPoint(canvas_shape: List[int], canvas_image_size: Tuple[float, float], proportion_factor: float, e: Any) -> Tuple[int, int]:
+def getEquivalentPoint(canvas_shape: List[int], canvas_image_size: Tuple[float, float], zoom_area: Tuple[float, float, float, float], e: Any) -> Tuple[int, int]:
     '''
     Gets equivalent point of canvas on volume surface
     '''
+    zoom = states['toolframe_states'].zoom
+    if(zoom >= 1):
+        zoom = 1
     center: Tuple[float, float] = (canvas_shape[0]/2, canvas_shape[1]/2)
-    if(e.x < center[0] - canvas_image_size[0]/2 or e.x > center[0] + canvas_image_size[0]/2 or e.y < center[1] - canvas_image_size[1]/2 or e.y > center[1] + canvas_image_size[1]/2):
-        return -1, -1
     offsetx: float = (canvas_shape[0] - canvas_image_size[0])/2
-    new_point_x: int = (e.x - offsetx)*proportion_factor[0]
     offsety: float = (canvas_shape[1] - canvas_image_size[1])/2
-    new_point_y: int = (e.y - offsety)*proportion_factor[1]
+    if(e.x < center[0] - (canvas_image_size[0]/2)*zoom or e.x > center[0] + (canvas_image_size[0]/2)*zoom or e.y < center[1] - (canvas_image_size[1]/2)*zoom or e.y > center[1] + (canvas_image_size[1]/2)*zoom):
+        return -1, -1
+    new_point_x: int = (e.x - offsetx)*(zoom_area[2] - zoom_area[0])/canvas_image_size[0] + zoom_area[0]
+    new_point_y: int = (e.y - offsety)*(zoom_area[3] - zoom_area[1])/canvas_image_size[1] + zoom_area[1]
+    return new_point_x, new_point_y
+
+def getInverseEquivalentPoint(id: int, canvas_shape: List[int], canvas_image_size: Tuple[float, float], zoom_area: Tuple[float, float, float, float]) -> Tuple[int, int]:
+    points = data["cursor_data"].current_point
+    x,y = 0,0
+    if(id == 0):
+        x,y = points[2], points[1]
+    if(id == 1):
+        x,y = points[2], points[0]
+    if(id == 2):
+        x,y = points[1], points[0]
+    
+    offsetx: float = (canvas_shape[0] - canvas_image_size[0])/2
+    offsety: float = (canvas_shape[1] - canvas_image_size[1])/2
+    new_point_x: int = (x - zoom_area[0])*canvas_image_size[0]/(zoom_area[2] - zoom_area[0]) + offsetx
+    new_point_y: int = (y - zoom_area[1])*canvas_image_size[1]/(zoom_area[3] - zoom_area[1]) + offsety
+    if(new_point_x < 0):
+        new_point_x = 0
+    if(new_point_y < 0):
+        new_point_y = 0
+    if(new_point_x > canvas_shape[0]):
+        new_point_x = canvas_shape[0]
+    if(new_point_y > canvas_shape[1]):
+        new_point_y = canvas_shape[1]
     return new_point_x, new_point_y
