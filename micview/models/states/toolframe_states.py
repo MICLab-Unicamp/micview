@@ -12,7 +12,7 @@ class ToolframeStatesClass:
         self.__tool_is_set.trace(mode='w', callback=toolIsSetHook)
         self.__transparency_level = tk.DoubleVar(master=master, value=1.0, name="transparency_level")
         self.__transparency_level.trace(mode='w', callback=transparencyLevelHook)
-        self.__zoom = tk.DoubleVar(master=master, value=1, name="zoom")
+        self.__zoom = tk.DoubleVar(master=master, value=1.0, name="zoom")
         self.__zoom.trace(mode='w', callback=zoomHook)    
 
     @property
@@ -56,10 +56,10 @@ class ToolframeStatesClass:
         self.__transparency_level.set(value=value)
 
     @property
-    def zoom(self) -> int:
+    def zoom(self) -> float:
         return self.__zoom.get()
     
     @zoom.setter
-    def zoom(self, value: int) -> None:
-        assert type(value) is int
+    def zoom(self, value: float) -> None:
+        assert type(value) is float
         self.__zoom.set(value=value)

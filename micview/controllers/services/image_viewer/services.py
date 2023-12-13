@@ -27,12 +27,15 @@ def getEquivalentPoint(canvas_shape: List[int], canvas_image_size: Tuple[float, 
     '''
     Gets equivalent point of canvas on volume surface
     '''
+    zoom = states['toolframe_states'].zoom
+    if(zoom >= 1):
+        zoom = 1
     center: Tuple[float, float] = (canvas_shape[0]/2, canvas_shape[1]/2)
-    if(e.x < center[0] - canvas_image_size[0]/2 or e.x > center[0] + canvas_image_size[0]/2 or e.y < center[1] - canvas_image_size[1]/2 or e.y > center[1] + canvas_image_size[1]/2):
-        return -1, -1
     offsetx: float = (canvas_shape[0] - canvas_image_size[0])/2
-    new_point_x: int = (e.x - offsetx)*(zoom_area[2] - zoom_area[0])/canvas_image_size[0] + zoom_area[0]
     offsety: float = (canvas_shape[1] - canvas_image_size[1])/2
+    if(e.x < center[0] - (canvas_image_size[0]/2)*zoom or e.x > center[0] + (canvas_image_size[0]/2)*zoom or e.y < center[1] - (canvas_image_size[1]/2)*zoom or e.y > center[1] + (canvas_image_size[1]/2)*zoom):
+        return -1, -1
+    new_point_x: int = (e.x - offsetx)*(zoom_area[2] - zoom_area[0])/canvas_image_size[0] + zoom_area[0]
     new_point_y: int = (e.y - offsety)*(zoom_area[3] - zoom_area[1])/canvas_image_size[1] + zoom_area[1]
     return new_point_x, new_point_y
 

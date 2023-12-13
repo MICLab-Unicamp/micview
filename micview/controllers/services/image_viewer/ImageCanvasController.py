@@ -13,7 +13,8 @@ class ImageCanvasController:
         super().__init__()
         self.master: tk.Canvas = master
         self.id: int = self.master.id
-        self.shift: Tuple[int, int] = (0,0)
+        self.shift: List[int, int] = [0, 0]
+        self.last_clicked_coord: List[int, int] = [0,0]
         self.canvas_image_size = False
         self.proportion_factor = False
         self.image_data = None
@@ -27,6 +28,7 @@ class ImageCanvasController:
         if(type == "action_on_child"):
             self.refresh()
         elif(type == "update_all_childs"):
+            self.actual_tool = states['toolframe_states'].selected_tool
             self.resize()
 
     def resize(self, e: Any = None) -> None:#Resizes the canvas widget
@@ -35,16 +37,15 @@ class ImageCanvasController:
         self.refresh()
 
     def click(self, e: Any) -> None:#Handles clicks on canvas
-        print(f"type={e.type}, coord=({e.x},{e.y})")
-        '''
-        type=4 --> click
-        type=6 --> motion
-        se tool for zoom, atualiza o zoom
-        se tool for cursor, atualiza o valor do ponto atual
-        shift é propriedade individual, zoom é propriedade global
-        '''
-        if(states['toolframe_states'].selected_tool == "zoom"):
-            pass
+        if(self.actual_tool == "zoom"):
+            if(int(e.type) == 4):
+                self.last_clicked_coord = [e.x, e.y]
+            elif(int(e.type) == 6):
+                self.shift[0] -= int((e.x - self.last_clicked_coord[0])/2)
+                self.last_clicked_coord[0] = e.x
+                self.shift[1] -= int((e.y - self.last_clicked_coord[1])/2)
+                self.last_clicked_coord[1] = e.y
+            states['image_canvas_states'].update_all_childs = True
         else:
             new_point_x, new_point_y = getEquivalentPoint(canvas_shape=self.canvas_shape, canvas_image_size=self.canvas_image_size, zoom_area=self.zoom_area, e=e)
             if(new_point_x == -1 and new_point_y == -1):
