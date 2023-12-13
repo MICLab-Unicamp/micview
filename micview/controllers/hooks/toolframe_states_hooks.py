@@ -23,3 +23,6 @@ def toolIsSetHook(* args: Any) -> None:
 
 def transparencyLevelHook(* args: Any) -> None:
     models.states['image_canvas_states'].update_all_childs = True
+
+def zoomHook(* args: Any) -> None:
+    models.states['image_canvas_states'].update_all_childs = True
