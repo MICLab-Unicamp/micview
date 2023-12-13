@@ -6,3 +6,4 @@ models: ModuleType = importlib.import_module(name='micview.models.getters')
 class ZoomTool:
     def __init__(self, master: tk.Tk):
         super().__init__()
+        models.states['toolframe_states'].zoom = 2
