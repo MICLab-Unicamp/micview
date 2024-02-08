@@ -1,3 +1,8 @@
+##
+# @brief This file contains the CursorTool class, which is a component of the ToolFrame class.
+#
+
+# Imports
 import tkinter as tk
 from tkinter import ttk
 import importlib
@@ -5,14 +10,27 @@ from types import ModuleType
 models: ModuleType = importlib.import_module(name='micview.models.getters')
 from micview.controllers.services.tools.cursor_tool import handleSelectedItem, updateTransparency
 
+# Classes
 class CursorTool:
+    """!
+    @brief This class represents the cursor tool in the toolframe.
+    """
     def __init__(self, master: tk.Tk) -> None:
+        """!
+        @brief The constructor of the class.
+        @param master: tk.Tk - The master window of the application.
+        @return None
+        """
         super().__init__()  # Call the __init__ method of the parent class
         self.master: tk.Tk = master
         self.createVars()
         self.createWidgets()
 
     def createVars(self) -> None:
+        """!
+        @brief This method creates the variables of the class.
+        @return None
+        """
         self.cursorX = tk.IntVar(master=self.master, value=0, name="cursorX")
         self.cursorY = tk.IntVar(master=self.master, value=0, name="cursorY")
         self.cursorZ = tk.IntVar(master=self.master, value=0, name="cursorZ")
@@ -22,6 +40,10 @@ class CursorTool:
         self.label_under_cursor = tk.StringVar(master=self.master, value=initial_label, name="label_under_cursor")
 
     def createWidgets(self) -> None:
+        """!
+        @brief This method creates the widgets of the class.
+        @return None
+        """
         self.title = tk.Label(master=self.master, text="Cursor Inspector", font=('Cambria', 13, 'bold'), bg="#f1f2f6")
         self.title.place(x=5, y=10)
         self.cursorpositiontitle = tk.Label(master=self.master, text="Cursor position (x,y,z):", font=('Cambria', 10), bg="#f1f2f6")
@@ -46,6 +68,10 @@ class CursorTool:
         self.CreateTreeView()
 
     def CreateTreeView(self) -> None:
+        """!
+        @brief This method creates the treeview widget.
+        @return None
+        """
         mode = "none"
         numofchannels: int = models.data['original_volume_data'].num_of_channels
         if(numofchannels > 1): mode = "browse" 
@@ -59,5 +85,10 @@ class CursorTool:
         self.treeview.bind(sequence='<<TreeviewSelect>>', func=handleSelectedItem)
 
     def addTreeviewItens(self, numofchannels: int) -> None:
+        """!
+        @brief This method adds the itens to the treeview.
+        @param numofchannels: int - The number of channels.
+        @return None
+        """
         for i in range(numofchannels):
             self.treeview.insert(parent='', index=tk.END, values=(f"{i+1}", "0"))

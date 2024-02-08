@@ -1,17 +1,37 @@
+##
+# @brief: This file contains the functions that are used to handle the cursor tool
+#
+
+# Imports
 import importlib
 from types import ModuleType
 from typing import Any, List, Tuple
 models: ModuleType = importlib.import_module(name='micview.models.getters')
 
+# Functions
 def handleSelectedItem(event: Any) -> None:
+    """!
+    @brief: This function is responsible for handling the selected item.
+    @param: event: Any - The event.
+    @return: None
+    """
     CursorTool: Any = models.views['objects_ref'].ToolFrame.actual_tool
     itemid: int = CursorTool.treeview.focus()
     models.states['toolframe_states'].channel_select = int(CursorTool.treeview.item(itemid, 'values')[0]) - 1
 
 def updateTransparency(value: float) -> None:
+    """!
+    @brief: This function is responsible for updating the transparency.
+    @param: value: float - The value of the transparency.
+    @return: None
+    """
     models.states['toolframe_states'].transparency_level = float(value)/100
 
 def updateChannelsIntensity() -> None:
+    """!
+    @brief: This function is responsible for updating the channels intensity.
+    @return: None
+    """
     original_vol: List[float] = models.data['original_volume_data'].image_volume
     original_shape: Tuple[int] = original_vol.shape
     point: Tuple[int] = models.data['cursor_data'].current_point
@@ -26,6 +46,10 @@ def updateChannelsIntensity() -> None:
     updateIntensityIndicators()
 
 def updateIntensityIndicators() -> None:
+    """!
+    @brief: This function is responsible for updating the intensity indicators.
+    @return: None
+    """
     intensity: List[str] = models.data['toolframe_data'].channel_intensity
     numofchannels: int = models.data['original_volume_data'].num_of_channels
     if(numofchannels > 1):
@@ -40,6 +64,12 @@ def updateIntensityIndicators() -> None:
     updateLabelUnderCursor(CursorTool=CursorTool)
 
 def updateItens(intensity_arr: List[str], CursorTool: object) -> None:
+    """!
+    @brief: This function is responsible for updating the items.
+    @param: intensity_arr: List[str] - The intensity array.
+    @param: CursorTool: object - The cursor tool.
+    @return: None
+    """
     treeview: object = CursorTool.treeview
     itens: Tuple[object] = treeview.get_children()
     for i in range(len(itens)):
@@ -47,6 +77,11 @@ def updateItens(intensity_arr: List[str], CursorTool: object) -> None:
         treeview.item(itens[i], values=(values[0], intensity_arr[i]))
 
 def updatePointIndicators(CursorTool: object) -> None:
+    """!
+    @brief: This function is responsible for updating the point indicators.
+    @param: CursorTool: object - The cursor tool.
+    @return: None
+    """
     point: Tuple[int] = models.data['cursor_data'].current_point
     axes_shape: Tuple[int] = models.data['original_volume_data'].image_volume.shape[-3:]
     flipped: Tuple[bool] = models.data['files_data'].flipped_axes
@@ -64,6 +99,11 @@ def updatePointIndicators(CursorTool: object) -> None:
         CursorTool.cursorZ.set(point[0]+1)
 
 def updateLabelUnderCursor(CursorTool: object) -> None:
+    """!
+    @brief: This function is responsible for updating the label under the cursor.
+    @param: CursorTool: object - The cursor tool.
+    @return: None
+    """
     label: int = models.data['cursor_data'].label_under_cursor
     text = "No Label"
     if(label != 0):

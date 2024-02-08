@@ -1,3 +1,8 @@
+##
+# @brief: This file initializes the models used in the application.
+#
+
+# Imports
 import tkinter as tk
 from micview.models.data.cursor_data import CursorDataClass
 from micview.models.data.toolframe_data import ToolframeDataClass
@@ -14,15 +19,12 @@ data: "dict[str,str]" = dict()
 views: "dict[str,str]" = dict()
 states: "dict[str,str]" = dict()
 
+# Functions
 def initModels(master: tk.Tk) -> None:
-    """
-    Initializes the models used in the application.
-
-    Args:
-        master (tk.Tk): The root Tkinter window.
-
-    Returns:
-        None
+    """!
+    @brief: This function initializes the models used in the application.
+    @param: master: tk.Tk - The master window of the application.
+    @return: None
     """
     global data, views, states
     data['cursor_data'] = CursorDataClass()

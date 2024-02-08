@@ -1,15 +1,32 @@
+##
+# @brief: This class is responsible for creating the animation of the loading screen.
+#
+
+# Imports
 import tkinter as tk
 from threading import Thread, Event
 from time import sleep
 
-
+# Classes
 class Animation(Thread):
+    """!
+    @brief: This class is responsible for creating the animation of the loading screen.
+    """
     def __init__(self, master: tk.Canvas, event: Event) -> None:
+        """!
+        @brief: The constructor of the class.
+        @param: master: tk.Canvas - The canvas of the loading screen.
+        @param: event: Event - The event of the loading screen.
+        """
         super().__init__()
         self.master: tk.Canvas = master
         self.event: Event = event
 
     def run(self) -> None:
+        """!
+        @brief: The run method of the class.
+        @return: None
+        """
         self.radius = 50
         self.angle = 360
         self.speed = 10
@@ -20,6 +37,10 @@ class Animation(Thread):
         del self.arc
 
     def createForms(self) -> None:
+        """!
+        @brief: This method is responsible for creating the forms of the animation.
+        @return: None
+        """
         self.master.create_oval(
             self.master.centerX - self.radius, self.master.centerY - self.radius,
             self.master.centerX + self.radius, self.master.centerY + self.radius,
@@ -38,6 +59,10 @@ class Animation(Thread):
         )
 
     def drawArc(self) -> None:
+        """!
+        @brief: This method is responsible for drawing the arc of the animation.
+        @return: None
+        """
         self.master.itemconfig(
             tagOrId=self.arc,
             extent=self.angle,
@@ -45,6 +70,10 @@ class Animation(Thread):
         )
 
     def update(self) -> None:
+        """!
+        @brief: This method is responsible for updating the animation.
+        @return: None
+        """
         self.angle -= self.speed
         if self.angle <= 0:
             self.angle = 360

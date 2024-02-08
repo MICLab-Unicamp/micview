@@ -1,3 +1,8 @@
+##
+# @brief: This class is responsible for handling the canvas widget that displays the image slices.
+#
+
+# Imports
 from ast import Dict
 import numpy as np
 from PIL import Image, ImageTk
@@ -8,8 +13,17 @@ from micview.controllers.services.volume.controller import changeCurrentPoint, g
 from micview.controllers.services.image_viewer.services import calcCanvasImageSize, get3DCoordinate, getEquivalentPoint, getInverseEquivalentPoint
 from micview.controllers.validations.validate_point import getNearestValidPoint
 
+# Class
 class ImageCanvasController:
+    """!
+    @brief: This class is responsible for handling the canvas widget that displays the image slices.
+    """
     def __init__(self, master: tk.Canvas) -> None:
+        """!
+        @brief: Constructor method
+        @param master: tk.Canvas
+        @return: None
+        """
         super().__init__()
         self.master: tk.Canvas = master
         self.id: int = self.master.id
@@ -22,21 +36,40 @@ class ImageCanvasController:
 
     @property
     def canvas_shape(self) -> Tuple[int, int]:
+        """!
+        @brief: Getter method
+        @return: Tuple[int, int]
+        """
         return (self.master.winfo_width(), self.master.winfo_height())
 
-    def eventHandler(self, type: str) -> None: #when other child suffer click
+    def eventHandler(self, type: str) -> None:
+        """!
+        @brief: This method is used to handle the events
+        @param type: str
+        @return: None
+        """
         if(type == "action_on_child"):
             self.refresh()
         elif(type == "update_all_childs"):
             self.actual_tool = states['toolframe_states'].selected_tool
             self.resize()
 
-    def resize(self, e: Any = None) -> None:#Resizes the canvas widget
+    def resize(self, e: Any = None) -> None:
+        """!
+        @brief: This method is used to resize the canvas widget
+        @param e: Any
+        @return: None
+        """
         image_shape: Tuple[int] = getImageSlices(axis=self.id).shape
         self.canvas_image_size: Tuple[int, int] = calcCanvasImageSize(canvas_shape=self.canvas_shape, image_shape=image_shape)
         self.refresh()
 
-    def click(self, e: Any) -> None:#Handles clicks on canvas
+    def click(self, e: Any) -> None:
+        """!
+        @brief: This method is used to handle the click event
+        @param e: Any
+        @return: None
+        """
         if(self.actual_tool == "zoom"):
             if(int(e.type) == 4):
                 self.last_clicked_coord = [e.x, e.y]
@@ -58,7 +91,11 @@ class ImageCanvasController:
             self.drawCross()
             states['image_canvas_states'].action_on_child = self.id
 
-    def refresh(self) -> None:# Refreshs the canvas objects
+    def refresh(self) -> None:
+        """!
+        @brief: This method is used to refresh the canvas widget
+        @return: None
+        """
         self.zoomed_image()
         self.drawImage()
         self.master.delete('orient_text')
@@ -77,6 +114,10 @@ class ImageCanvasController:
             self.drawCross()
     
     def zoomed_image(self):
+        """!
+        @brief: This method is used to zoom the image
+        @return: None
+        """
         self.original_image = Image.fromarray(obj=getImageSlices(axis=self.id), mode='L')
         original_image_size = self.original_image.size
         w,h = original_image_size[0]//2, original_image_size[1]//2
@@ -87,16 +128,32 @@ class ImageCanvasController:
         self.image_data = ImageTk.PhotoImage(image=self.zoomed_img.resize(size=self.canvas_image_size, resample=Image.NEAREST))
 
     def zoomed_mask(self):
+        """!
+        @brief: This method is used to zoom the mask
+        @return: None
+        """
         self.zoomed_msk = self.mask_image.crop(box=self.zoom_area)
         self.mask_data = ImageTk.PhotoImage(image=self.zoomed_msk.resize(size=self.canvas_image_size, resample=Image.NEAREST))
 
     def drawImage(self) -> None:
+        """!
+        @brief: This method is used to draw the image
+        @return: None
+        """
         self.drawn_image: int = self.master.create_image((self.master.centerX, self.master.centerY), image=self.image_data, anchor="center", tags=("image",))
 
     def drawMask(self) -> None:
+        """!
+        @brief: This method is used to draw the mask
+        @return: None
+        """
         self.drawn_mask: int = self.master.create_image((self.master.centerX, self.master.centerY), image=self.mask_data, anchor="center", tags=("mask",))
     
     def drawOrientText(self) -> None:
+        """!
+        @brief: This method is used to draw the orientation text
+        @return: None
+        """
         self.orient_text: Dict[str, Any] = data['files_data'].orient_text[self.id]
         if(self.orient_text):
             self.drawn_orient_text: int = self.master.create_text((10,self.master.centerY), text=f"{self.orient_text[0]}", font=('Cambria',15,'bold'), fill="#EA2027", anchor="w", tags=("orient_text",))
@@ -105,6 +162,10 @@ class ImageCanvasController:
             self.drawn_orient_text: int = self.master.create_text((self.master.centerX,self.canvas_shape[1] -3), text=f"{self.orient_text[3]}", fill="#EA2027", font=('Cambria',13,'bold'), anchor="s", tags=("orient_text",))
 
     def drawCross(self) -> None:
+        """!
+        @brief: This method is used to draw the cross
+        @return: None
+        """
         x,y = getInverseEquivalentPoint(id=self.id, canvas_shape=self.canvas_shape, canvas_image_size=self.canvas_image_size, zoom_area=self.zoom_area)
         imgTop = self.canvas_shape[1]/2 - self.canvas_image_size[1]/2
         imgBottom = self.canvas_shape[1]/2 + self.canvas_image_size[1]/2

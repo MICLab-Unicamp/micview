@@ -1,9 +1,20 @@
+##
+# @brief: This file contains the file reader service, which is responsible for reading the image and mask files.
+#
+
+# Imports
 import numpy as np
 from typing import Any, List, Dict
 import SimpleITK as sitk
 from micview.models.getters import data
 
+# Functions
 def orientImage(file: sitk.Image) -> List[Any]:
+    """!
+        @brief: This function is used to orient the image
+        @param file: sitk.Image
+        @return: List[Any]
+    """
     Orient = sitk.DICOMOrientImageFilter()
     Orient.SetDesiredCoordinateOrientation(DesiredCoordinateOrientation="LPI")
     oriented_image: Any = Orient.Execute(image1=file)
@@ -17,6 +28,11 @@ def orientImage(file: sitk.Image) -> List[Any]:
     return extracted
 
 def readImageFile(path: str) -> List[Any]:
+    """!
+        @brief: This function is used to read the image file
+        @param path: str
+        @return: List[Any]
+    """
     MetadatasFile: sitk.Image = sitk.ReadImage(fileName=path)
     image_metadatas: Dict[str, Any] = dict()
     for key in MetadatasFile.GetMetaDataKeys():
@@ -26,6 +42,11 @@ def readImageFile(path: str) -> List[Any]:
     return ArrayFromImage
 
 def readMaskFile(path: str) -> List[Any]:
+    """!
+        @brief: This function is used to read the mask file
+        @param path: str
+        @return: List[Any]
+    """
     MetadatasFile: sitk.Image = sitk.ReadImage(fileName=path)
     mask_metadatas: Dict[str, Any] = dict()
     for key in MetadatasFile.GetMetaDataKeys():

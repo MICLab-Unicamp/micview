@@ -1,3 +1,8 @@
+##
+# @brief This file contains the Parent class, which is a toplevel window that is used as a parent window for other toplevel windows.
+#
+
+# Imports
 import tkinter as tk
 import os
 import importlib
@@ -5,8 +10,19 @@ from types import ModuleType
 from micview.controllers.services.toplevels.input_file_handler import browseFileHandler, callbackCurrentDir, callbackFilePath, onClosing
 models: ModuleType = importlib.import_module(name='micview.models.getters')
 
+# Classes
 class Parent(tk.Toplevel):
+    """!
+    @brief This class represents the Parent class, which is a toplevel window that is used as a parent window for other toplevel windows.
+    """
     def __init__(self, master: tk.Tk, windowtitle: str, type_of_file: str) -> None:
+        """!
+        @brief The constructor of the class.
+        @param master: tk.Tk - The master window of the application.
+        @param windowtitle: str - The title of the window.
+        @param type_of_file: str - The type of file that the window will handle.
+        @return None
+        """
         super().__init__(master=master)
         self.master = master
         self.title(string=windowtitle)
@@ -17,6 +33,10 @@ class Parent(tk.Toplevel):
         self.actionButtons()
 
     def configWindow(self) -> None:
+        """!
+        @brief This method configures the window.
+        @return None
+        """
         self.configure(background='#70a1ff')
         self.geometry(newGeometry="400x300")
         self.resizable(width=False, height=False)
@@ -26,6 +46,10 @@ class Parent(tk.Toplevel):
         self.grab_set()
 
     def createVars(self) -> None:
+        """!
+        @brief This method creates the variables of the class.
+        @return None
+        """
         self.warning = tk.StringVar(master=self, value="", name="warning")
         self.filepath = tk.StringVar(master=self, value="", name="filepath")
         currentdir = models.data['toolframe_data'].dirpath
@@ -35,6 +59,10 @@ class Parent(tk.Toplevel):
         self.pathtextvariable = tk.StringVar(master=self, value=f"Path: {currentdir if(len(currentdir)>0) else os.getcwd()}", name="pathtextvariable")
 
     def createWidgets(self) -> None:
+        """!
+        @brief This method creates the widgets of the class.
+        @return None
+        """
         title = tk.Label(master=self, text=f"Select {self.type_of_file}", font=('Helvetica', 15, 'bold'), bg="#70a1ff",  justify="left", anchor="w")
         title.place(rely=0.02, relx=0.02, relwidth=0.9,relheight=0.1)
         filenametext = tk.Label(master=self, text=f"{self.type_of_file} Filename:", font=('Helvetica', 11), bg="#70a1ff", justify="left", anchor="w")
@@ -47,6 +75,10 @@ class Parent(tk.Toplevel):
         pathtext.place(rely=0.36, relx=0.02, relwidth=0.96,relheight=0.08)
 
     def actionButtons(self) -> None:
+        """!
+        @brief This method creates the action buttons of the class.
+        @return None
+        """
         self.cancel = tk.Button(master=self, text="Cancel")
         self.browse = tk.Button(master=self, text="Browse", command=browseFileHandler)
         self.openbutton = tk.Button(master=self, text="Open File", state="disabled")

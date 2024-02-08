@@ -1,3 +1,8 @@
+##
+# @brief: This function returns a color from the pallete
+#
+
+# Imports
 from typing import Dict, Any, List, Tuple
 
 pallete: List[Dict[str, Tuple[int,int,int]]] = [
@@ -10,7 +15,13 @@ pallete: List[Dict[str, Tuple[int,int,int]]] = [
     {'Number': 7, 'RGB': (255, 255, 255)}
 ]
 
+# Function
 def maskPallete(index: int) -> Dict[str, Any]:
+    """!
+    @brief: This function returns a color from the pallete
+    @param index: int
+    @return: Dict[str, Any]
+    """
     if(index < 7):
         return dict.copy(pallete[index])
     else:

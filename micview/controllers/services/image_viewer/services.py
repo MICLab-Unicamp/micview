@@ -1,21 +1,34 @@
+##
+# @brief: This file contains the services for the image viewer
+#
+
+# Imports
 from typing import Any, List, Literal, Tuple
 from micview.models.getters import states, data
 from typing import List, Tuple
 
+# Functions
 def calcCanvasImageSize(canvas_shape: Tuple[int,int]=(0,0), image_shape: Tuple[int,int]=(0,0)) -> Tuple[int, int]:
-        '''
-        Calcs the image size that will be displayed on canvas
-        '''
-        max_side: Literal[0, 1] = 0 if image_shape[0]>image_shape[1] else 1
-        if states['options_states'].image_is_square:
-            return (int(canvas_shape[1]), int(canvas_shape[1]))
-        mult_factor: float = canvas_shape[1]/image_shape[max_side]
-        return (int(mult_factor*image_shape[1]), int(mult_factor*image_shape[0]))
+    """!
+    @brief: This function is used to calculate the canvas image size
+    @param canvas_shape: Tuple[int,int]
+    @param image_shape: Tuple[int,int]
+    @return: Tuple[int, int]
+    """
+    max_side: Literal[0, 1] = 0 if image_shape[0]>image_shape[1] else 1
+    if states['options_states'].image_is_square:
+        return (int(canvas_shape[1]), int(canvas_shape[1]))
+    mult_factor: float = canvas_shape[1]/image_shape[max_side]
+    return (int(mult_factor*image_shape[1]), int(mult_factor*image_shape[0]))
     
 def get3DCoordinate(id:int, x:int, y:int) -> List[int]:
-    '''
-    Gets the 3D coordinate on volume
-    '''
+    """!
+    @brief: This function is used to get the 3D coordinate
+    @param id: int
+    @param x: int
+    @param y: int
+    @return: List[int]
+    """
     if(id == 0):
         return [0, y, x]
     if(id == 1):
@@ -24,9 +37,14 @@ def get3DCoordinate(id:int, x:int, y:int) -> List[int]:
         return [y, x, 0]
     
 def getEquivalentPoint(canvas_shape: List[int], canvas_image_size: Tuple[float, float], zoom_area: Tuple[float, float, float, float], e: Any) -> Tuple[int, int]:
-    '''
-    Gets equivalent point of canvas on volume surface
-    '''
+    """!
+    @brief: This function is used to get the equivalent point
+    @param canvas_shape: List[int]
+    @param canvas_image_size: Tuple[float, float]
+    @param zoom_area: Tuple[float, float, float, float]
+    @param e: Any
+    @return: Tuple[int, int]
+    """
     zoom = states['toolframe_states'].zoom
     if(zoom >= 1):
         zoom = 1
@@ -40,6 +58,14 @@ def getEquivalentPoint(canvas_shape: List[int], canvas_image_size: Tuple[float, 
     return new_point_x, new_point_y
 
 def getInverseEquivalentPoint(id: int, canvas_shape: List[int], canvas_image_size: Tuple[float, float], zoom_area: Tuple[float, float, float, float]) -> Tuple[int, int]:
+    """!
+    @brief: This function is used to get the inverse equivalent point
+    @param id: int
+    @param canvas_shape: List[int]
+    @param canvas_image_size: Tuple[float, float]
+    @param zoom_area: Tuple[float, float, float, float]
+    @return: Tuple[int, int]
+    """
     points = data["cursor_data"].current_point
     x,y = 0,0
     if(id == 0):

@@ -1,10 +1,23 @@
+##
+# @mainpage MICView
+#
+# @file run.py
+#
+# @brief Entrypoint for micview, where the main window is created and the arguments are parsed
+
+# Imports
 import sys
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
 from micview import __version__
 from micview.views.windows.MainWindow import MainWindow
 from typing import Optional, Sequence
 
+# Functions
 def verifyType(s: str) -> None:
+    """! Verifies if the file format is supported
+    @param s: File path
+    @return: s if the file format is supported or raises an ArgumentTypeError
+    """
     if(s.endswith(".nii.gz" or ".dcm")):
         return s
     else:
@@ -12,6 +25,10 @@ def verifyType(s: str) -> None:
 
 
 def main(argv: Optional[Sequence[str]] = sys.argv[1:]) -> None:
+    """! Main function for micview, where the main window is created and the arguments are parsed
+    @param argv: Arguments passed to the program
+    @return: 0 if the test argument is passed, else the main window is opened
+    """
     parser = ArgumentParser(prog="micview")
 
     parser_file = parser.add_argument_group(title="run_file", description="Opens micview passing a file as argument")

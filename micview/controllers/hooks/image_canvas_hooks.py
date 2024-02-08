@@ -1,10 +1,22 @@
+##
+# @brief: This file contains the hooks for the image canvas
+#
+
+
+# Imports
 import importlib
 from types import ModuleType
 from typing import Any
 models: ModuleType = importlib.import_module(name='micview.models.getters')
 from micview.controllers.services.tools.cursor_tool import updateChannelsIntensity
 
+# Functions
 def actionOnChild(* args: Any) -> None:
+    """!
+        @brief: This function is called when the user clicks in one of the childs of the image canvas
+        @param args: Any
+        @return: None
+    """
     if(models.states['toolframe_states'].selected_tool == "cursor"):
         updateChannelsIntensity()
     parent: object = models.views['objects_ref'].ImagesFrame
@@ -22,6 +34,11 @@ def actionOnChild(* args: Any) -> None:
             raise IndexError
         
 def updateAllChilds(* args: Any) -> None:
+    """!
+        @brief: This function is called when the user clicks in one of the childs of the image canvas
+        @param args: Any
+        @return: None
+    """
     if(models.states['toolframe_states'].selected_tool == "cursor"):
         updateChannelsIntensity()
     parent: object = models.views['objects_ref'].ImagesFrame

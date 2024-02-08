@@ -1,3 +1,8 @@
+##
+# @brief: This file contains the class that represents the zoom tool in the toolframe.
+#
+
+# Imports
 import tkinter as tk
 import importlib
 from types import ModuleType
@@ -6,19 +11,35 @@ from typing import Any
 from micview.controllers.services.tools.zoom_tool import changeZoom
 models: ModuleType = importlib.import_module(name='micview.models.getters')
 
+# Classes
 class ZoomTool:
+    """!
+    @brief: This class represents the zoom tool in the toolframe.
+    """
     def __init__(self, master: tk.Tk):
+        """!
+        @brief: The constructor of the class.
+        @param: master: tk.Tk - The master window of the application.
+        """
         super().__init__()
         self.master: tk.Tk = master
         self.createVars()
         self.createWidgets()
 
     def createVars(self) -> None:
+        """!
+        @brief: This method creates the variables of the class.
+        @return: None
+        """
         initial_value = models.states['toolframe_states'].zoom
         self.zoom = tk.DoubleVar(master=self.master, value=initial_value, name="zoom_local")
         self.zoom.trace_add(mode="write", callback=self.updateZoom)
 
     def createWidgets(self) -> None:
+        """!
+        @brief: This method creates the widgets of the class.
+        @return: None
+        """
         self.title = tk.Label(master=self.master, text="Zoom Tool", font=('Cambria', 13, 'bold'), bg="#f1f2f6")
         self.title.place(x=5, y=10)
         self.zoomTitle = tk.Label(master=self.master, text="Zoom", font=('Cambria', 11, 'bold'), bg="#f1f2f6")
@@ -33,17 +54,34 @@ class ZoomTool:
         self.zoomButton10.place(x=105, y=125)
 
     def updateZoom(self, *args: Any) -> None:
+        """!
+        @brief: This method updates the zoom value.
+        @param: *args: Any - The arguments of the method.
+        @return: None
+        """
         value = self.zoom.get()
         changeZoom(zoom=value)
 
     def set1(self) -> None:
+        """!
+        @brief: This method sets the zoom to 1x.
+        @return: None
+        """
         self.zoom.set(value=float(1))
         changeZoom(float(1))
 
     def set5(self) -> None:
+        """!
+        @brief: This method sets the zoom to 5x.
+        @return: None
+        """
         self.zoom.set(value=float(5))
         changeZoom(float(5))
     
     def set10(self) -> None:
+        """!
+        @brief: This method sets the zoom to 10x.
+        @return: None
+        """
         self.zoom.set(value=float(10))
         changeZoom(float(10))
