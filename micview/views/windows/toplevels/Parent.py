@@ -7,7 +7,7 @@ import tkinter as tk
 import os
 import importlib
 from types import ModuleType
-from micview.controllers.services.toplevels.input_file_handler import browseFileHandler, callbackCurrentDir, callbackFilePath, onClosing
+from micview.controllers.services.toplevels.input_file_handler import browseFileHandler, browseDirHandler, callbackCurrentDir, callbackFilePath, onClosing
 models: ModuleType = importlib.import_module(name='micview.models.getters')
 
 # Classes
@@ -80,9 +80,11 @@ class Parent(tk.Toplevel):
         @return None
         """
         self.cancel = tk.Button(master=self, text="Cancel")
+        self.browseDir = tk.Button(master=self, text="Browse Dir", command=browseDirHandler)
         self.browse = tk.Button(master=self, text="Browse", command=browseFileHandler)
         self.openbutton = tk.Button(master=self, text="Open File", state="disabled")
-        self.cancel.place(rely=0.88, relx=0.43, relheight=0.1, relwidth=0.18)
+        self.cancel.place(rely=0.88, relx=0.24, relheight=0.1, relwidth=0.18)
         self.cancel.configure(command=onClosing)
+        self.browseDir.place(rely=0.88, relx=0.43, relheight=0.1, relwidth=0.18)
         self.browse.place(rely=0.88, relx=0.62, relheight=0.1, relwidth=0.18)
         self.openbutton.place(rely=0.88, relx=0.81, relheight=0.1, relwidth=0.18)

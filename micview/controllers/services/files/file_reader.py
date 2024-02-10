@@ -3,10 +3,14 @@
 #
 
 # Imports
+import os
 import numpy as np
 from typing import Any, List, Dict
 import SimpleITK as sitk
 from micview.models.getters import data
+import pydicom
+import dicom2nifti
+import tempfile
 
 # Functions
 def orientImage(file: sitk.Image) -> List[Any]:
@@ -27,12 +31,35 @@ def orientImage(file: sitk.Image) -> List[Any]:
     extracted: List[Any] = np.array(object=sitk.GetArrayFromImage(image=oriented_image))
     return extracted
 
+def readImageFilesFromDir(path: str) -> List[Any]:
+    """!
+        @brief: This function is used to read a DICOM series from a directory, order the slices and convert them to a NIfTI file
+        @param path: str
+        @return: str
+    """
+    onlyfiles = [path+'/'+f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    openfiles = []
+    for file in onlyfiles:
+        if file.endswith('.dcm'):
+            openfiles.append(pydicom.dcmread(file))
+    slices = sorted(openfiles, key=lambda s: s.SliceLocation)    
+    with tempfile.TemporaryDirectory() as workdir:
+        for i in slices:
+            tmpfile = tempfile.NamedTemporaryFile(delete=False, dir=workdir, suffix='.dcm')
+            pydicom.dcmwrite(tmpfile.name, i)
+        newPath = "/tmp/niftitempfile.nii.gz"
+        dicom2nifti.dicom_series_to_nifti(workdir, "/tmp/niftitempfile", reorient_nifti=True)
+
+    return newPath
+
 def readImageFile(path: str) -> List[Any]:
     """!
         @brief: This function is used to read the image file
         @param path: str
         @return: List[Any]
     """
+    if(os.path.isdir(path)):
+        path = readImageFilesFromDir(path=path)
     MetadatasFile: sitk.Image = sitk.ReadImage(fileName=path)
     image_metadatas: Dict[str, Any] = dict()
     for key in MetadatasFile.GetMetaDataKeys():
@@ -47,6 +74,8 @@ def readMaskFile(path: str) -> List[Any]:
         @param path: str
         @return: List[Any]
     """
+    if(os.path.isdir(path)):
+        path = readImageFilesFromDir(path=path)
     MetadatasFile: sitk.Image = sitk.ReadImage(fileName=path)
     mask_metadatas: Dict[str, Any] = dict()
     for key in MetadatasFile.GetMetaDataKeys():

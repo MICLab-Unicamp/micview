@@ -21,7 +21,7 @@ class FilesDataClass:
         self.__mask_file: sitk.Image = None
         self.__image_metadatas: Dict[str, Any] = None
         self.__mask_metadatas: Dict[str, Any] = None
-        self.__flipped_axes: tuple[int] = None
+        self.__flipped_axes: tuple[int] = (False, False, False)
         self.__orient_text: Dict[str, Any] = None
 
     @property

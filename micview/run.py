@@ -36,6 +36,10 @@ def main(argv: Optional[Sequence[str]] = sys.argv[1:]) -> None:
     parser_file.add_argument('-m', '--mask', type=verifyType, help="Mask image file, requires input argument, archive must ends with .nii.gz or .dcm", required=False)
     parser_file.add_argument('-r','--resize', action="store_true", help="Resize image to fit screen, requires input argument", required=False)
 
+    parser_directory = parser.add_argument_group(title="run_directory_files", description="Opens micview passing a dir with multiples .dcm files as argurment")
+    parser_directory.add_argument('-id', '--inputDir', type=str, help="Input image file directory, files must ends with .dcm", required=False)
+    parser_directory.add_argument('-md', '--maskDir', type=str, help="Mask image file directory, requires input argument, archives must ends with .dcm", required=False)
+
     parser_array = parser.add_argument_group(title="run_array", description="Opens micview passing a numpy.ndarray as argument")
     parser_array.add_argument('-ia', '--inputArray', help="Input image array, must be a numpy.ndarray", required=False)
     parser_array.add_argument('-ma', '--maskArray', help="Input mask array, must be a numpy.ndarray", required=False)
@@ -57,6 +61,8 @@ def main(argv: Optional[Sequence[str]] = sys.argv[1:]) -> None:
         window = MainWindow(file=args.input, mask=args.mask, resized = args.resize)
     elif(args.inputArray):
         window = MainWindow(file=args.inputArray, mask=args.maskArray, resized = args.resize, array=True)
+    elif(args.inputDir):
+        window = MainWindow(file=args.inputDir, mask=args.maskDir, resized = args.resize)
     else:
         window = MainWindow()
 

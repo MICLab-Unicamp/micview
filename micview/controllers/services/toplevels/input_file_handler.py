@@ -30,6 +30,27 @@ def browseFileHandler() -> None:
         window.filepath.set(filepath)
     window.deiconify()
 
+def browseDirHandler() -> None:
+    """!
+    @brief: This function is responsible for handling the browse directory button.
+    @return: None
+    """
+    window: object = views['objects_ref'].SideWindow
+    window.withdraw()
+    actualdir = data['toolframe_data'].dirpath
+    name: str = fd.askdirectory(initialdir= actualdir if(len(actualdir)>0) else "./", title="Select Directory")
+    if(type(name) != str):
+        window.deiconify()
+        return
+    aux: List[str] = name.split('/')
+    filepath: str = aux[-1]
+    currentdirectory: str = "/".join(aux[:-1])
+    if(len(filepath) > 0 and len(currentdirectory) > 0):
+        window.currentdirectory.set(currentdirectory)
+        data['toolframe_data'].dirpath = currentdirectory
+        window.filepath.set(filepath)
+    window.deiconify()
+
 def callbackCurrentDir(*args: None) -> None:
     """!
     @brief: This function is responsible for handling the current directory callback.
@@ -60,8 +81,14 @@ def callbackFilePath(*args: None) -> None:
                 window.warning.set("File not found")
                 window.openbutton['state'] = "disabled"
         else:
-            window.warning.set("File format not suported")
-            window.openbutton['state'] = "disabled"
+            finalpath: str = window.currentdirectory.get()+"/"+path
+            if(os.path.exists(path=finalpath) and os.path.isdir(finalpath)):
+                window.finalpath = finalpath
+                window.warning.set("")
+                window.openbutton['state'] = "normal"
+            else:
+                window.warning.set("File format not suported")
+                window.openbutton['state'] = "disabled"
 
 def resizedImageHandler(*args: None) -> None:
     """!
