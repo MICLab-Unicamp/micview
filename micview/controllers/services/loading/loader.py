@@ -3,6 +3,7 @@
 #
 
 # Imports
+import tkinter as tk
 import array
 from typing import Any, Dict
 from threading import Event, Thread
@@ -107,10 +108,16 @@ class LoadNewMask(Thread):
         self.loading_process.join()
         self.event.set()
         self.animation.join()
-        states['loading_states'].mask_is_loaded = True
-        states['options_states'].mask_is_set = True
-        enableAllCanvas()
-        states['loading_states'].loading =  False
+        if(data['changed_volume_data'].changed_mask_volume is not None):
+            states['loading_states'].mask_is_loaded = True
+            states['options_states'].mask_is_set = True
+            enableAllCanvas()
+            states['loading_states'].loading =  False
+        else:
+            states['loading_states'].mask_is_loaded = False
+            states['options_states'].mask_is_set = False
+            enableAllCanvas()
+            states['loading_states'].loading =  False
 
 def delImage() -> None:
     """!

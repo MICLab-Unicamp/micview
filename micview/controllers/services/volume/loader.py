@@ -3,6 +3,7 @@
 #
 
 # Imports
+import tkinter as tk
 import os
 from typing import Any, List
 import numpy as np
@@ -108,15 +109,16 @@ class MaskVolumeLoader(Thread):
             os.unlink(self.path)
         else:
             self.mask: List[Any] = readMaskFile(path=self.path)
-        data['original_volume_data'].mask_volume = self.mask
-        setLabelUnderCursor(mask=self.mask)
-        R: List[Any] = np.expand_dims(np.zeros_like(self.mask), axis=-1).astype(dtype=np.uint8)
-        G: List[Any] = np.zeros_like(R)
-        B: List[Any] = np.zeros_like(R)
-        A: List[Any] = np.expand_dims(np.where(self.mask > 0, 255, 0), axis=-1)
-        RGBA_mask: List[Any] = np.concatenate((R,G,B,A), axis=-1).astype(dtype=np.uint8)
-        RGBA_mask: List[Any] = maskLabelColors(RGBA_mask=RGBA_mask, mask=self.mask)
-        data['changed_volume_data'].changed_mask_volume = RGBA_mask
+            if(self.mask is not None):
+                data['original_volume_data'].mask_volume = self.mask
+                setLabelUnderCursor(mask=self.mask)
+                R: List[Any] = np.expand_dims(np.zeros_like(self.mask), axis=-1).astype(dtype=np.uint8)
+                G: List[Any] = np.zeros_like(R)
+                B: List[Any] = np.zeros_like(R)
+                A: List[Any] = np.expand_dims(np.where(self.mask > 0, 255, 0), axis=-1)
+                RGBA_mask: List[Any] = np.concatenate((R,G,B,A), axis=-1).astype(dtype=np.uint8)
+                RGBA_mask: List[Any] = maskLabelColors(RGBA_mask=RGBA_mask, mask=self.mask)
+                data['changed_volume_data'].changed_mask_volume = RGBA_mask
 
 def settingMaskPallete(max) -> List[Any]:
     """!

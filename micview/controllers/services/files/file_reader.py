@@ -4,6 +4,7 @@
 
 # Imports
 import os
+import tkinter as tk
 import numpy as np
 from typing import Any, List, Dict
 import SimpleITK as sitk
@@ -80,6 +81,11 @@ def readMaskFile(path: str) -> List[Any]:
     mask_metadatas: Dict[str, Any] = dict()
     for key in MetadatasFile.GetMetaDataKeys():
         mask_metadatas[key] = MetadatasFile.GetMetaData(key=key)
-    data['files_data'].mask_metadatas = mask_metadatas
     ArrayFromImage: List[Any] = orientImage(file=MetadatasFile)
-    return ArrayFromImage
+    if ArrayFromImage.ndim != 3:
+        tk.messagebox.showerror(title="Error", message="Mask volume must be 3D.")
+    if(ArrayFromImage.shape[-3:] != data['original_volume_data'].image_volume.shape[-3:]):
+        tk.messagebox.showerror(title="Error", message="Mask volume must have the same dimensions as the image volume.")
+    else:
+        data['files_data'].mask_metadatas = mask_metadatas
+        return ArrayFromImage
