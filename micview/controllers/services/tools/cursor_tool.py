@@ -58,10 +58,15 @@ def updateIntensityIndicators() -> None:
     else:
         parse: List[str] = (intensity.split('[')[1]).split(']')[0]
         chann_intensity = [round(float(parse),2)]
-    CursorTool: object = models.views['objects_ref'].ToolFrame.actual_tool
-    updateItens(intensity_arr=chann_intensity, CursorTool=CursorTool)
-    updatePointIndicators(CursorTool=CursorTool)
-    updateLabelUnderCursor(CursorTool=CursorTool)
+    if(models.views['objects_ref'].ToolFrame.actual_tool is not None):
+        if(models.states['toolframe_states'].selected_tool == 'cursor'):
+            CursorTool: object = models.views['objects_ref'].ToolFrame.actual_tool
+            updatePointIndicators(CursorTool=CursorTool)
+            updateItens(intensity_arr=chann_intensity, CursorTool=CursorTool)
+            updateLabelUnderCursor(CursorTool=CursorTool)
+        elif(models.states['toolframe_states'].selected_tool == 'edit'):
+            tool: object = models.views['objects_ref'].ToolFrame.actual_tool
+            updatePointIndicators(CursorTool=tool)
 
 def updateItens(intensity_arr: List[str], CursorTool: object) -> None:
     """!

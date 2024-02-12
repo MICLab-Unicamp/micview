@@ -17,7 +17,7 @@ def actionOnChild(* args: Any) -> None:
         @param args: Any
         @return: None
     """
-    if(models.states['toolframe_states'].selected_tool == "cursor"):
+    if(models.states['toolframe_states'].selected_tool == "cursor" or models.states['toolframe_states'].selected_tool == "edit"):
         updateChannelsIntensity()
     parent: object = models.views['objects_ref'].ImagesFrame
     child: int = models.states['image_canvas_states'].action_on_child
@@ -39,7 +39,7 @@ def updateAllChilds(* args: Any) -> None:
         @param args: Any
         @return: None
     """
-    if(models.states['toolframe_states'].selected_tool == "cursor"):
+    if(models.states['toolframe_states'].selected_tool == "cursor" or models.states['toolframe_states'].selected_tool == "edit"):
         updateChannelsIntensity()
     parent: object = models.views['objects_ref'].ImagesFrame
     parent.coronal.controller.eventHandler("update_all_childs")

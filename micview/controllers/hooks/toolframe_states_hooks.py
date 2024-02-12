@@ -27,6 +27,7 @@ def selectedToolHook(* args: Any) -> None:
     @return: None
     """
     tool: str = models.states['toolframe_states'].selected_tool
+    models.states['toolframe_states'].paint_mode = False
     master: object = models.views['objects_ref'].ToolFrame
     setTool(tool=tool, master=master)
     models.states['image_canvas_states'].update_all_childs = True
@@ -58,3 +59,12 @@ def zoomHook(* args: Any) -> None:
     @return: None
     """
     models.states['image_canvas_states'].update_all_childs = True
+
+def paintHooks(* args: Any) -> None:
+    """!
+    @brief: This function is called when the user clicks in one of the childs of the image canvas
+    @param args: Any
+    @return: None
+    """
+    models.states['image_canvas_states'].update_all_childs = True
+    

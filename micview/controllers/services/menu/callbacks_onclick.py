@@ -4,6 +4,7 @@
 
 # Imports
 from typing import Any, Literal
+from tkinter import messagebox
 from micview.models.getters import states, views, data
 from micview.views.windows.toplevels.Metadata import Metadata
 from micview.views.windows.toplevels.OpenImage import OpenImage
@@ -103,7 +104,10 @@ def setToolEdit() -> None:
     @brief: This function is responsible for setting the tool to edit.
     @return: None
     """
-    states['toolframe_states'].selected_tool = "edit"
+    if(states['loading_states'].mask_is_loaded is False):
+        messagebox.showwarning("Warning", "Load a mask first!")
+    else:
+        states['toolframe_states'].selected_tool = "edit"
 
 def setImageInfo() -> None:
     """!

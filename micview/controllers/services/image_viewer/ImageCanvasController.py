@@ -88,7 +88,12 @@ class ImageCanvasController:
             valid_points[self.id] = -1
             changeCurrentPoint(axis0=valid_points[0] ,axis1=valid_points[1], axis2=valid_points[2])
             self.master.delete('cross')
-            self.drawCross()
+            if(states['toolframe_states'].selected_tool == "cursor"):
+                self.drawCross()
+            if(states['toolframe_states'].paint_mode):
+                self.paintMode()
+                states['image_canvas_states'].update_all_childs = True
+                return
             states['image_canvas_states'].action_on_child = self.id
 
     def refresh(self) -> None:
@@ -110,6 +115,8 @@ class ImageCanvasController:
             self.mask_image = Image.fromarray(obj=data, mode='RGBA')
             self.zoomed_mask()
             self.drawMask()
+        if(states['toolframe_states'].paint_mode):
+            self.paintMode()
         if(states['toolframe_states'].selected_tool == "cursor"):
             self.drawCross()
     
@@ -173,3 +180,12 @@ class ImageCanvasController:
         imgRight = self.canvas_shape[0]/2 + self.canvas_image_size[0]/2
         self.master.create_line((x, imgTop, x, imgBottom), fill="#759fe6", dash=(3,2), tags=("cross",))
         self.master.create_line((imgLeft, y, imgRight, y), fill="#759fe6", dash=(3,2), tags=("cross",))
+
+    def paintMode(self) -> None:
+        """!
+        @brief: This method is used to handle the paint mode
+        @param e: Any
+        @return: None
+        """
+        x,y,z = data['cursor_data'].current_point
+        data['changed_volume_data'].changed_mask_volume[x, y, z] = states['toolframe_states'].color_paint_mode

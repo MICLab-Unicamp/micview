@@ -4,7 +4,7 @@
 
 # Imports
 import tkinter as tk
-from micview.controllers.hooks.toolframe_states_hooks import channelSelectHook, selectedToolHook, toolIsSetHook, transparencyLevelHook, zoomHook
+from micview.controllers.hooks.toolframe_states_hooks import channelSelectHook, selectedToolHook, toolIsSetHook, transparencyLevelHook, zoomHook, paintHooks
 
 # Classes
 class ToolframeStatesClass:
@@ -26,7 +26,10 @@ class ToolframeStatesClass:
         self.__transparency_level = tk.DoubleVar(master=master, value=1.0, name="transparency_level")
         self.__transparency_level.trace(mode='w', callback=transparencyLevelHook)
         self.__zoom = tk.DoubleVar(master=master, value=1.0, name="zoom")
-        self.__zoom.trace(mode='w', callback=zoomHook)    
+        self.__zoom.trace(mode='w', callback=zoomHook)
+        self.__paint_mode = tk.BooleanVar(master=master, value=False, name="paint_mode")
+        self.__paint_mode.trace(mode='w', callback=paintHooks)
+        self.color_paint_mode = (255, 0, 0, 255)
 
     @property
     def channel_select(self) -> int:
@@ -125,3 +128,38 @@ class ToolframeStatesClass:
         """
         assert type(value) is float
         self.__zoom.set(value=value)
+
+    @property
+    def paint_mode(self) -> bool:
+        """!
+        @brief: The getter method of the paint_mode property.
+        @return: bool
+        """
+        return self.__paint_mode.get()
+    
+    @paint_mode.setter
+    def paint_mode(self, value: bool) -> None:
+        """!
+        @brief: The setter method of the paint_mode property.
+        @param: value: bool - The value to be set.
+        @return: None
+        """
+        assert type(value) is bool
+        self.__paint_mode.set(value=value)
+
+    @property
+    def color_paint_mode(self):
+        """!
+        @brief: The getter method of the color_paint_mode property.
+        @return: str
+        """
+        return self.__color_paint_mode
+
+    @color_paint_mode.setter
+    def color_paint_mode(self, value) -> None:
+        """!
+        @brief: The setter method of the color_paint_mode property.
+        @param: value: str - The value to be set.
+        @return: None
+        """
+        self.__color_paint_mode=value
