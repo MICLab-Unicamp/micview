@@ -25,7 +25,7 @@ setuptools.setup(
     ],
     python_requires='>=3.8',
     install_requires=['setuptools', 'numpy>=1.22', 'scipy>=1.6.0', 'pillow>=9.0.0',
-    'SimpleITK>=2.3.0', 'screeninfo>=0.8.1', 'pydicom', 'dicom2nifti'],
+    'SimpleITK>=2.3.0', 'screeninfo>=0.8.1', 'pydicom', 'dicom2nifti', 'plotly', 'scikit-image', 'matplotlib', 'pandas'],
     entry_points={
         'console_scripts': ["micview = micview.run:main"]
     }

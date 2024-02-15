@@ -74,6 +74,7 @@ class MainWindow(tk.Tk):
         self.Left_Frame.place(x=0, rely=0, width=200, relheight=1)
         self.ToolFrame = ToolFrame(master=self.Left_Frame)
         self.ImagesFrame = ImagesFrame(master=self)
+        self.protocol("WM_DELETE_WINDOW", self.onClose)
         self.Menu = Menu(master=self)
 
     def initInput(self) -> None:
@@ -84,3 +85,11 @@ class MainWindow(tk.Tk):
         if(self.kwargs):
             self.loading_process = LoadImageFromShell(**self.kwargs)
             self.loading_process.start()
+
+    def onClose(self) -> None:
+        """!
+        @brief: This method is called when the window is closed.
+        @return: None
+        """
+        self.destroy()
+        exit(0)

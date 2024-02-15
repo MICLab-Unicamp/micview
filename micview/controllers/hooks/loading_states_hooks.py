@@ -28,4 +28,4 @@ def loadingHook(* args: Any) -> None:
         handleOnLoading(loading=False)
         changeButtonsState()
         updateRadiobool()
-
+        models.views['objects_ref'].ImagesFrame.resetSurface()

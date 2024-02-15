@@ -25,6 +25,7 @@ def changeCurrentPoint(axis0: int, axis1: int, axis2: int) -> None:
     if (axis2 >= 0):
         current_point[2] = axis2
     models.data['cursor_data'].current_point = current_point
+    models.views['objects_ref'].ImagesFrame.refreshSurface()
     changeLabelUnderCursor(current_point=current_point)
 
 def changeLabelUnderCursor(current_point: "tuple[int]") -> None:
