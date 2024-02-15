@@ -63,7 +63,6 @@ class Menu(tk.Menu):
         """
         self.segmentation_options = tk.Menu(master=self, tearoff=False, background='#4b7bec', foreground='white')
         self.segmentation_options.add_command(label="Open Segmentation", command=segmentationWindow)
-        self.segmentation_options.add_command(label="Save Segmentation")
         self.add_cascade(label="Segmentation", menu=self.segmentation_options)
 
     def toolsView(self) -> None:

@@ -33,6 +33,7 @@ class ImageCanvasController:
         self.proportion_factor = False
         self.image_data = None
         self.mask_data = None
+        self.get_colors()
 
     @property
     def canvas_shape(self) -> Tuple[int, int]:
@@ -155,7 +156,15 @@ class ImageCanvasController:
         @return: None
         """
         self.drawn_mask: int = self.master.create_image((self.master.centerX, self.master.centerY), image=self.mask_data, anchor="center", tags=("mask",))
-    
+
+    def get_colors(self) -> None:
+        if(self.id == 0):
+            self.text_colors: List[str] = ["Green", "Blue", "Green", "Blue"]
+        elif(self.id == 1):
+            self.text_colors: List[str] = ["Green", "Red", "Green", "Red"]
+        elif(self.id == 2):
+            self.text_colors: List[str] = ["Blue", "Red", "Blue", "Red"]
+
     def drawOrientText(self) -> None:
         """!
         @brief: This method is used to draw the orientation text
@@ -163,10 +172,10 @@ class ImageCanvasController:
         """
         self.orient_text: Dict[str, Any] = data['files_data'].orient_text[self.id]
         if(self.orient_text):
-            self.drawn_orient_text: int = self.master.create_text((10,self.master.centerY), text=f"{self.orient_text[0]}", font=('Cambria',15,'bold'), fill="#EA2027", anchor="w", tags=("orient_text",))
-            self.drawn_orient_text: int = self.master.create_text((self.master.centerX,3), text=f"{self.orient_text[1]}", font=('Cambria',13,'bold'), fill="#EA2027", anchor="n", tags=("orient_text",))
-            self.drawn_orient_text: int = self.master.create_text((self.canvas_shape[0] -10,self.master.centerY), text=f"{self.orient_text[2]}", fill="#EA2027", font=('Cambria',15,'bold'), anchor="e", tags=("orient_text",))
-            self.drawn_orient_text: int = self.master.create_text((self.master.centerX,self.canvas_shape[1] -3), text=f"{self.orient_text[3]}", fill="#EA2027", font=('Cambria',13,'bold'), anchor="s", tags=("orient_text",))
+            self.drawn_orient_text: int = self.master.create_text((10,self.master.centerY), text=f"{self.orient_text[0]}", font=('Cambria',15,'bold'), fill=self.text_colors[0], anchor="w", tags=("orient_text",))
+            self.drawn_orient_text: int = self.master.create_text((self.master.centerX,3), text=f"{self.orient_text[1]}", font=('Cambria',13,'bold'), fill=self.text_colors[1], anchor="n", tags=("orient_text",))
+            self.drawn_orient_text: int = self.master.create_text((self.canvas_shape[0] -10,self.master.centerY), text=f"{self.orient_text[2]}", fill=self.text_colors[2], font=('Cambria',15,'bold'), anchor="e", tags=("orient_text",))
+            self.drawn_orient_text: int = self.master.create_text((self.master.centerX,self.canvas_shape[1] -3), text=f"{self.orient_text[3]}", fill=self.text_colors[3], font=('Cambria',13,'bold'), anchor="s", tags=("orient_text",))
 
     def drawCross(self) -> None:
         """!
