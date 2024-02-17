@@ -75,11 +75,14 @@ def updateItens(intensity_arr: List[str], CursorTool: object) -> None:
     @param: CursorTool: object - The cursor tool.
     @return: None
     """
-    treeview: object = CursorTool.treeview
-    itens: Tuple[object] = treeview.get_children()
-    for i in range(len(itens)):
-        values: List[Any] = treeview.item(itens[i],'values')
-        treeview.item(itens[i], values=(values[0], intensity_arr[i]))
+    try:
+        treeview: object = CursorTool.treeview
+        itens: Tuple[object] = treeview.get_children()
+        for i in range(len(itens)):
+            values: List[Any] = treeview.item(itens[i],'values')
+            treeview.item(itens[i], values=(values[0], intensity_arr[i]))
+    except:
+        pass
 
 def updatePointIndicators(CursorTool: object) -> None:
     """!
@@ -91,17 +94,35 @@ def updatePointIndicators(CursorTool: object) -> None:
     axes_shape: Tuple[int] = models.data['original_volume_data'].image_volume.shape[-3:]
     flipped: Tuple[bool] = models.data['files_data'].flipped_axes
     if(flipped[0]):
-        CursorTool.cursorX.set(axes_shape[2]-point[2])
+        try:
+            CursorTool.cursorX.set(axes_shape[2]-point[2])
+        except:
+            pass
     else:
-        CursorTool.cursorX.set(point[2]+1)
+        try:
+            CursorTool.cursorX.set(point[2]+1)
+        except:
+            pass
     if(flipped[1]):
-        CursorTool.cursorY.set(axes_shape[1]-point[1])
+        try:
+            CursorTool.cursorY.set(axes_shape[1]-point[1])
+        except:
+            pass
     else:
-        CursorTool.cursorY.set(point[1]+1)
+        try:
+            CursorTool.cursorY.set(point[1]+1)
+        except:
+            pass
     if(flipped[2]):
-        CursorTool.cursorZ.set(axes_shape[0]-point[0])
+        try:
+            CursorTool.cursorZ.set(axes_shape[0]-point[0])
+        except:
+            pass
     else:
-        CursorTool.cursorZ.set(point[0]+1)
+        try:
+            CursorTool.cursorZ.set(point[0]+1)
+        except:
+            pass
 
 def updateLabelUnderCursor(CursorTool: object) -> None:
     """!
@@ -113,4 +134,7 @@ def updateLabelUnderCursor(CursorTool: object) -> None:
     text = "No Label"
     if(label != 0):
         text = f"Label {label}"
-    CursorTool.label_under_cursor.set(text)
+    try:
+        CursorTool.label_under_cursor.set(text)
+    except:
+        pass
