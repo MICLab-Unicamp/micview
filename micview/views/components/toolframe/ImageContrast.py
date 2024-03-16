@@ -51,6 +51,8 @@ class ImageContrast:
         self.maximumScale.set(self.max)
         self.changeButton = tk.Button(master=self.master, text="Set", font=('Cambria', 10, 'bold'), bg="#f1f2f6", command=self.setContrast)
         self.changeButton.place(x=5, y=165)
+        self.backButton = tk.Button(master=self.master, text="Back", font=('Cambria', 10, 'bold'), bg="#f1f2f6", command=self.back)
+        self.backButton.place(x=5, y=195)
 
     def updateMinimum(self, value: int) -> None:
         """!
@@ -80,3 +82,11 @@ class ImageContrast:
         @return: None
         """
         changeContrast(min=self.min, max=self.max)
+
+    def back(self) -> None:
+        """!
+        @brief: This method is used to go back to cursor tool.
+        @return: None
+        """
+        from micview.controllers.services.menu.callbacks_onclick import setToolCursor
+        setToolCursor()

@@ -119,6 +119,7 @@ class MaskVolumeLoader(Thread):
                 RGBA_mask: List[Any] = np.concatenate((R,G,B,A), axis=-1).astype(dtype=np.uint8)
                 RGBA_mask: List[Any] = maskLabelColors(RGBA_mask=RGBA_mask, mask=self.mask)
                 data['changed_volume_data'].changed_mask_volume = RGBA_mask
+                data['changed_volume_data'].pre_edit_changed_mask_volume = RGBA_mask.copy()
 
 def settingMaskPallete(max) -> List[Any]:
     """!

@@ -7,6 +7,7 @@ from ast import Dict
 import numpy as np
 from PIL import Image, ImageTk
 import tkinter as tk
+import math
 from typing import Any, Tuple, List
 from micview.models.getters import states, data
 from micview.controllers.services.volume.controller import changeCurrentPoint, getImageSlices, getMaskSlices
@@ -116,8 +117,6 @@ class ImageCanvasController:
             self.mask_image = Image.fromarray(obj=data, mode='RGBA')
             self.zoomed_mask()
             self.drawMask()
-        if(states['toolframe_states'].paint_mode):
-            self.paintMode()
         if(states['toolframe_states'].selected_tool == "cursor"):
             self.drawCross()
     
@@ -197,4 +196,21 @@ class ImageCanvasController:
         @return: None
         """
         x,y,z = data['cursor_data'].current_point
-        data['changed_volume_data'].changed_mask_volume[x, y, z] = states['toolframe_states'].color_paint_mode
+        brush_size = states['toolframe_states'].brush_size
+        color_paint_mode = states['toolframe_states'].color_paint_mode
+        for i in range(-math.floor(brush_size/2), math.floor(brush_size/2)+1):
+            for j in range(-math.floor(brush_size/2), math.floor(brush_size/2)+1):
+                for k in range(-math.floor(brush_size/2), math.floor(brush_size/2)+1):
+                    try:
+                        data['changed_volume_data'].changed_mask_volume[x+i, y+j, z+k] = color_paint_mode
+                    except:
+                        pass
+
+    def reset_paint(self) -> None:
+        """!
+        @brief: This method is used to reset the paint
+        @return: None
+        """
+        del data['changed_volume_data'].changed_mask_volume
+        data['changed_volume_data'].changed_mask_volume = data['changed_volume_data'].pre_edit_changed_mask_volume.copy()
+        self.refresh()

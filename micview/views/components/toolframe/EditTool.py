@@ -68,8 +68,16 @@ class EditTool():
         self.paintButtonFalse.place(x=5, y=180)
         self.paintButtonTrue = tk.Radiobutton(master=self.master, text="Paint", font=('Cambria', 10, 'bold'), bg="#f1f2f6", variable=models.states['toolframe_states'].paint_mode, value=True, command=self.PaintModeTrue)
         self.paintButtonTrue.place(x=5, y=210)
+        self.PaintModeTrue()
         self.selectColorButton = tk.Button(master=self.master, text="Select Color", font=('Cambria', 10, 'bold'), bg="#f1f2f6", command=self.selectColor)
-        self.selectColorButton.place(x=6, y=240)
+        self.selectColorButton.place(x=5, y=240)
+        self.brushSizeScale = tk.Scale(master=self.master, from_=1, to=20, resolution=1, orient=tk.HORIZONTAL, length=100, bg="#f1f2f6", troughcolor="#ffffff", sliderlength=20, sliderrelief=tk.FLAT, command=self.updateBrushSize)
+        self.brushSizeScale.place(x=5, y=270)
+        self.brushSizeScale.set(1)
+        self.resetButton = tk.Button(master=self.master, text="Clear", font=('Cambria', 10, 'bold'), bg="#f1f2f6", command=self.resetDrawing)
+        self.resetButton.place(x=5, y=320)
+        self.backButton = tk.Button(master=self.master, text="Back", font=('Cambria', 10, 'bold'), bg="#f1f2f6", command=self.back)
+        self.backButton.place(x=5, y=350)
 
     def PaintModeTrue(self) -> None:
         models.states['toolframe_states'].paint_mode = True
@@ -81,3 +89,29 @@ class EditTool():
         colors = colorchooser.askcolor()
         selectedColor = (colors[0][0], colors[0][1], colors[0][2], 255)
         models.states['toolframe_states'].color_paint_mode = selectedColor
+
+    def updateBrushSize(self, value: int) -> None:
+        """!
+        @brief: This method is used to select the pencil size.
+        @param: value: int - The new minimum value.
+        @return: None
+        """
+        models.states['toolframe_states'].brush_size = int(value)
+
+    def resetDrawing(self) -> None:
+        """!
+        @brief: This method is used to reset the drawing.
+        @return: None
+        """
+        images_frame: object = models.views['objects_ref'].ImagesFrame
+        images_frame.axial.controller.reset_paint()
+        images_frame.coronal.controller.reset_paint()
+        images_frame.sagital.controller.reset_paint()
+
+    def back(self) -> None:
+        """!
+        @brief: This method is used to go back to cursor tool.
+        @return: None
+        """
+        from micview.controllers.services.menu.callbacks_onclick import setToolCursor
+        setToolCursor()

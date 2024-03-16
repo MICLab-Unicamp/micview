@@ -29,7 +29,8 @@ class ToolframeStatesClass:
         self.__zoom.trace(mode='w', callback=zoomHook)
         self.__paint_mode = tk.BooleanVar(master=master, value=False, name="paint_mode")
         self.__paint_mode.trace(mode='w', callback=paintHooks)
-        self.color_paint_mode = (255, 0, 0, 255)
+        self.__color_paint_mode = (255, 0, 0, 255)
+        self.__brush_size = 1
 
     @property
     def channel_select(self) -> int:
@@ -163,3 +164,20 @@ class ToolframeStatesClass:
         @return: None
         """
         self.__color_paint_mode=value
+
+    @property
+    def brush_size(self):
+        """!
+        @brief: The getter method of the brush_size property.
+        @return: str
+        """
+        return self.__brush_size
+
+    @brush_size.setter
+    def brush_size(self, value) -> None:
+        """!
+        @brief: The setter method of the brush_size property.
+        @param: value: str - The value to be set.
+        @return: None
+        """
+        self.__brush_size=value
