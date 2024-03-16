@@ -8,7 +8,7 @@ import importlib
 from types import ModuleType
 from typing import Any
 
-from micview.controllers.services.tools.zoom_tool import changeZoom
+from micview.controllers.services.tools.zoom_tool import changeZoom, reset_shifting
 models: ModuleType = importlib.import_module(name='micview.models.getters')
 
 # Classes
@@ -52,6 +52,10 @@ class ZoomTool:
         self.zoomButton5.place(x=55, y=125)
         self.zoomButton10 = tk.Button(master=self.master, text="10x", font=('Cambria', 10, 'bold'), bg="#f1f2f6", command=self.set10)
         self.zoomButton10.place(x=105, y=125)
+        self.resetButton = tk.Button(master=self.master, text="Reset", font=('Cambria', 10, 'bold'), bg="#f1f2f6", command=self.reset)
+        self.resetButton.place(x=20, y=175)
+        self.backButton = tk.Button(master=self.master, text="Back", font=('Cambria', 10, 'bold'), bg="#f1f2f6", command=self.back)
+        self.backButton.place(x=90, y=175)
 
     def updateZoom(self, *args: Any) -> None:
         """!
@@ -77,7 +81,7 @@ class ZoomTool:
         """
         self.zoom.set(value=float(5))
         changeZoom(float(5))
-    
+
     def set10(self) -> None:
         """!
         @brief: This method sets the zoom to 10x.
@@ -85,3 +89,19 @@ class ZoomTool:
         """
         self.zoom.set(value=float(10))
         changeZoom(float(10))
+
+    def reset(self) -> None:
+        """!
+        @brief: This method resets the zoom.
+        @return: None
+        """
+        self.set1()
+        reset_shifting()
+
+    def back(self) -> None:
+        """!
+        @brief: This method is used to go back to cursor tool.
+        @return: None
+        """
+        from micview.controllers.services.menu.callbacks_onclick import setToolCursor
+        setToolCursor()
