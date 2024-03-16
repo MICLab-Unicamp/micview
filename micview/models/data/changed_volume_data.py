@@ -17,6 +17,7 @@ class ChangedVolumeDataClass:
         super().__init__()
         self.__changed_image_volume: List[Any] = None
         self.__changed_mask_volume: List[Any] = None
+        self.__pre_edit_changed_mask_volume: List[Any] = None
         self.__min_and_max_values: "tuple[float, float]" = (0, 0)
 
     @property
@@ -72,6 +73,23 @@ class ChangedVolumeDataClass:
         if(self.__changed_mask_volume is not None):
             del self.__changed_mask_volume
             self.__changed_mask_volume = None
+
+    @property
+    def pre_edit_changed_mask_volume(self) -> List[Any]:
+        """!
+        @brief: The getter method of the pre_edit_changed_mask_volume property.
+        @return: List[Any]
+        """
+        return self.__pre_edit_changed_mask_volume
+
+    @pre_edit_changed_mask_volume.setter
+    def pre_edit_changed_mask_volume(self, value: List[Any]) -> None:
+        """!
+        @brief: The setter method of the pre_edit_changed_mask_volume property.
+        @param: value: List[Any] - The value to be set.
+        @return: None
+        """
+        self.__pre_edit_changed_mask_volume = value
 
     @property
     def min_and_max_values(self) -> "tuple[float, float]":
