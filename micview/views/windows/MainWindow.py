@@ -28,6 +28,10 @@ class MainWindow(tk.Tk):
         self.kwargs: dict[str, dict[str, str]] = kwargs
         super().__init__()
         self.create()
+        tk.Tk.report_callback_exception = self.show_error
+
+    def show_error(self, *args):
+        tk.messagebox.showerror(title="Error", message="Unexpected error")
 
     def create(self) -> None:
         """!
