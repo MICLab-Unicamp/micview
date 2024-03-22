@@ -201,10 +201,11 @@ class ImageCanvasController:
         for i in range(-math.floor(brush_size/2), math.floor(brush_size/2)+1):
             for j in range(-math.floor(brush_size/2), math.floor(brush_size/2)+1):
                 for k in range(-math.floor(brush_size/2), math.floor(brush_size/2)+1):
-                    try:
-                        data['changed_volume_data'].changed_mask_volume[x+i, y+j, z+k] = color_paint_mode
-                    except:
-                        pass
+                    if(math.sqrt(i**2 + j**2 + k**2) < brush_size/2):
+                        try:
+                            data['changed_volume_data'].changed_mask_volume[x+i, y+j, z+k] = color_paint_mode
+                        except:
+                            pass
 
     def reset_paint(self) -> None:
         """!
