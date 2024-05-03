@@ -2,5 +2,4 @@ screeninfo>=0.8.1
 pillow>=9.0.0
 SimpleITK>=2.3.0
 numpy>=1.22
-scipy>=1.6.0
 setuptools
