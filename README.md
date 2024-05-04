@@ -7,14 +7,18 @@ The software was developed and tested in Ubuntu 22.04, and tested on Windows. Th
 ## Installation
 It is suggested to create a Python environment with Conda:
 
-    conda create -n micview python=3.8
-    conda activate micview
+    $ conda create -n micview python=3.8
+    $ conda activate micview
 
 To download the package, do:
 
-    git clone https://github.com/MICLab-Unicamp/micview
-    cd micview
-    pip install . 
+    $ pip install MICView
+
+Or fork this GitHub Repository:
+
+    $ git clone https://github.com/MICLab-Unicamp/micview
+    $ cd micview
+    $ pip install . 
 
 ## Using
 You can use the API calling inside a terminal, and calling functions of micview inside your Python code, to call micview inside a terminal do:
