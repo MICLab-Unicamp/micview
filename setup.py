@@ -14,7 +14,7 @@ setuptools.setup(
     description="Open-source GUI for visualization of multimodal medical images and segmentations viewing",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/MICLab-Unicamp/micview.git",
+    url="https://github.com/MICLab-Unicamp/micview/archive/refs/tags/v1.0.0.tar.gz",
     packages=found,
     include_package_data=True,
     package_data={'micview': ["assets/miclab_logo.jpg"]},
