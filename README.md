@@ -2,12 +2,12 @@
 This project is an open-source API of a GUI for visualization of multimodal medical images and segmentations viewing. It was produced in a scenario of need for the assistance of graphical tools for the study of deep-learning neural networks for segmenting medical images, and also as the final project of my Bachelor's degree on Computer Engineering in FEEC-Unicamp. The project was made using Tkinter, and designed in a MVC software architecture (Model View Controller).
 
 ## Requirements
-The software was developed and tested in Ubuntu 22.04, and tested on Windows. The minimum required version of Python is 3.8, others required libs are described in [requirements](./requirements.txt)
+The software was developed and tested in Ubuntu 22.04, and tested on Windows. The minimum required version of Python is 3.10, other required libraries are described in [requirements](./requirements.txt)
 
 ## Installation
 It is suggested to create a Python environment with Conda:
 
-    $ conda create -n micview python=3.8
+    $ conda create -n micview python=3.10
     $ conda activate micview
 
 To download the package, do:
