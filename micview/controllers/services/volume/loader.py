@@ -121,7 +121,7 @@ class MaskVolumeLoader(Thread):
                 data['changed_volume_data'].changed_mask_volume = RGBA_mask
                 data['changed_volume_data'].pre_edit_changed_mask_volume = RGBA_mask.copy()
 
-def settingMaskPallete(max) -> List[Any]:
+def settingMaskPallete(max: int) -> List[Any]:
     """!
     @brief: This function returns a list of colors for the mask.
     @param max: int - The maximum number of labels.
@@ -139,7 +139,7 @@ def maskLabelColors(RGBA_mask: List[Any], mask: List[Any]) -> List[Any]:
     @param mask: List[Any] - The mask.
     @return: List[Any]
     """
-    pallete: List[Any] = settingMaskPallete(max=mask.max())
+    pallete: List[Any] = settingMaskPallete(max=int(mask.max()))
     for label in pallete:
         RGBA_mask[:,:,:, 0] = np.where(mask == label["Number"], label["RGB"][0], RGBA_mask[:,:,:,0])
         RGBA_mask[:,:,:, 1] = np.where(mask == label["Number"], label["RGB"][1], RGBA_mask[:,:,:,1])
@@ -157,10 +157,10 @@ def setChannelsIntensity(volume: List[Any]) -> None:
     data['cursor_data'].current_point = point
     multichannel: bool = len(volume.shape) > 3
     if(multichannel):
-        data['toolframe_data'].channel_intensity = str(list(volume[x, point[0], point[1], point[2]] for x in range(4)))
+        data['toolframe_data'].channel_intensity = str([float(volume[x, point[0], point[1], point[2]]) for x in range(4)])
         data['original_volume_data'].num_of_channels = volume.shape[0]
     else:
-        data['toolframe_data'].channel_intensity = str([volume[point[0], point[1], point[2]]])
+        data['toolframe_data'].channel_intensity = str([float(volume[point[0], point[1], point[2]])])
         data['original_volume_data'].num_of_channels = 1
 
 def setLabelUnderCursor(mask: List[Any]) -> None:
@@ -171,4 +171,4 @@ def setLabelUnderCursor(mask: List[Any]) -> None:
     """
     point: List[Any] = (np.array(mask.shape[-1:-4:-1][::-1])/2).astype(dtype=int)
     data['cursor_data'].current_point = point
-    data['cursor_data'].label_under_cursor = str(mask[point[0], point[1], point[2]])
+    data['cursor_data'].label_under_cursor = str(float(mask[point[0], point[1], point[2]]))

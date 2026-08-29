@@ -39,9 +39,9 @@ def updateChannelsIntensity() -> None:
     intensity: List[str] = []
     if(multi):
         for i in range(original_shape[0]):
-            intensity.append(original_vol[i,point[0],point[1],point[2]])
+            intensity.append(float(original_vol[i,point[0],point[1],point[2]]))
     else:
-        intensity.append(original_vol[point[0],point[1],point[2]])
+        intensity.append(float(original_vol[point[0],point[1],point[2]]))
     models.data['toolframe_data'].channel_intensity = str(intensity)
     updateIntensityIndicators()
 
