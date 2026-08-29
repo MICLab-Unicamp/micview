@@ -48,7 +48,7 @@ class Info(tk.Toplevel):
         self.metadatas = models.data['files_data'].image_metadatas
         self.dimensions: tuple[str, str, str] = (self.metadatas['dim[1]'], self.metadatas['dim[2]'], self.metadatas['dim[3]'])
         self.spacing: tuple[str, str, str] = (self.metadatas['pixdim[1]'], self.metadatas['pixdim[2]'], self.metadatas['pixdim[3]'])
-        self.origin: list[int, int, int] = [-1*int(self.metadatas['qoffset_x']),-1*int(self.metadatas['qoffset_y']),-1*int(self.metadatas['qoffset_z'])]
+        self.origin: list[int, int, int] = [-1*int(float(self.metadatas['qoffset_x'])),-1*int(float(self.metadatas['qoffset_y'])),-1*int(float(self.metadatas['qoffset_z']))]
         self.intensity_range: tuple[str, str] = models.data["original_volume_data"].min_and_max_values
 
     def createWidgets(self) -> None:
