@@ -6,6 +6,7 @@
 import os
 import site
 import tkinter as tk
+import traceback
 from PIL import Image, ImageTk
 from micview.models.getters import initModels
 from micview.controllers.services.screen_size.screensize import getScreensize
@@ -31,7 +32,9 @@ class MainWindow(tk.Tk):
         tk.Tk.report_callback_exception = self.show_error
 
     def show_error(self, *args):
-        tk.messagebox.showerror(title="Error", message="Unexpected error")
+        error_text = "".join(traceback.format_exception(*args)) if args else traceback.format_exc()
+        print(error_text)
+        tk.messagebox.showerror(title="Error", message=f"Unexpected error\n\n{error_text}")
 
     def create(self) -> None:
         """!
