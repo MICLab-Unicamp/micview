@@ -23,9 +23,9 @@ def maskPallete(index: int) -> Dict[str, Any]:
     @return: Dict[str, Any]
     """
     if(index < 7):
-        return dict.copy(pallete[index])
+        return pallete[index].copy()
     else:
-        color: Dict[str, Any] = dict.copy(self=pallete[index%7])
+        color: Dict[str, Any] = pallete[index%7].copy()
         color["Number"] = index + 1
         rgb: List[int] = [0,0,0]
         for i in range(3):
