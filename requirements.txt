@@ -3,3 +3,6 @@ pillow>=9.0.0
 SimpleITK>=2.3.0
 numpy>=1.22
 setuptools
+pydicom
+dicom2nifti
+matplotlib
